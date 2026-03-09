@@ -2,10 +2,10 @@ import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import CustomToPagination from "../../../Shared/Pagination";
+import { apiConnectorPost } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
-import CustomToPagination from "../../../Shared/Pagination";
 
 const JoinMember = () => {
   const [level, setLevel] = useState(1);

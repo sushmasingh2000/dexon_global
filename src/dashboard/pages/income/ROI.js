@@ -78,7 +78,7 @@ const ROI = () => {
         shadow-md shadow-white/30 text-center
       "
       >
-        ROI Bonus
+        Trading Income
       </h2>
 
       {/* <div

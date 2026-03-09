@@ -34,6 +34,7 @@ const MemberList = () => {
       fk.values.search,
       fk.values.start_date,
       fk.values.end_date,
+      fk.values.count,
       page,
     ],
     () =>
@@ -97,6 +98,38 @@ const MemberList = () => {
     }
     setLoading(false);
   }
+
+  const copyWalletAddress = async (walletAddress) => {
+    if (!walletAddress) {
+      Swal.fire({
+        title: "Not Available",
+        text: "Wallet address is not available for this member.",
+        icon: "info",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(walletAddress);
+      Swal.fire({
+        title: "Copied",
+        text: "Wallet address copied to clipboard.",
+        icon: "success",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.error("Failed to copy wallet address:", error);
+      Swal.fire({
+        title: "Copy Failed",
+        text: "Unable to copy wallet address.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   const tablehead = [
     <span>S.No.</span>,
     <span>Email</span>,
@@ -106,6 +139,7 @@ const MemberList = () => {
     <span>Password</span>,
     <span>Spon Id</span>,
     <span>Spon Name</span>,
+    <span>Wallet Address</span>,
     <span>Topup Wallet</span>,
     <span>Registration Date</span>,
     <span>Total Income</span>,
@@ -138,6 +172,18 @@ const MemberList = () => {
       </span>,
       <span>{row.spon_id || "N/A"}</span>,
       <span>{row.spon_name || "N/A"}</span>,
+      <span className="flex items-center gap-2">
+        <span className="max-w-[150px] truncate font-mono" title={row.lgn_wallet_add || "N/A"}>
+          {row.lgn_wallet_add || "N/A"}
+        </span>
+        <button
+          type="button"
+          onClick={() => copyWalletAddress(row.lgn_wallet_add)}
+          className="px-2 py-1 text-[10px] rounded border border-cyan-400/40 text-cyan-300 hover:bg-cyan-500/10"
+        >
+          Copy
+        </button>
+      </span>,
       <span> {getFloatingValue(row.tr03_topup_wallet)}</span>,
       <span> {formatedDate(moment, row.tr03_reg_date)}</span>,
       <span> {getFloatingValue(row.tr03_total_income)}</span>,
@@ -183,7 +229,16 @@ const MemberList = () => {
         </div> */}
 
         {/* Pagination */}
-        <CustomToPagination page={page} setPage={setPage} data={allData} />
+        <CustomToPagination
+          page={page}
+          setPage={setPage}
+          data={allData}
+          count={fk.values.count}
+          onCountChange={(value) => {
+            fk.setFieldValue("count", value);
+            setPage(1);
+          }}
+        />
       </div>
     </div>
   );

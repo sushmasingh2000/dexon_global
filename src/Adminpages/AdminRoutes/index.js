@@ -14,6 +14,7 @@ import AdminTree from "../Pages/userandnetwork/AdminTree";
 import TeamAndMembers from "../Pages/userandnetwork/TeamAndMembers";
 import NewsAndUpdated from "../Pages/newsupdates/NewsAndUpdated";
 import TradePair from "../Pages/tradePair/TradePair";
+import UpdateROICond from "../Pages/income/UpdateROICond";
 
 export const adminroutes = [
   {
@@ -26,19 +27,19 @@ export const adminroutes = [
     id: 19,
     path: "/levelBonus",
     component: <LevelBonus />,
-    navItem: "Community Level Bonus",
+    navItem: "Community Level Income",
   },
   {
     id: 19,
     path: "/directBonus",
     component: <DirectBonus />,
-    navItem: "Referral Bonus",
+    navItem: "Sponsor Income",
   },
   {
     id: 19,
     path: "/roiBonus",
     component: <ROIBonus />,
-    navItem: "ROI Bonus",
+    navItem: "Trading Income",
   },
   {
     id: 19,
@@ -102,11 +103,17 @@ export const adminroutes = [
     component: <NewsAndUpdated />,
     navItem: "News And Updated",
   },
-{
+  {
     id: 48,
     path: "/trade_pairs",
     component: <TradePair />,
     navItem: "Trade & Pair",
+  },
+  {
+    id: 49,
+    path: "/update-trade-profit",
+    component: <UpdateROICond />,
+    navItem: "Update Trade Profit",
   },
 
 ];

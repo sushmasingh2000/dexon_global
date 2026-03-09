@@ -1,4 +1,5 @@
 // export const localdomain = "http://192.168.18.101:9010";
+// export const domain = "http://192.168.18.214:9010";
 export const domain = "https://dexon.global";
 export const frontend = "https://dexon.global";
 
@@ -47,6 +48,7 @@ export const endpoint = {
   update_news_and_updates_status: `${domain}/api/v9/update-news-and-updates-status`,
   get_admin_dashboard: `${domain}/api/v9/get-admin-dashboard`,
   get_member_global_live_transaction_activity: `${domain}/api/v9/get-member-global-live-transaction-activity`,
+  get_package_details: `${domain}/api/v9/get-package-details`,
   //////////////////////////////////////////////////
 
   update_popup_status: `${domain}/api/v9/udpate-popup-status`,

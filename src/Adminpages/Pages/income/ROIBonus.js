@@ -29,6 +29,7 @@ const ROIBonus = () => {
       fk.values.search,
       fk.values.start_date,
       fk.values.end_date,
+      fk.values.count,
       page,
     ],
     () =>
@@ -108,7 +109,13 @@ const ROIBonus = () => {
         </div> */}
 
         {/* Pagination */}
-        <CustomToPagination page={page} setPage={setPage} data={allData} />
+        <CustomToPagination page={page} setPage={setPage} data={allData}
+          count={fk.values.count}
+          onCountChange={(value) => {
+            fk.setFieldValue("count", value);
+            setPage(1);
+          }}
+        />
       </div>
     </div>
   );

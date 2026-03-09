@@ -27,7 +27,7 @@ const Reward = () => {
     ["reward_income_api", page],
     () =>
       apiConnectorGet(
-`        ${endpoint?.roi_income_api}?income_type=REWARD&page=${page}`
+        `        ${endpoint?.roi_income_api}?income_type=REWARD&page=${page}`
       ),
     {
       refetchOnMount: false,
@@ -61,7 +61,7 @@ const Reward = () => {
   return (
     <div className="p-2">
       <div className="bg-gray-800 rounded-lg shadow-lg p-3 text-white border border-gray-700 mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-200">Reward Bonus</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-200">Dexon Global Reward Pool</h2>
 
         <div className="flex flex-col sm:flex-wrap md:flex-row items-center gap-3 sm:gap-4 w-full text-sm sm:text-base">
           <input
@@ -120,7 +120,7 @@ const Reward = () => {
           isLoading={isLoading}
         />
 
-            <div className='flex justify-end py-2 '>Total Income : $ {allData?.totalAmount || 0}</div>
+        <div className='flex justify-end py-2 '>Total Income : $ {allData?.totalAmount || 0}</div>
 
         {/* Pagination */}
         <CustomToPagination

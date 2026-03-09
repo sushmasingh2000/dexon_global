@@ -60,11 +60,12 @@ const menu = [
     title: "Income",
     icon: <CurrencyExchangeIcon />,
     submenu: [
-      { title: "Referral Bonus", icon: <SignalCellularAltIcon />, path: "/income/direct" },
-      { title: "Community Level Bonus", icon: <CurrencyExchangeIcon />, path: "/income/level" },
-      { title: "ROI Bonus", icon: <CurrencyExchangeIcon />, path: "/income/roi" },
-      { title: "Reward Bonus", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
-      { title: "Salary Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
+      { title: "Trading Income", icon: <CurrencyExchangeIcon />, path: "/income/roi" },
+      { title: "Sponsor Income", icon: <SignalCellularAltIcon />, path: "/income/direct" },
+      { title: "Community Level Income", icon: <CurrencyExchangeIcon />, path: "/income/level" },
+      { title: "Leadership Rank Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
+
+      { title: "Dexon Global Reward Pool", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
     ]
   },
   {
@@ -271,10 +272,10 @@ const Sidebar = () => {
                             setActive(sub.title);
                             if (sub?.title === "Our Orders") {
                               window.open(sub?.path, "_blank");
-                            }else{
+                            } else {
                               navigate(sub.path);
                             }
-                            
+
                             setOpen(false);
                           }}
                           className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200

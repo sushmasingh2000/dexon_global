@@ -2,7 +2,14 @@ import React from "react";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-const CustomToPagination = ({ setPage, page, data }) => {
+const CustomToPagination = ({
+  setPage,
+  page,
+  data,
+  count,
+  onCountChange,
+  countOptions = [10, 25, 50, 100],
+}) => {
   const totalPages = data?.totalPage || 1;
   const currentPage = data?.currPage || 1;
 
@@ -18,6 +25,24 @@ const CustomToPagination = ({ setPage, page, data }) => {
 
       {/* Page Info */}
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 text-sm">
+
+        {/* Page Size Select */}
+        {onCountChange && (
+          <div className="flex items-center gap-2 bg-blue-950/40 border border-blue-400/20 rounded-lg px-3 py-1.5 backdrop-blur-sm">
+            <span className="text-gray-400 font-medium tracking-wide text-xs uppercase">Show</span>
+            <select
+              value={count || 10}
+              onChange={(e) => onCountChange(Number(e.target.value))}
+              className="bg-transparent text-cyan-300 text-xs font-semibold outline-none border border-cyan-500/30 rounded px-2 py-1"
+            >
+              {countOptions.map((item) => (
+                <option key={item} value={item} className="bg-slate-900 text-cyan-300">
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Total Pages Badge */}
         <div className="flex items-center gap-2 bg-blue-950/40 border border-blue-400/20 rounded-lg px-3 py-1.5 backdrop-blur-sm">

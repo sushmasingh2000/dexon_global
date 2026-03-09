@@ -139,8 +139,8 @@ const Profile = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showTopupModal, setShowTopupModal] = useState(false);
-  const [showOldPass, setShowOldPass] = useState(false);
-  const [showNewPass, setShowNewPass] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [sponName, setSponName] = useState(null);
 
   const { data: profile, refetch: refetchProfile } = useQuery(
@@ -159,14 +159,28 @@ const Profile = () => {
   const fkProfile = useFormik({
     initialValues: {
       name: user_profile?.lgn_name || "",
-      newPass: "",
-      oldPass: "",
+      email: user_profile?.lgn_email || "",
+      password: "",
+      confirmPassword: "",
       mobile: user_profile?.lgn_mobile || "",
-      wallet: user_profile?.wallet_Address || "",
+      wallet_address: user_profile?.lgn_wallet_add || "",
     },
     enableReinitialize: true,
     onSubmit: () => {
-      const reqbody = fkProfile.values;
+      if (fkProfile.values.password || fkProfile.values.confirmPassword) {
+        if (fkProfile.values.password !== fkProfile.values.confirmPassword) {
+          toast.error("Password and confirm password must match.");
+          return;
+        }
+      }
+
+      const reqbody = {
+        ...fkProfile.values,
+        newPass: fkProfile.values.password,
+        oldPass: "",
+      };
+      delete reqbody.password;
+      delete reqbody.confirmPassword;
       UpdateProfileFn(reqbody);
     },
   });
@@ -364,6 +378,7 @@ const Profile = () => {
                 <InfoRow label="Mobile" value={user_profile?.lgn_mobile || "—"} color="green" />
                 <InfoRow label="Customer ID" value={user_profile?.tr03_cust_id || "—"} />
                 <InfoRow label="Sponsor ID" value={user_profile?.spon_id || "—"} />
+                <InfoRow label="Wallet Address" value={user_profile?.lgn_wallet_add || "—"} />
                 <InfoRow label="Registration Date" value={formatedDate(moment, user_profile?.tr03_reg_date)} />
                 <InfoRow label="Activation Date" value={formatedDate(moment, user_profile?.tr03_topup_date)} />
 
@@ -405,7 +420,7 @@ const Profile = () => {
                   style={{ background: 'rgba(234,179,8,0.04)', border: '1px solid rgba(234,179,8,0.1)' }}>
                   <div>
                     <p className="text-gray-300 text-sm font-medium">Update Profile</p>
-                    <p className="text-gray-600 text-xs mt-0.5">Name & mobile number</p>
+                    <p className="text-gray-600 text-xs mt-0.5">Name, email & mobile number</p>
                   </div>
                   <button
                     onClick={() => setShowProfileModal(true)}
@@ -466,12 +481,12 @@ const Profile = () => {
                 </div>
 
                 {/* Wallet address row */}
-                {/* <div className="flex justify-between items-center px-3 py-3 rounded-xl"
+                <div className="flex justify-between items-center px-3 py-3 rounded-xl"
                   style={{ background: 'rgba(234,179,8,0.04)', border: '1px solid rgba(234,179,8,0.1)' }}>
                   <div className="flex-1 min-w-0 mr-3">
                     <p className="text-gray-300 text-sm font-medium">Wallet Address</p>
                     <p className="text-xs font-mono truncate mt-0.5" style={{ color: 'rgba(253,224,71,0.5)' }}>
-                      {user_profile?.lgn_mobile || "Not set"}
+                      {fkProfile.values.wallet_address || "Not set"}
                     </p>
                   </div>
                   <button
@@ -497,10 +512,10 @@ const Profile = () => {
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                       </svg>
-                      {user_profile?.lgn_mobile ? "Update" : "Add"}
+                      {fkProfile.values.wallet_address ? "Update" : "Add"}
                     </span>
                   </button>
-                </div> */}
+                </div>
               </div>
             </Card>
           </div>
@@ -519,11 +534,11 @@ const Profile = () => {
         },
         showPasswordModal && {
           key: 'password', accent: 'cyan', title: 'Change Password',
-          onClose: () => { setShowPasswordModal(false); setShowOldPass(false); setShowNewPass(false); fkProfile.handleReset(); },
+          onClose: () => { setShowPasswordModal(false); setShowPassword(false); setShowConfirmPassword(false); fkProfile.handleReset(); },
           onSubmit: (e) => { e.preventDefault(); areYouSureFn(Swal, () => fkProfile.handleSubmit()); },
           fields: [
-            { label: 'Old Password', name: 'oldPass', type: showOldPass ? 'text' : 'password', placeholder: 'Enter old password', value: fkProfile.values.oldPass, onChange: fkProfile.handleChange, isPasswordField: true, isVisible: showOldPass, toggleVisibility: () => setShowOldPass((prev) => !prev) },
-            { label: 'New Password', name: 'newPass', type: showNewPass ? 'text' : 'password', placeholder: 'Enter new password', value: fkProfile.values.newPass, onChange: fkProfile.handleChange, isPasswordField: true, isVisible: showNewPass, toggleVisibility: () => setShowNewPass((prev) => !prev) },
+            { label: 'Password', name: 'password', type: showPassword ? 'text' : 'password', placeholder: 'Enter password', value: fkProfile.values.password, onChange: fkProfile.handleChange, isPasswordField: true, isVisible: showPassword, toggleVisibility: () => setShowPassword((prev) => !prev) },
+            { label: 'Confirm Password', name: 'confirmPassword', type: showConfirmPassword ? 'text' : 'password', placeholder: 'Confirm password', value: fkProfile.values.confirmPassword, onChange: fkProfile.handleChange, isPasswordField: true, isVisible: showConfirmPassword, toggleVisibility: () => setShowConfirmPassword((prev) => !prev) },
           ],
         },
       ].filter(Boolean).map(modal => (
@@ -612,6 +627,7 @@ const Profile = () => {
               <div className="px-6 py-5 space-y-4">
                 {[
                   { label: 'Name', name: 'name', type: 'text' },
+                  { label: 'Email', name: 'email', type: 'email' },
                   { label: 'Mobile', name: 'mobile', type: 'text' },
                 ].map(f => (
                   <div key={f.name}>

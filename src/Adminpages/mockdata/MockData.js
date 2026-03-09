@@ -35,11 +35,20 @@ export const all_Data = [
       </span>
     ),
     subcomponent: [
-
+      {
+        id: 6.5,
+        navLink: "/roiBonus",
+        navItem: "Trading Income",
+        navIcon: (
+          <span>
+            <PaidIcon sx={{ color: "#749df5" }} fontSize="medium" />
+          </span>
+        ),
+      },
       {
         id: 6.4,
         navLink: "/directBonus",
-        navItem: "Referral Bonus",
+        navItem: "Sponsor Income",
         navIcon: (
           <span>
             <GroupAddIcon sx={{ color: "#749df5" }} fontSize="medium" />
@@ -49,23 +58,14 @@ export const all_Data = [
       {
         id: 6.3,
         navLink: "/levelBonus",
-        navItem: "Community Level Bonus",
+        navItem: "Community Level Income",
         navIcon: (
           <span>
             <StackedLineChartIcon sx={{ color: "#749df5" }} fontSize="medium" />
           </span>
         ),
       },
-      {
-        id: 6.5,
-        navLink: "/roiBonus",
-        navItem: "ROI Bonus",
-        navIcon: (
-          <span>
-            <PaidIcon sx={{ color: "#749df5" }} fontSize="medium" />
-          </span>
-        ),
-      },
+
     ],
   },
   {
@@ -171,6 +171,18 @@ export const all_Data = [
     id: 7,
     navLink: "/newsAnnouncement",
     navItem: "News & Announcement",
+    navIcon: (
+      <span>
+        <CampaignIcon sx={{ color: "#749df5" }} fontSize="medium" />
+      </span>
+    ),
+    subcomponent: [
+    ],
+  },
+  {
+    id: 7,
+    navLink: "/update-trade-profit",
+    navItem: "Update Trade Profit",
     navIcon: (
       <span>
         <CampaignIcon sx={{ color: "#749df5" }} fontSize="medium" />
