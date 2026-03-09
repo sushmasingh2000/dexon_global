@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.MuiButtonBase-root {
+  color: white;
+}
+
+/* From Uiverse.io by Hashir-Ahmed123 */
+@keyframes drop {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(1000px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.lava-lamp {
+  /* position: relative; */
+  width: 50px;
+  height: 100px;
+  background: #000;
+  border-radius: 25px;
+  /* overflow: hidden; */
+}
+
+.bubble {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to bottom, #e64980, #ff8787);
+  border-radius: 50%;
+  left: 15px;
+  animation: drop 50s ease-in-out infinite;
+}
+
+.bubble1 {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to bottom, #82c91e, #3bc9db);
+  border-radius: 50%;
+  left: 1px;
+  animation: drop 30s ease-in-out infinite;
+}
+
+.bubble2 {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to bottom, #7950f2, #f783ac);
+  border-radius: 50%;
+  left: 30px;
+  animation: drop 40s ease-in-out infinite;
+}
+
+.bubble3 {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to bottom, #4481eb, #04befe);
+  border-radius: 50%;
+  left: 20px;
+  animation: drop 60s ease-in-out infinite;
+}
+
+.example {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* /// */
+@keyframes starMove {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 500px 1000px;
+  }
+}
+
+.star-bg {
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 18px 18px;
+  animation: starMove 20s linear infinite;
+}
+
+
+/* Outer rotating border only */
+.jalwa-border-spinner {
+  width: 140px;
+  height: 140px;
+  border: 4px solid transparent;
+  border-top: 4px solid #00faff;
+  border-bottom: 4px solid #00faff;
+  border-radius: 50%;
+  animation: spinRing 1.5s linear infinite;
+  position: absolute;
+}
+
+/* Centered static logo */
+.jalwa-logo-container {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.jalwa-logo {
+  width: 100px;
+  height: auto;
+  z-index: 2;
+}
+
+/* Border rotation */
+@keyframes spinRing {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.border11 {
+  border: 1px solid #7d18d2 !important;
+}
+
+.text11 {
+  color: #7d18d2 !important;
+}
+
+.THBY {
+  font-size: 12px !important;
+  color: #fff !important;
+}
+
+.rv-circle__text {
+  color: white !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+.custom-picker .rv-picker__toolbar {
+  background-color: #05113C;
+  color: #A2A5E1;
+  font-size: 16px;
+  padding: 0 16px;
+}
+
+.custom-picker .rv-picker__confirm {
+  color: #00fcd3;
+}
+
+.custom-picker .rv-picker__cancel {
+  color: #A2A5E1;
+}
+
+.custom-picker .rv-picker-column {
+  background-color: #0A0F2B;
+  color: #A2A5E1;
+  font-size: 18px;
+}
+
+.custom-textfield {
+  outline: none !important;
+  border: none !important;
+}
+
+
+.custom-textfield:focus-within {
+  outline: none !important;
+  border: none !important;
+}
+
+.custom-textfield .MuiInputBase-input {
+  border: none !important;
+  outline: none !important;
+}
+
+.custom-textfield .MuiInputBase-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.main_taleb {
+  overflow-x: scroll;
+}
+
+.main_taleb thead tr th {
+  padding: 10px 15px !important;
+  white-space: nowrap;
+}
+
+.main_taleb tbody tr td {
+  color: #fff;
+  padding: 10px 15px !important;
+  white-space: nowrap;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.animate-typing {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  animation: typing 3s steps(40) forwards;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, currentColor 0%, rgba(255, 255, 255, 0.5) 50%, currentColor 100%);
+  background-size: 1000px 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmer 3s infinite;
+}
+
+/* /////////////////////////////// TREE CSS /////////////////////////////
+ */
+
+/* Tree joining lines - dark background par visible */
+.tree-link {
+  stroke: rgba(34, 211, 238, 0.4) !important;
+  stroke-width: 1.5px !important;
+  fill: none !important;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.3));
+}
+
+.tree-link:hover {
+  stroke: rgba(34, 211, 238, 0.8) !important;
+  stroke-width: 2px !important;
+}
+
+/* Scrollbar dark theme */
+#treeWrapper::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+#treeWrapper::-webkit-scrollbar-track {
+  background: #060d1a;
+}
+
+#treeWrapper::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.3);
+  border-radius: 3px;
+}
