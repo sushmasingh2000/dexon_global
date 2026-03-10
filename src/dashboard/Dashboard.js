@@ -17,6 +17,9 @@ import { apiConnectorGet } from "../utils/APIConnector";
 import { endpoint, frontend } from "../utils/APIRoutes";
 import { getFloatingValue } from "../utils/utilityFun";
 import tether from "../images/tether.png";
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import Groups2Icon from '@mui/icons-material/Groups2';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
@@ -448,7 +451,7 @@ const Dashboard = () => {
                 {/* Value */}
                 <h2 className="text-3xl font-bold mb-1">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">
-                    {getFloatingValue(user_profile?.tr03_compound_wallet)}USD
+                    {getFloatingValue(dashboard?.growth_wallet)}USD
                   </span>
                 </h2>
 
@@ -465,13 +468,13 @@ const Dashboard = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-xl animate-pulse"></div>
                 <button
-                  // onClick={() => navigate("/fund-transfer-to-topup-wallet")}
+                  onClick={() => navigate("/topup_history")}
                   className="relative bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-400 hover:to-cyan-300 text-white font-semibold text-sm px-5 py-2 rounded-full shadow-lg shadow-blue-500/40 transition-all duration-300 hover:scale-105 hover:shadow-blue-400/60 group/btn overflow-hidden"
                 >
                   <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-500"></div>
                   </div>
-                  {/* <span className="relative z-10">Topup</span> */}
+                  <span className="relative z-10"></span>
                 </button>
               </div>
             </div>
@@ -856,6 +859,13 @@ const Dashboard = () => {
         <Card
           title="Earning Wallet"
           value={`$${getFloatingValue(user_profile?.tr03_inc_wallet)}`}
+          color="cyan"
+          path=""
+          navigate={navigate}
+        />
+        <Card
+          title="Today Earning"
+          value={`$${getFloatingValue(dashboard?.today_earning)}`}
           color="cyan"
           path=""
           navigate={navigate}

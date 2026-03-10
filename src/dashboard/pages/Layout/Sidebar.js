@@ -41,18 +41,18 @@ const menu = [
 
     ]
   },
-  {
-    title: "Compounding",
-    icon: <CurrencyExchangeIcon />,
-    submenu: [
-      { title: "Auto Compounding", icon: <CurrencyExchangeIcon />, path: "/auto-compounding-history" },
-      // { title: "Sponsor Income", icon: <SignalCellularAltIcon />, path: "/income/direct" },
-      // { title: "Community Level Income", icon: <CurrencyExchangeIcon />, path: "/income/level" },
-      // { title: "Leadership Rank Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
+  // {
+  //   title: "Compounding",
+  //   icon: <CurrencyExchangeIcon />,
+  //   submenu: [
+  //     { title: "Auto Compounding", icon: <CurrencyExchangeIcon />, path: "/auto-compounding-history" },
+  //     // { title: "Sponsor Income", icon: <SignalCellularAltIcon />, path: "/income/direct" },
+  //     // { title: "Community Level Income", icon: <CurrencyExchangeIcon />, path: "/income/level" },
+  //     // { title: "Leadership Rank Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
 
-      // { title: "Dexon Global Reward Pool", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
-    ]
-  },
+  //     // { title: "Dexon Global Reward Pool", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
+  //   ]
+  // },
   {
     title: "Fund Withdrawal",
     icon: <FaWallet />,
