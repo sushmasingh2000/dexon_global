@@ -212,12 +212,11 @@ function Payout() {
                 </div>
                 <div className="relative group mb-3">
                   <input
-                    placeholder="Enter wallet address"
                     id="walletAddress"
                     name="walletAddress"
-                    value={fk.values.walletAddress}
+                    value={fk.values.walletAddress || user_profile?.lgn_wallet_add || ""}
                     onChange={fk.handleChange}
-                    className="w-full px-4 py-2 pr-16 rounded-lg bg-gradient-to-r from-gray-900/80 to-gray-800/90 text-cyan-100 text-sm border-2 border-gray-700 focus:border-cyan-400 focus:outline-none transition-all duration-300 font-semibold placeholder:text-gray-500"
+                    className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-gray-900/80 to-gray-800/90 text-cyan-100 text-sm border-2 border-gray-700 focus:border-cyan-400 focus:outline-none transition-all duration-300 font-semibold"
                   />
                 </div>
 
@@ -271,13 +270,24 @@ function Payout() {
 
             {/* Warning Notice */}
             <div className="mb-6 flex items-start gap-3 bg-amber-950/30 border border-amber-400/30 rounded-lg p-4">
-              <svg className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
+
               <div>
                 <p className="text-amber-300 text-xs font-semibold mb-1">Important Notice</p>
                 <p className="text-amber-400/80 text-xs leading-relaxed">
-                  Withdrawal requests are processed within 24–48 hours. Minimum withdrawal amount is $10.
+                  Withdrawals are processed automatically. Minimum withdrawal amount is $10.
                 </p>
               </div>
             </div>

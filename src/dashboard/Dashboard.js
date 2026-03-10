@@ -577,18 +577,39 @@ const Dashboard = () => {
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4 flex items-center gap-2">
-              <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
-                  style={{
-                    width: `${Number(user_profile?.tr03_inc_wallet || 0) > 0 ? "100" : "0"}%`
-                  }}
-                ></div>
+            <div className="mt-4 space-y-2">
+              {/* Progress Bar */}
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
+                    style={{
+                      width: `${Math.min(
+                        (Number(user_profile?.tr03_total_income || 0) / (2 * Number(user_profile?.tr03_topup_wallet || 1))) * 100,
+                        100
+                      )}%`
+                    }}
+                  ></div>
+                </div>
+                <span className="text-xs text-yellow-400 font-semibold">
+                  {Math.min(
+                    Math.floor((Number(user_profile?.tr03_total_income || 0) / (2 * Number(user_profile?.tr03_topup_wallet || 1))) * 100),
+                    100
+                  )}%
+                </span>
               </div>
-              <span className="text-xs text-yellow-400 font-semibold">
-                {Number(user_profile?.tr03_inc_wallet || 0) > 0 ? "100%" : "0%"}
-              </span>
+
+              {/* Caption */}
+              <p className="text-[11px] text-gray-500 italic tracking-wide text-center">
+                ⚡ Capping calculated at{" "}
+                <span className="text-yellow-400/80 font-semibold not-italic">
+                  2× Topup Wallet
+                </span>{" "}
+                — Max:{" "}
+                <span className="text-yellow-400/80 font-semibold not-italic">
+                  ${Number(user_profile?.tr03_topup_wallet || 0) * 2}
+                </span>
+              </p>
             </div>
           </div>
 
