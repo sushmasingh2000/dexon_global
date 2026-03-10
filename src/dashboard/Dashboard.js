@@ -393,7 +393,7 @@ const Dashboard = () => {
                 {/* Label */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
-                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Topup Wallet</p>
+                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Capital Wallet</p>
                 </div>
 
                 {/* Value */}
@@ -433,6 +433,54 @@ const Dashboard = () => {
                 Topup/Re-Topup Your Account to continue earning profit &amp; Rewards
               </p>
             </div>
+          </div>
+          {/* Compounding */}
+          <div className="relative z-10 mb-5">
+            <div className="flex items-start justify-between">
+              <div>
+                {/* Label */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Growth Wallet</p>
+                </div>
+
+                {/* Value */}
+                <h2 className="text-3xl font-bold mb-1">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">
+                    {getFloatingValue(user_profile?.tr03_compound_wallet)}USD
+                  </span>
+                </h2>
+
+                {/* Tether icon row */}
+                <div className="flex items-center gap-2 mt-1">
+                  <div className=" rounded-full  flex items-center justify-center ">
+                    <img src={tether} alt="" className="w-6 h-6" />
+                  </div>
+                  <span className="text-xs text-gray-500 font-medium">Active Auto Compound</span>
+                </div>
+              </div>
+
+              {/* Deposit Button with icon glow area */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-xl animate-pulse"></div>
+                <button
+                  // onClick={() => navigate("/fund-transfer-to-topup-wallet")}
+                  className="relative bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-400 hover:to-cyan-300 text-white font-semibold text-sm px-5 py-2 rounded-full shadow-lg shadow-blue-500/40 transition-all duration-300 hover:scale-105 hover:shadow-blue-400/60 group/btn overflow-hidden"
+                >
+                  <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-500"></div>
+                  </div>
+                  {/* <span className="relative z-10">Topup</span> */}
+                </button>
+              </div>
+            </div>
+
+            {/* Notice text */}
+            {/* <div className="mt-4 bg-blue-950/30 rounded-lg py-2 px-3 border border-blue-400/10">
+              <p className="text-blue-400/70 text-xs text-center italic">
+                Topup/Re-Topup Your Account to continue earning profit &amp; Rewards
+              </p>
+            </div> */}
           </div>
 
           {/* Divider */}
@@ -784,7 +832,7 @@ const Dashboard = () => {
           navigate={navigate}
         />
         <Card
-          title="Referral Bonus"
+          title="Sponsor Income"
           value={`$${getFloatingValue(dashboard?.referral_income)}`}
           color="red"
           path="/income/direct"
@@ -794,35 +842,35 @@ const Dashboard = () => {
         {/* <Card title="Profit Ratio" value="$ 0" color="yellow" /> */}
 
         <Card
-          title="Community Level Bonus"
+          title="Community Level Income"
           value={`$${getFloatingValue(dashboard?.level_bonus || 0)}`}
           color="cyan"
           path="/income/level"
           navigate={navigate}
         />
         <Card
-          title="ROI Bonus"
+          title="Trading Income"
           value={`$${getFloatingValue(dashboard?.roi_bonus || 0)}`}
           color="cyan"
           path="/income/roi"
           navigate={navigate}
         />
         <Card
-          title="Reward Bonus"
+          title="Dexon Global Reward Pool"
           value={`$${getFloatingValue(dashboard?.reward_bonus || 0)}`}
           color="red"
           path="/income/reward"
           navigate={navigate}
         />
         {/* <Card
-          title="Salary Bonus"
+          title="Salary Income"
           value={`$${getFloatingValue(dashboard?.salary_bonus || 0)}`}
           color="green"
           path="/income/salary"
           navigate={navigate}
         /> */}
         <Card
-          title="Total Income"
+          title="Total Earning"
           value={`$${getFloatingValue(dashboard?.total_income || 0)}`}
           color="yellow"
           path=""

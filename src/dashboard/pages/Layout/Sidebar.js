@@ -31,11 +31,23 @@ const menu = [
     submenu: [
       { title: "Fund Deposit", icon: <DashboardIcon />, path: "/topup_data" },
       { title: "Deposit History", icon: <PhotoAlbumIcon />, path: "/activation" },
-      { title: "Claim Deposit", icon: <DashboardIcon />, path: "/claim_topup" },
+      // { title: "Claim Deposit", icon: <DashboardIcon />, path: "/claim_topup" },
       { title: "Fund Transfer", icon: <DashboardIcon />, path: "/fund-transfer-to-topup-wallet" },
       { title: "Transfer History", icon: <BarChartIcon />, path: "/fund-transfer-history" },
       { title: "Topup History", icon: <BarChartIcon />, path: "/topup_history" },
 
+    ]
+  },
+  {
+    title: "Compounding",
+    icon: <CurrencyExchangeIcon />,
+    submenu: [
+      { title: "Auto Compounding", icon: <CurrencyExchangeIcon />, path: "/auto-compounding-history" },
+      // { title: "Sponsor Income", icon: <SignalCellularAltIcon />, path: "/income/direct" },
+      // { title: "Community Level Income", icon: <CurrencyExchangeIcon />, path: "/income/level" },
+      // { title: "Leadership Rank Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
+
+      // { title: "Dexon Global Reward Pool", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
     ]
   },
   {

@@ -1,6 +1,6 @@
 // export const localdomain = "http://192.168.18.101:9010";
-// export const domain = "http://192.168.18.214:9010";
-export const domain = "https://dexon.global";
+export const domain = "http://192.168.18.214:9010";
+// export const domain = "https://dexon.global";
 export const frontend = "https://dexon.global";
 
 // const isProduction = process.env.NODE_ENV === "production";
@@ -49,14 +49,15 @@ export const endpoint = {
   get_admin_dashboard: `${domain}/api/v9/get-admin-dashboard`,
   get_member_global_live_transaction_activity: `${domain}/api/v9/get-member-global-live-transaction-activity`,
   get_package_details: `${domain}/api/v9/get-package-details`,
+  paying_dummy_api: `${domain}/api/v9/user-payin-dummy`,
+  paying_api: `${domain}/api/v9/user-payin-req`,
+
   //////////////////////////////////////////////////
 
   update_popup_status: `${domain}/api/v9/udpate-popup-status`,
 
   general_contact_address_api: `${domain}/api/v9/get-api-general-data`,
-  paying_dummy_api: `${domain}/api/v9/activation-dummy-request`,
   team_topup_data: `${domain}/api/v9/get-team-topup-details`,
-  paying_api: `${domain}/api/v9/activation-request`,
   roi_income_api: `${domain}/api/v9/get-roi-income-details`,
   admin_roi_income_api: `${domain}/api/v9/admin-income-report`,
   admin_fund_memeber: `${domain}/api/v9/admin-fund-member-topup`,

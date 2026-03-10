@@ -18,7 +18,6 @@ import Payout from "../dashboard/pages/Payout";
 import Profile from "../dashboard/pages/Profile";
 import TeamActivation from "../dashboard/pages/TeamActivation";
 import Team from "../dashboard/pages/TeamTree/Team";
-import TopupWithContWithoutPull from "../dashboard/pages/Topup/TopupWithContWithoutPull";
 import Wallet from "../dashboard/pages/Wallet";
 import FundTransferToToupWallet from "../dashboard/pages/Topup/FundTransferToToupWallet";
 import FundTransferHistory from "../dashboard/pages/FundTransferHistory";
@@ -27,6 +26,9 @@ import PayoutReport from "../dashboard/pages/PayoutReport";
 import GlobalDepositHistory from "../dashboard/pages/globalhistory/GlobalDepositHistory";
 import GlobalWithdrawalHistory from "../dashboard/pages/globalhistory/GlobalWithdrawalHistory";
 import GlobalDashboard from "../dashboard/pages/globalhistory/GlobalDashboard";
+import AutoCompounding from "../dashboard/pages/income/AutoCompounding";
+import TopupByRandomQR from "../dashboard/pages/Topup/TopupByRandomQR";
+import TopupUpWithoutPull from "../dashboard/pages/Topup/TopupUpWithoutPull";
 
 export const routes = [
   {
@@ -57,22 +59,22 @@ export const routes = [
   //   path: '/topup_data',
   //   element: ( <MainLayout><ActivationWithFSTAndPull /> </MainLayout>),
   // },
-  // {
-  //   path: "/topup_data",
-  //   element: (
-  //     <MainLayout>
-  //       <TopupUpWithoutPull />{" "}
-  //     </MainLayout>
-  //   ),
-  // },
   {
     path: "/topup_data",
     element: (
       <MainLayout>
-        <TopupWithContWithoutPull />{" "}
+        <TopupUpWithoutPull />{" "}
       </MainLayout>
     ),
   },
+  // {
+  //   path: "/topup_data",
+  //   element: (
+  //     <MainLayout>
+  //       <TopupByRandomQR />{" "}
+  //     </MainLayout>
+  //   ),
+  // },
   {
     path: "/topup_history",
     element: (
@@ -254,6 +256,14 @@ export const routes = [
     element: (
       <MainLayout>
         <GlobalDashboard />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/auto-compounding-history",
+    element: (
+      <MainLayout>
+        <AutoCompounding />{" "}
       </MainLayout>
     ),
   },

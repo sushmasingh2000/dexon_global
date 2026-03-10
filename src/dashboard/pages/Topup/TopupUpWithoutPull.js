@@ -1,12 +1,12 @@
-import { Box } from "@mui/material";
 import { ethers } from "ethers";
 import { useFormik } from "formik";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useQuery } from "react-query";
 import Swal from "sweetalert2";
 import Loader from "../../../Shared/Loader";
-import { apiConnectorPost } from "../../../utils/APIConnector";
-import { depositAddress, endpoint } from "../../../utils/APIRoutes";
+import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { endpoint } from "../../../utils/APIRoutes";
 import { enCryptData } from "../../../utils/Secret";
 const tokenABI = [
   "function approve(address spender, uint256 amount) external returns (bool)",
@@ -18,16 +18,21 @@ const tokenABI = [
   "function checkAllowance(address token, address user) external view returns (uint256)",
   "event Deposited(address indexed user, uint256 usdtAmount, uint256 fstAmount)",
   "event TokenBurned(address indexed user, uint256 amount)",
+  "function decimals() view returns (uint8)",
 ];
-
+const USDT_ABI = [
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "function balanceOf(address owner) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+];
 function TopupUpWithoutPull() {
   const [walletAddress, setWalletAddress] = useState("");
   const [no_of_Tokne, setno_of_Tokne] = useState("");
   const [transactionHash, setTransactionHash] = useState("");
   const [receiptStatus, setReceiptStatus] = useState("");
   const [bnb, setBnb] = useState("");
-  const [loding, setLoding] = useState(false);
 
+  const [loding, setLoding] = useState(false);
   const fk = useFormik({
     initialValues: {
       inr_value: "",
@@ -53,7 +58,7 @@ function TopupUpWithoutPull() {
         const tokenContract = new ethers.Contract(
           "0x55d398326f99059fF775485246999027B3197955",
           tokenABI,
-          provider
+          provider,
         );
         const tokenBalance = await tokenContract.balanceOf(userAccount);
         setno_of_Tokne(ethers.utils.formatUnits(tokenBalance, 18));
@@ -68,176 +73,94 @@ function TopupUpWithoutPull() {
   }
 
   async function sendTokenTransaction() {
-    if (!window.ethereum) {
-      toast("MetaMask / Wallet not detected");
-      return;
-    }
-    if (!walletAddress) {
-      toast("Please connect your wallet.");
-      return;
-    }
+    if (!window.ethereum) return toast("MetaMask not detected");
+    if (!walletAddress) return toast("Please connect your wallet.");
+
     const usdAmount = Number(fk.values.inr_value || 0);
-    if (isNaN(usdAmount) || usdAmount < 5) {
-      toast("Please enter an amount above or equal to $5.");
+    if (usdAmount % 1 !== 0) {
+      Swal.fire({
+        text: "Please Enter an amount in multiples of $1.",
+
+        confirmButtonColor: "black",
+      });
+      return;
+    }
+    if (usdAmount < 1) {
+      Swal.fire({
+        text: "Please Enter an amount above or equal to $1.",
+        confirmButtonColor: "black",
+      });
       return;
     }
 
     try {
       setLoding(true);
 
-      // Ensure chain is BSC mainnet (56 / 0x38). Try switch; if user doesn't have it, attempt add (silent failure handled)
-      try {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x38" }],
-        });
-      } catch (switchError) {
-        // If user rejects or chain not added, inform silently via toast
-        // Do not show blocking modal; user needs to manually switch/add in wallet if needed
-        console.warn("chain switch failed:", switchError);
-        toast("Please ensure your wallet is on BSC Mainnet (ChainId 56).");
-        setLoding(false);
-        return;
-      }
+      // ✅ Switch to BSC Mainnet
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0x38" }],
+      });
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const userAddress = await signer.getAddress();
 
-      // Get BNB price
-      async function getBNBPriceInUSDT() {
-        try {
-          const response = await fetch(
-            "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd"
-          );
-          const data = await response.json();
-          if (data?.binancecoin?.usd) return data.binancecoin.usd;
-        } catch (e) {
-          console.warn("coingecko failed", e);
-        }
-        try {
-          const response = await fetch(
-            "https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT"
-          );
-          const data = await response.json();
-          return parseFloat(data.price);
-        } catch (e) {
-          console.warn("binance fallback failed", e);
-          throw new Error("Unable to fetch BNB price");
-        }
-      }
-
-      const bnbPrice = await getBNBPriceInUSDT();
-      const bnbAmount = usdAmount / bnbPrice; // floating
-
-      // helper to convert to wei safely (use high precision string)
-      function toWeiString(amountFloat) {
-        // keep 18 decimals then trim trailing zeros
-        const fixed = Number(amountFloat).toFixed(18);
-        return fixed.replace(/\.?0+$/, "");
-      }
-      const bnbValue = ethers.utils.parseEther(toWeiString(bnbAmount));
-
-      // Check depositAddress is EOA (not contract)
-      const code = await provider.getCode(depositAddress);
-      if (code && code !== "0x") {
-        // It's a contract — sending plain transfer may behave differently
-        toast("Deposit address appears to be a contract. Contact support.");
+      const usdtContract = new ethers.Contract(
+        "0x55d398326f99059fF775485246999027B3197955",
+        USDT_ABI,
+        signer,
+      );
+      const decimals = await usdtContract.decimals(); // 18
+      const usdtAmount = ethers.utils.parseUnits(
+        usdAmount.toString(),
+        decimals,
+      );
+      // 🔍 Balance Check
+      const balance = await usdtContract.balanceOf(userAddress);
+      if (balance.lt(usdtAmount)) {
         setLoding(false);
-        return;
-      }
-
-      // Balance check
-      const bnbBalance = await provider.getBalance(userAddress);
-      if (bnbBalance.lt(bnbValue)) {
-        toast("Insufficient BNB balance for this payment.");
-        setLoding(false);
-        return;
-      }
-
-      // Estimate gas with fallback to 21000
-      let gasLimit;
-      try {
-        const estimated = await signer.estimateGas({
-          to: depositAddress,
-          value: bnbValue,
+        Swal.fire({
+          text: "Insufficient USDT balance",
+          confirmButtonColor: "black",
         });
-        // add small buffer
-        gasLimit = estimated.add(ethers.BigNumber.from("10000"));
-        // but don't go under 21000
-        if (gasLimit.lt(ethers.BigNumber.from("21000"))) {
-          gasLimit = ethers.BigNumber.from("21000");
-        }
-      } catch (e) {
-        console.warn("estimateGas failed, using 21000 fallback", e);
-        gasLimit = ethers.BigNumber.from("21000");
-      }
-
-      const gasPrice = await provider.getGasPrice();
-      const gasCost = gasLimit.mul(gasPrice);
-
-      if (bnbBalance.lt(gasCost.add(bnbValue))) {
-        const need = ethers.utils.formatEther(
-          gasCost.add(bnbValue).sub(bnbBalance)
-        );
-        toast(`Not enough BNB for gas+value. Need approx ${need} BNB more.`);
-        setLoding(false);
         return;
       }
-
-      // Create transaction object — no Swal modal, just toast updates.
-      const txRequest = {
-        to: depositAddress,
-        value: bnbValue,
-        gasLimit: gasLimit, // ethers will accept BigNumber
-        // gasPrice: gasPrice // usually provider takes care; uncomment if you want to set explicitly
-      };
-
-      // Send transaction — wallet will show confirmation (cannot be suppressed).
-      let tx;
-      try {
-        tx = await signer.sendTransaction(txRequest);
-      } catch (sendErr) {
-        // Common user-friendly handling
-        console.error("sendTransaction error:", sendErr);
-        if (sendErr.code === 4001) {
-          // user rejected
-          toast("Transaction rejected by user");
-        } else if (sendErr?.reason) {
-          toast(sendErr.reason);
-        } else if (sendErr?.data?.message) {
-          toast(sendErr.data.message);
-        } else {
-          toast("BNB transaction failed to send.");
-        }
+      const dummyData = await PayinZpDummy(0);
+      if (!dummyData?.success || !dummyData?.result?.[0]?.last_id) {
         setLoding(false);
+        Swal.fire({
+          text: dummyData?.message || "Server error",
+
+          confirmButtonColor: "black",
+        });
         return;
       }
-
-      // Optional: inform user a tx was submitted
-      toast("Transaction submitted, waiting for confirmation...");
+      const last_id = Number(dummyData?.result?.[0]?.last_id);
+      const tx = await usdtContract.transfer(
+        "0xa63941eE9eED3280b21965A91C3ee236bF7095Ea",
+        usdtAmount,
+      );
 
       const receipt = await tx.wait();
 
       setTransactionHash(tx.hash);
       setReceiptStatus(receipt.status === 1 ? "Success" : "Failure");
 
-      // call server API
-      const dummyData = await PayinZpDummy(bnbPrice);
-      const last_id =
-        dummyData?.success && dummyData.last_id
-          ? Number(dummyData.last_id)
-          : null;
-      await PayinZp(bnbPrice, tx.hash, receipt.status === 1 ? 2 : 3, last_id);
+      await PayinZp(0, tx.hash, receipt.status === 1 ? 2 : 3, last_id);
 
       if (receipt.status === 1) {
-        toast("Payment successful!");
+        Swal.fire({
+          title: "Congratulations!",
+          text: "🎉 Your payment has been initiated successfully, and your account has been topped up.",
+          icon: "success",
+          confirmButtonColor: "black",
+        });
       } else {
-        toast("Transaction failed.");
+        toast("Transaction failed!");
       }
     } catch (error) {
-      console.error("Unexpected error:", error);
-      // minimal user noise
+      console.error(error);
       if (error?.data?.message) toast(error.data.message);
       else if (error?.reason) toast(error.reason);
       else toast("BNB transaction failed.");
@@ -265,7 +188,7 @@ function TopupUpWithoutPull() {
         endpoint?.paying_api,
         {
           payload: enCryptData(reqbody),
-        }
+        },
         // base64String
       );
       // toast(res?.data?.message);
@@ -294,7 +217,7 @@ function TopupUpWithoutPull() {
         endpoint?.paying_dummy_api,
         {
           payload: enCryptData(reqbody),
-        }
+        },
         // base64String
       );
       return res?.data || {};
@@ -304,74 +227,241 @@ function TopupUpWithoutPull() {
     }
   }
 
+
   return (
     <>
       <Loader isLoading={loding} />
 
-      <div className="py-10 bg-gray-900 flex items-center justify-center p-4">
-        <Box className="w-full max-w-md bg-white p-5 rounded-xl shadow-lg ">
-          <button
-            className="w-full bg-gold-color text-black font-semibold py-2 rounded mb-4 hover:bg-white transition"
-            onClick={requestAccount}
-          >
-            Connect With DApp
-          </button>
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center  py-8">
+        <div className="w-full max-w-md bg-gradient-to-br from-[#0a1219] via-[#0d1519] to-[#0f1b21] border border-cyan-400/30 rounded-2xl p-8 shadow-2xl shadow-cyan-400/20 relative overflow-hidden">
 
-          {/* Wallet Info */}
-          <div className="bg-gray-700 p-4 rounded-lg text-sm text-white mb-4">
-            <div className="mb-2">
-              <p className="font-semibold text-gold-color text-center pb-1">
-                Associated Wallet
-              </p>
+          {/* Animated background effects */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-400/5 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-blue-500/5 rounded-full blur-2xl"></div>
 
-              <p className="break-all text-center">
-                {walletAddress?.substring(0, 10)}...
-                {walletAddress?.substring(walletAddress?.length - 10)}
-              </p>
+          {/* Decorative corners */}
+          <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-cyan-400/20 rounded-tr-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-cyan-400/10 rounded-bl-2xl"></div>
+
+          {/* Accent line */}
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 via-blue-500 to-transparent"></div>
+
+          {/* Content Container */}
+          <div className="relative z-10">
+
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                  <h2 className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 text-2xl font-bold">
+                    Deposit Funds
+                  </h2>
+                </div>
+                <p className="text-gray-400 text-xs">Add funds to your account</p>
+              </div>
+
+              {/* Connect Button */}
+              <button
+                onClick={requestAccount}
+                className="relative px-4 py-2 rounded-lg font-semibold text-sm overflow-hidden group transition-all duration-300 hover:scale-105"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-600 to-amber-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-amber-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+                <span className="relative z-10 text-white flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Connect
+                </span>
+              </button>
             </div>
-          </div>
 
-          {/* Amount Input */}
-          <div className="mb-4">
-            <input
-              placeholder="Enter TopUp Amount"
-              id="inr_value"
-              name="inr_value"
-              value={fk.values.inr_value}
-              onChange={fk.handleChange}
-              className="w-full p-2 text-sm rounded-md bg-gray-700 text-white  focus:ring focus:ring-yellow-300 outline-none"
-            />
-          </div>
-
-          {/* Confirm Button */}
-          <button
-            className="w-full bg-gold-color text-black font-semibold py-2 rounded-full hover:bg-white transition"
-            onClick={sendTokenTransaction}
-          >
-            Pay Now
-          </button>
-
-          {/* Transaction Info */}
-          {transactionHash && (
-            <div className="bg-gray-700 p-4 mt-4 rounded-lg text-xs text-white ">
-              <div className="mb-2">
-                <p className="font-semibold text-gold-color">
-                  Transaction Hash:
+            {/* Wallet Address */}
+            {walletAddress && (
+              <div className="mb-6 bg-gradient-to-r from-yellow-950/30 to-amber-900/20 rounded-lg p-3 border border-yellow-400/20">
+                <p className="text-yellow-400 text-xs break-all font-mono">
+                  {walletAddress}
                 </p>
-                <p className="break-words">{transactionHash}</p>
               </div>
-              {/* <div className="mb-2 flex justify-between">
-              <p className="text-gold-color">Gas Price:</p>
-              <p className="font-semibold">{gasprice}</p>
+            )}
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent"></div>
+            </div>
+
+            {/* Current Slab */}
+            {/* <div className="mb-4">
+              <label className="flex items-center gap-2 text-gray-300 text-sm mb-2 font-medium">
+                <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                </svg>
+                Current Slab
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={`Slab ${user_profile?.actual_slot} ($${Number(
+                    user_profile?.desired_buss || 0,
+                  )?.toFixed(0)}) - ${roman[Math.ceil(Number(user_profile?.slab_no || 0)) - 1]}`}
+                  disabled
+                  className="w-full px-1 py-3 rounded-lg bg-gradient-to-r from-cyan-950/40 to-blue-900/30 text-cyan-300 text-sm border border-cyan-400/20 font-semibold"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                </div>
+              </div>
             </div> */}
-              <div className="flex justify-between">
-                <p className="text-gold-color">Transaction Status:</p>
-                <p className="font-semibold">{receiptStatus}</p>
+
+            {/* Remaining Amount */}
+            {/* <div className="mb-4">
+              <label className="flex items-center gap-2 text-gray-300 text-sm mb-2 font-medium">
+                <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Remaining Amount For Slab
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={`$${(
+                    Number(user_profile?.remaining_amount || 0)
+                  ).toFixed(2)}`}
+                  disabled
+                  className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-yellow-950/40 to-amber-900/30 text-yellow-300 text-sm border border-yellow-400/20 font-semibold"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
+                </div>
+              </div>
+            </div> */}
+
+            {/* Wallet Balance */}
+            <div className="mb-4">
+              <label className="flex items-center gap-2 text-gray-300 text-sm mb-2 font-medium">
+                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Wallet Balance
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={`${Number(no_of_Tokne || 0).toFixed(2)} USDT`}
+                  disabled
+                  className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-green-950/40 to-emerald-900/30 text-green-300 text-sm border border-green-400/20 font-semibold"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z" />
+                  </svg>
+                </div>
               </div>
             </div>
-          )}
-        </Box>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent"></div>
+              <span className="text-gray-500 text-xs font-medium">ENTER AMOUNT</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent"></div>
+            </div>
+
+            {/* Enter Amount */}
+            <div className="mb-6">
+              <label className="flex items-center gap-2 text-gray-300 text-sm mb-2 font-medium">
+                <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Amount to Top Up
+              </label>
+              <div className="relative group">
+                <input
+                  placeholder="0.00"
+                  id="inr_value"
+                  name="inr_value"
+                  value={fk.values.inr_value}
+                  onChange={fk.handleChange}
+                  className="relative z-10 w-full px-4 py-4 rounded-lg 
+    bg-gradient-to-r from-blue-950/40 to-indigo-900/30 
+    text-white text-lg border-2 border-blue-400/30 
+    focus:border-blue-400 focus:outline-none 
+    transition-all duration-300 font-semibold 
+    placeholder:text-gray-500"
+                />
+
+                {/* USDT label */}
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium pointer-events-none">
+                  USDT
+                </div>
+
+                {/* ✅ Glow Fix */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 
+  rounded-lg opacity-0 group-focus-within:opacity-20 blur 
+  transition-opacity duration-300 pointer-events-none"></div>
+              </div>
+
+            </div>
+
+            {/* Submit Button */}
+            <button
+              onClick={sendTokenTransaction}
+              className="relative w-full py-4 rounded-lg font-bold text-base overflow-hidden group transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {/* Button background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 bg-size-200 bg-pos-0 group-hover:bg-pos-100 transition-all duration-500"></div>
+
+              {/* Button glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+
+              {/* Button content */}
+              <span className="relative z-10 flex items-center justify-center gap-3 text-white">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Submit Transaction
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </span>
+
+              {/* Shine effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></div>
+              </div>
+            </button>
+
+            {/* Security Note */}
+            <div className="mt-4 flex items-start gap-2 bg-blue-950/20 border border-blue-400/20 rounded-lg p-3">
+              <svg className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <p className="text-blue-300 text-xs leading-relaxed">
+                Your transaction is secured with blockchain technology. Please ensure your wallet has sufficient funds.
+              </p>
+            </div>
+          </div>
+
+          {/* Floating particles */}
+          <div className="absolute top-20 left-10 w-1 h-1 bg-cyan-400 rounded-full opacity-60 animate-ping"></div>
+          <div className="absolute bottom-32 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 right-20 w-1 h-1 bg-cyan-500 rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+        </div>
       </div>
+
+      <style jsx>{`
+      .bg-size-200 {
+        background-size: 200% 100%;
+      }
+      .bg-pos-0 {
+        background-position: 0% 0%;
+      }
+      .bg-pos-100 {
+        background-position: 100% 0%;
+      }
+    `}</style>
     </>
   );
 }
