@@ -73,13 +73,10 @@ const DappLogin = () => {
       wallet_address: String(walletAddress),
     };
     // const reqBodyy = {
-    //   mobile: String("9876543210"),
-    //   email: String("9876543210"),
-    //   full_name: String(datatele?.username||"N/A"),
-    //   referral_id: String("9876543210"),
-    //   username: String("9876543210"),
-    //   password: String("9876543210"),
+    //   lgn_type: 2,
+    //   wallet_address: String("0x39c1ac253c8e680299dc08e96a85cf6dd3c56ed3"),
     // };
+
 
     try {
       const response = await axios.post(endpoint?.member_dapp_log_reg, reqBodyy, {
