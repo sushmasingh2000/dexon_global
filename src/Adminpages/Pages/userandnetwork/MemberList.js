@@ -141,6 +141,7 @@ const MemberList = () => {
     <span>Spon Name</span>,
     <span>Wallet Address</span>,
     <span>Topup Wallet</span>,
+    <span>Rank</span>,
     <span>Registration Date</span>,
     <span>Total Income</span>,
     <span>Current Balance</span>,
@@ -185,7 +186,7 @@ const MemberList = () => {
         </button>
       </span>,
       <span> {getFloatingValue(row.tr03_topup_wallet)}</span>,
-      <span> {formatedDate(moment, row.tr03_reg_date)}</span>,
+      <span> {row.tr03_rank >0 ? "V"+row.tr03_rank : "--"}</span>,
       <span> {getFloatingValue(row.tr03_total_income)}</span>,
       <span> {getFloatingValue(row.tr03_inc_wallet)}</span>,
       <span> {getFloatingValue(row.tr03_fund_wallet)}</span>,
