@@ -23,22 +23,34 @@ const Reward = () => {
     enableReinitialize: true,
 
   })
-  const { isLoading, data } = useQuery(
-    ["reward_income_api", page],
+  const { data, isLoading } = useQuery(
+    [
+      "get_reward_details",
+      fk.values.search,
+      fk.values.start_date,
+      fk.values.end_date,
+      page,
+    ],
     () =>
-      apiConnectorGet(
-        `        ${endpoint?.roi_income_api}?income_type=REWARD&page=${page}`
-      ),
+      apiConnectorPost(endpoint?.get_report_details, {
+        search: fk.values.search,
+        created_at: fk.values.start_date,
+        updated_at: fk.values.end_date,
+        page: page,
+        count: "10",
+        sub_label: "REWARD",
+        main_label: "IN"
+      }),
     {
+      keepPreviousData: true,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      retry: false,
-      retryOnMount: false,
       refetchOnWindowFocus: false,
+      onError: (err) => console.error("Error fetching ROI data:", err),
     }
   );
 
-  const allData = data?.data?.data || [];
+  const allData = data?.data?.result || [];
 
   const tablehead = [
     <span>S.No.</span>,

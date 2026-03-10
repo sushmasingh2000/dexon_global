@@ -376,6 +376,7 @@ const Profile = () => {
                 <InfoRow label="Name" value={user_profile?.lgn_name || "—"} color="yellow" />
                 <InfoRow label="Email" value={user_profile?.lgn_email || "—"} color="yellow" />
                 <InfoRow label="Mobile" value={user_profile?.lgn_mobile || "—"} color="green" />
+                <InfoRow label="Current Rank" value={user_profile?.tr03_rank > 0 ? 'V'+user_profile?.tr03_rank : "—"} color="green" />
                 <InfoRow label="Customer ID" value={user_profile?.tr03_cust_id || "—"} />
                 <InfoRow label="Sponsor ID" value={user_profile?.spon_id || "—"} />
                 <InfoRow label="Wallet Address" value={user_profile?.lgn_wallet_add || "—"} />
