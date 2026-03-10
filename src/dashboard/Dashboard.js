@@ -18,6 +18,7 @@ import { endpoint, frontend } from "../utils/APIRoutes";
 import { getFloatingValue } from "../utils/utilityFun";
 import tether from "../images/tether.png";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
   const colors = {
@@ -788,6 +789,13 @@ const Dashboard = () => {
               </div>
               <span className="text-green-500 font-bold text-sm">{getFloatingValue(dashboardBusiness?.team_business)}</span>
             </div>
+            <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
+              <div className="flex items-center gap-2 text-[#FFD700]" >
+                <EmojiEventsIcon />
+                <span className="text-gray-300 text-sm font-medium">Current Rank</span>
+              </div>
+              <span className="text-green-500 font-bold text-sm">{user_profile?.tr03_rank > 0 ? 'V'+user_profile?.tr03_rank : "—"}</span>
+            </div>
 
             {/* TopUp Amount */}
             {/* <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
@@ -846,10 +854,17 @@ const Dashboard = () => {
       {/* ===== GRID ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4">
         <Card
-          title="Current Wallet"
+          title="Earning Wallet"
           value={`$${getFloatingValue(user_profile?.tr03_inc_wallet)}`}
           color="cyan"
           path=""
+          navigate={navigate}
+        />
+        <Card
+          title="Trading Income"
+          value={`$${getFloatingValue(dashboard?.roi_bonus || 0)}`}
+          color="cyan"
+          path="/income/roi"
           navigate={navigate}
         />
         <Card
@@ -870,12 +885,13 @@ const Dashboard = () => {
           navigate={navigate}
         />
         <Card
-          title="Trading Income"
-          value={`$${getFloatingValue(dashboard?.roi_bonus || 0)}`}
-          color="cyan"
-          path="/income/roi"
+          title="Leadership Rank Bonus"
+          value={`$${getFloatingValue(dashboard?.salary_bonus || 0)}`}
+          color="red"
+          path="/income/salary"
           navigate={navigate}
         />
+        
         <Card
           title="Dexon Global Reward Pool"
           value={`$${getFloatingValue(dashboard?.reward_bonus || 0)}`}
