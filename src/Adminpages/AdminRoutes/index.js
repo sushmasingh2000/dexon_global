@@ -15,6 +15,8 @@ import TeamAndMembers from "../Pages/userandnetwork/TeamAndMembers";
 import NewsAndUpdated from "../Pages/newsupdates/NewsAndUpdated";
 import TradePair from "../Pages/tradePair/TradePair";
 import UpdateROICond from "../Pages/income/UpdateROICond";
+import RankBonus from "../Pages/income/RankBonus";
+import RewardBonus from "../Pages/income/RewardBonus";
 
 export const adminroutes = [
   {
@@ -114,6 +116,18 @@ export const adminroutes = [
     path: "/update-trade-profit",
     component: <UpdateROICond />,
     navItem: "Update Trade Profit",
+  },
+  {
+    id: 50,
+    path: "/leadershipRankBonus",
+    component: <RankBonus />,
+    navItem: "Leadership Rank Bonus",
+  },
+  {
+    id: 51,
+    path: "/rewardBonus",
+    component: <RewardBonus />,
+    navItem: "Dexon Global Reward Pool",
   },
 
 ];

@@ -65,6 +65,26 @@ export const all_Data = [
           </span>
         ),
       },
+      {
+        id: 6.3,
+        navLink: "/leadershipRankBonus",
+        navItem: "Leadership Rank Bonus",
+        navIcon: (
+          <span>
+            <StackedLineChartIcon sx={{ color: "#749df5" }} fontSize="medium" />
+          </span>
+        ),
+      },
+      {
+        id: 6.3,
+        navLink: "/rewardBonus",
+        navItem: "Dexon Global Reward Pool",
+        navIcon: (
+          <span>
+            <StackedLineChartIcon sx={{ color: "#749df5" }} fontSize="medium" />
+          </span>
+        ),
+      },
 
     ],
   },

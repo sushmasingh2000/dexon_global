@@ -1,6 +1,6 @@
 // export const localdomain = "http://192.168.18.101:9010";
-export const domain = "http://192.168.18.214:9010";
-// export const domain = "https://dexon.global";
+// export const domain = "http://192.168.18.214:9010";
+export const domain = "https://dexon.global";
 export const frontend = "https://dexon.global";
 
 // const isProduction = process.env.NODE_ENV === "production";
