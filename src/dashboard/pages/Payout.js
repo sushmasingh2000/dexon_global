@@ -287,7 +287,7 @@ function Payout() {
               <div>
                 <p className="text-amber-300 text-xs font-semibold mb-1">Important Notice</p>
                 <p className="text-amber-400/80 text-xs leading-relaxed">
-                  Withdrawals are processed automatically. Minimum withdrawal amount is $10.
+                  Withdrawals are processed automatically. Minimum withdrawal amount is $1.
                 </p>
               </div>
             </div>

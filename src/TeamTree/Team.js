@@ -211,7 +211,7 @@ const Team = () => {
               {selectedNode?.topup_date == 0 ? '- -' : selectedNode?.topup_date}
             </p>
             <p className="px-4 py-2 text-center text-sm border border-gray-700 font-semibold">
-              Current Wallet
+              Earning Wallet
             </p>
             <p className="px-4 py-2 text-sm text-center border border-gray-700">
               {Number(selectedNode?.curr_wallet).toFixed(2)}

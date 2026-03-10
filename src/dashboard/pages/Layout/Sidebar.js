@@ -19,6 +19,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import logo from "../../../assets/favicon.png";
 import logo1 from "../../../assets/logo.png";
+import { apiConnectorGet } from '../../../utils/APIConnector';
+import { endpoint } from '../../../utils/APIRoutes';
+import { useQuery } from 'react-query';
 const menu = [
   {
     title: "Dashboard",
@@ -38,18 +41,18 @@ const menu = [
 
     ]
   },
-  {
-    title: "Compounding",
-    icon: <CurrencyExchangeIcon />,
-    submenu: [
-      { title: "Auto Compounding", icon: <CurrencyExchangeIcon />, path: "/auto-compounding-history" },
-      // { title: "Sponsor Income", icon: <SignalCellularAltIcon />, path: "/income/direct" },
-      // { title: "Community Level Income", icon: <CurrencyExchangeIcon />, path: "/income/level" },
-      // { title: "Leadership Rank Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
+  // {
+  //   title: "Compounding",
+  //   icon: <CurrencyExchangeIcon />,
+  //   submenu: [
+  //     { title: "Auto Compounding", icon: <CurrencyExchangeIcon />, path: "/auto-compounding-history" },
+  //     // { title: "Sponsor Income", icon: <SignalCellularAltIcon />, path: "/income/direct" },
+  //     // { title: "Community Level Income", icon: <CurrencyExchangeIcon />, path: "/income/level" },
+  //     // { title: "Leadership Rank Bonus", icon: <CurrencyExchangeIcon />, path: "/income/salary" },
 
-      // { title: "Dexon Global Reward Pool", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
-    ]
-  },
+  //     // { title: "Dexon Global Reward Pool", icon: <CurrencyExchangeIcon />, path: "/income/reward" },
+  //   ]
+  // },
   {
     title: "Fund Withdrawal",
     icon: <FaWallet />,
@@ -127,6 +130,16 @@ const Sidebar = () => {
     red: "from-red-400 to-red-600",
     pink: "from-pink-400 to-pink-600",
   };
+  const { data: profile, refetch: refetchProfile } = useQuery(
+    ["get_profile"],
+    () => apiConnectorGet(endpoint?.profile_api),
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+  const user_profile = profile?.data?.result?.[0] || {};
   return (
     <>
       {/* Mobile Header */}
@@ -221,7 +234,7 @@ const Sidebar = () => {
               <PersonIcon className="text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-white font-semibold text-sm">Welcome Back</p>
+             <p className="text-white font-semibold text-sm">{user_profile?.lgn_name || user_profile?.lgn_email  || "NA"}</p>
               <p className="text-cyan-400 text-xs">Premium Member</p>
             </div>
           </div>
