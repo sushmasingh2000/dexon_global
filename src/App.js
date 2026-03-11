@@ -19,6 +19,8 @@ import Main from "./Dexon";
 
 const App = () => {
   const user = localStorage.getItem("logindataen");
+  const admin = localStorage.getItem("logindataen_admin");
+
 
   return (
     <Router>
@@ -37,7 +39,7 @@ const App = () => {
         {/* //admin */}
         <Route path="/adminlogin" element={<LogIn />} />
 
-        {user ? (
+        {admin ? (
           adminroutes.map((route, i) => (
             <Route
               key={i}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorGet, apiConnectorGetAdmin, apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
@@ -44,7 +44,7 @@ const UpdateROICond = () => {
       page,
     ],
     () =>
-      apiConnectorGet(endpoint?.get_package_details, {
+      apiConnectorGetAdmin(endpoint?.get_package_details, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,
@@ -91,7 +91,7 @@ const UpdateROICond = () => {
 
     setEditLoading(true);
     try {
-      const res = await apiConnectorPost(endpoint?.update_trade_profit, {
+      const res = await apiConnectorPostAdmin(endpoint?.update_trade_profit, {
         m05_id: selectedRow?.m05_id,
         m05_profit: profitFrom,
         m05_profit1: profitTo,

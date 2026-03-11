@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorGet, apiConnectorGetAdmin, apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
@@ -37,7 +37,7 @@ const TeamAndMembers = () => {
       page,
     ],
     () =>
-      apiConnectorPost(endpoint?.member_list, {
+      apiConnectorPostAdmin(endpoint?.member_list, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,
@@ -59,7 +59,7 @@ const TeamAndMembers = () => {
   async function showBusiness(userId) {
     setLoading(true);
     try {
-      const { data } = await apiConnectorGet(endpoint?.user_dashboard_business_api, { userId: userId });
+      const { data } = await apiConnectorGetAdmin(endpoint?.user_dashboard_business_api, { userId: userId });
       const directBusines = getFloatingValue(data?.result?.direct_business)
       const TeamBusines = getFloatingValue(data?.result?.team_business)
       Swal.fire({

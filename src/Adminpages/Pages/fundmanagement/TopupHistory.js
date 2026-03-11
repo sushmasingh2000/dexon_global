@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorGet, apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
@@ -32,7 +32,7 @@ const TopupHistory = () => {
       page,
     ],
     () =>
-      apiConnectorPost(endpoint?.get_report_details, {
+      apiConnectorPostAdmin(endpoint?.get_report_details, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,

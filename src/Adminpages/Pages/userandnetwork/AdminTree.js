@@ -5,7 +5,7 @@ import { Menu, MenuItem } from '@mui/material';
 import { useQuery } from 'react-query';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import { endpoint } from '../../../utils/APIRoutes';
-import { apiConnectorGet } from '../../../utils/APIConnector';
+import { apiConnectorGet, apiConnectorGetAdmin } from '../../../utils/APIConnector';
 import moment from 'moment/moment';
 import { useLocation } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ const AdminTree = () => {
 
   const { data } = useQuery(
     ['tree-downline-admin', userId],
-    () => apiConnectorGet(endpoint.get_member_downline_tree, {
+    () => apiConnectorGetAdmin(endpoint.get_member_downline_tree, {
       userId: userId
     }),
     {

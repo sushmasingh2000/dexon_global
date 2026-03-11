@@ -2,7 +2,7 @@ import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorGet, apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { MenuItem, Select } from "@mui/material";
 import CustomToPagination from "../../../Shared/Pagination";
@@ -19,7 +19,7 @@ const DownlineTeam = () => {
   const { isLoading, data: team_data } = useQuery(
     ["get_direct_member", level, userId, page, limit],
     () =>
-      apiConnectorPost(
+      apiConnectorPostAdmin(
         `${endpoint?.team_data_api}`, {
         level_id: level,
         page: page,

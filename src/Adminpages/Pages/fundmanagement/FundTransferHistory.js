@@ -6,7 +6,7 @@ import CustomToPagination from "../../../Shared/Pagination";
 import { useFormik } from "formik";
 import moment from "moment";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
-import { apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 
 const FundTransferHistory = () => {
@@ -32,7 +32,7 @@ const FundTransferHistory = () => {
       page,
     ],
     () =>
-      apiConnectorPost(endpoint?.get_report_details, {
+      apiConnectorPostAdmin(endpoint?.get_report_details, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,

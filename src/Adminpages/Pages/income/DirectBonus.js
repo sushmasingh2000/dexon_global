@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
@@ -33,7 +33,7 @@ const DirectBonus = () => {
       page,
     ],
     () =>
-      apiConnectorPost(endpoint?.get_report_details, {
+      apiConnectorPostAdmin(endpoint?.get_report_details, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,

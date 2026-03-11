@@ -50,6 +50,51 @@ export const apiConnectorPost = async (endpoint, reqBody) => {
   }
 };
 
+export const apiConnectorGetAdmin = async (endpoint, params) => {
+  try {
+    const response = await axios.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("logindataen_admin")}`,
+      },
+      params: params,
+    });
+    if (response?.data?.message === "Invalid Token") {
+      toast("Login in another device ", { id: 1 });
+      localStorage.clear();
+      window.location.href = `${frontend}`;
+      return;
+    }
+    return response;
+  } catch (e) {
+    return {
+      msg: e?.message,
+    };
+  }
+};
+export const apiConnectorPostAdmin = async (endpoint, reqBody) => {
+  try {
+    const response = await axios?.post(
+      endpoint,
+      reqBody,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("logindataen_admin")}`,
+        },
+      }
+    );
+    if (response?.data?.message === "Invalid Token") {
+      toast("Login in another device ", { id: 1 });
+      localStorage.clear();
+      window.location.href = `${frontend}`;
+      return;
+    }
+    return response;
+  } catch (e) {
+    return {
+      msg: e?.message,
+    };
+  }
+};
 export const apiConnectorGetWithoutToken = async (endpoint, params, token) => {
   try {
     const response = await axios?.get(

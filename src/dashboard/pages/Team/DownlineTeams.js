@@ -10,7 +10,7 @@ import { useState } from "react";
 import moment from "moment";
 import { endpoint } from "../../../utils/APIRoutes";
 import CustomTable from "../../../Adminpages/Shared/CustomTable";
-import { apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 const DownlineTeams = () => {
   const [loding, setloding] = useState(false);
   const [data, setData] = useState([]);
@@ -20,7 +20,7 @@ const DownlineTeams = () => {
   const UserBonusFn = async (page) => {
     setloding(true);
     try {
-      const res = await apiConnectorPost(
+      const res = await apiConnectorPostAdmin(
         type === "downline"
           ? endpoint?.get_downline_team
           : endpoint?.get_upline_team,

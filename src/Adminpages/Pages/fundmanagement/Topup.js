@@ -2,7 +2,7 @@ import { Button, CircularProgress, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -52,7 +52,7 @@ const TopUp = () => {
     }
     try {
       setLoding(true)
-      const res = await apiConnectorPost(endpoint?.member_fund_transfer, reqbody);
+      const res = await apiConnectorPostAdmin(endpoint?.member_fund_transfer, reqbody);
       if (res?.data?.success) {
         Swal.fire({
           icon: 'success',

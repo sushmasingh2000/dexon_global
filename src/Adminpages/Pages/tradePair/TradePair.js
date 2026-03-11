@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
-import { endpoint } from "../../../utils/APIRoutes";
-import CustomTable from "../../../Shared/CustomTable";
-import CustomToPagination from "../../../Shared/Pagination";
+import { DeleteForever } from "@mui/icons-material";
+import { Switch } from "@mui/material";
 import { useFormik } from "formik";
 import moment from "moment";
-import { areYouSureFn, formatedDate, getFloatingValue } from "../../../utils/utilityFun";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { Delete, DeleteIcon, Edit } from "lucide-react";
-import { Switch } from "@mui/material";
-import { DeleteForever } from "@mui/icons-material";
+import { useQuery, useQueryClient } from "react-query";
 import Swal from "sweetalert2";
+import CustomTable from "../../../Shared/CustomTable";
+import CustomToPagination from "../../../Shared/Pagination";
+import { apiConnectorPostAdmin } from "../../../utils/APIConnector";
+import { endpoint } from "../../../utils/APIRoutes";
+import { areYouSureFn, formatedDate } from "../../../utils/utilityFun";
 
 const TradePair = () => {
     const [page, setPage] = useState(1);
@@ -37,7 +36,7 @@ const TradePair = () => {
             page,
         ],
         () =>
-            apiConnectorPost(endpoint?.get_trade_api, {
+            apiConnectorPostAdmin(endpoint?.get_trade_api, {
                 search: fk.values.search,
                 created_at: fk.values.start_date,
                 updated_at: fk.values.end_date,
@@ -62,7 +61,7 @@ const TradePair = () => {
         },
         onSubmit: async (values, { resetForm }) => {
             try {
-                const res = await apiConnectorPost(
+                const res = await apiConnectorPostAdmin(
                     endpoint?.create_trade_pair_api,
                     values
                 );
@@ -80,7 +79,7 @@ const TradePair = () => {
 
     const StatusFn = async (id, status) => {
         try {
-            const res = await apiConnectorPost(
+            const res = await apiConnectorPostAdmin(
                 endpoint?.update_trade_pair_api, {
                 id: id,
                 status: status
@@ -97,7 +96,7 @@ const TradePair = () => {
     }
     const DeleteFn = async (id,) => {
         try {
-            const res = await apiConnectorPost(
+            const res = await apiConnectorPostAdmin(
                 endpoint?.delete_trade_pair_api, {
                 id: id,
             }

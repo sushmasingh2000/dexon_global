@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { areYouSureFn, formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
@@ -34,7 +34,7 @@ const PayoutReport = () => {
       page,
     ],
     () =>
-      apiConnectorPost(endpoint?.member_payout_report, {
+      apiConnectorPostAdmin(endpoint?.member_payout_report, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,
@@ -79,7 +79,7 @@ const PayoutReport = () => {
         t_id: row?.tr11_id,
         status_type: action
       }
-      const apiRes = await apiConnectorPost(endpoint?.withdrawal_approval_from_admin, reqBody);
+      const apiRes = await apiConnectorPostAdmin(endpoint?.withdrawal_approval_from_admin, reqBody);
       if (apiRes?.data?.status) {
         Swal.fire({
           title: "Success",

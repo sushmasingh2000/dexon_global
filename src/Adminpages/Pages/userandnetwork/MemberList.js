@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorGet, apiConnectorGetAdmin, apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint, frontend } from "../../../utils/APIRoutes";
 import { getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
@@ -36,7 +36,7 @@ const MemberList = () => {
       page,
     ],
     () =>
-      apiConnectorPost(endpoint?.member_list, {
+      apiConnectorPostAdmin(endpoint?.member_list, {
         search: fk.values.search,
         created_at: fk.values.start_date,
         updated_at: fk.values.end_date,
@@ -58,7 +58,7 @@ const MemberList = () => {
   async function showBusiness(userId) {
     setLoading(true);
     try {
-      const { data } = await apiConnectorGet(endpoint?.user_dashboard_business_api, { userId: userId });
+      const { data } = await apiConnectorGetAdmin(endpoint?.user_dashboard_business_api, { userId: userId });
       const directBusines = getFloatingValue(data?.result?.direct_business)
       const TeamBusines = getFloatingValue(data?.result?.team_business)
       Swal.fire({

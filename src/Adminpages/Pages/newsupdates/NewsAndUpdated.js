@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
+import { apiConnectorGet, apiConnectorGetAdmin, apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { areYouSureFn, formatedDate } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
@@ -38,7 +38,7 @@ const NewsAndUpdated = () => {
             page,
         ],
         () =>
-            apiConnectorGet(endpoint?.get_news_and_updates, {
+            apiConnectorGetAdmin(endpoint?.get_news_and_updates, {
                 search: fk.values.search,
                 created_at: fk.values.start_date,
                 updated_at: fk.values.end_date,
@@ -82,7 +82,7 @@ const NewsAndUpdated = () => {
                 id: selectedNewsRow?.m01_nw_id,
                 news: newsInput?.trim(),
             };
-            const res = await apiConnectorPost(endpoint?.update_news_and_updates, reqbody);
+            const res = await apiConnectorPostAdmin(endpoint?.update_news_and_updates, reqbody);
             toast.success(res?.data?.message || "News updated successfully.");
             setOpenNewsDialog(false);
             setSelectedNewsRow(null);
@@ -105,7 +105,7 @@ const NewsAndUpdated = () => {
             const reqbody = {
                 id,
             };
-            const res = await apiConnectorPost(endpoint?.update_news_and_updates_status, reqbody);
+            const res = await apiConnectorPostAdmin(endpoint?.update_news_and_updates_status, reqbody);
             toast.success(res?.data?.message || "News status updated.");
             client.invalidateQueries(["get_news_and_updates"]);
         } catch (error) {

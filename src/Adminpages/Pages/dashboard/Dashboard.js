@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { apiConnectorGet } from "../../../utils/APIConnector";
-import { dollar, endpoint, withdrawalAddress } from "../../../utils/APIRoutes";
 import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { apiConnectorGetAdmin } from "../../../utils/APIConnector";
+import { dollar, endpoint, withdrawalAddress } from "../../../utils/APIRoutes";
 import { getFloatingValue } from "../../../utils/utilityFun";
 
 const Dashboard = () => {
   const [bal, setBal] = useState(0);
   const { data } = useQuery(
     ["get_admin_dashboard"],
-    () => apiConnectorGet(endpoint?.admin_dashboard),
+    () => apiConnectorGetAdmin(endpoint?.admin_dashboard),
     {
       keepPreviousData: true,
       refetchOnMount: false,
