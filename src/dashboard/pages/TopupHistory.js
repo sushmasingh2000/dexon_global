@@ -56,21 +56,28 @@ const TopupHistory = () => {
     "Transaction",
     "Amount ($)",
     "Compounding",
+    "Trade Amount",
     "Date/Time",
     "Status",
     "Description",
   ];
   const tablerow = allData?.data?.map((row, index) => {
-    return [
-      <span>{index + 1}</span>,
-      <span>{row?.tr07_trans_id}</span>,
-      <span>{getFloatingValue(row.tr07_tr_amount)}</span>,
-      <span>{getFloatingValue(row.tr09_roi_amount)}</span>,
-      <span>{formatedDate(moment, row?.tr07_created_at)}</span>,
-      <span className="!text-green-600">Success</span>,
-      <span>{row?.tr07_description}</span>,
-    ];
-  });
+  const total =
+    parseFloat(row.tr07_tr_amount || 0) +
+    parseFloat(row.tr09_roi_amount || 0) -
+    parseFloat(row.tr09_withdraw_amount || 0);
+
+  return [
+    <span>{index + 1}</span>,
+    <span>{row?.tr07_trans_id}</span>,
+    <span>{getFloatingValue(row.tr07_tr_amount)}</span>,
+    <span>{getFloatingValue(row.tr09_roi_amount)}</span>,
+    <span>{getFloatingValue(total)}</span>,
+    <span>{formatedDate(moment, row?.tr07_created_at)}</span>,
+    <span className="!text-green-600">Success</span>,
+    <span>{row?.tr07_description}</span>,
+  ];
+});
 
   return (
     <div className="p-2">
