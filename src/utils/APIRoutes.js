@@ -1,6 +1,8 @@
 // export const localdomain = "http://192.168.18.101:9010";
-export const domain = "http://192.168.18.214:9010";
-// export const domain = "https://dexon.global";
+// export const domain = "http://192.168.18.214:9010";
+export const domain = "https://dexon.global";
+// export const domain = "http://localhost:2000";
+
 export const frontend = "https://dexon.global";
 
 // const isProduction = process.env.NODE_ENV === "production";
@@ -106,4 +108,5 @@ export const endpoint = {
   get_downline_team: `${domain}/api/v9/get-downline-team`,
   get_upline_team: `${domain}/api/v9/get-upline-team`,
   inr_payout_data: `${domain}/api/v9/get-withdrawal-details-admin`,
+  update_trade_profit: `${domain}/api/v9/update-trade-profit`,
 };
