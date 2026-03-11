@@ -22,23 +22,79 @@ function Payout() {
     initialValues: {
       amount: "",
       walletAddress: "",
-      wallet_type: "fund", // default
+      wallet_type: "earning",
+      growth_type: "",
+      growth_option: "",
     },
     enableReinitialize: true,
   });
-
+  const { data, isLoading } = useQuery(
+      [
+        "withdraw",
+        fk.values.search,
+        fk.values.start_date,
+        fk.values.end_date,
+      ],
+      () =>
+        apiConnectorPost(endpoint?.get_report_details, {
+          search: fk.values.search,
+          created_at: fk.values.start_date,
+          updated_at: fk.values.end_date,
+          count: "10",
+          sub_label: "TOPUP WALLET",
+          main_label: "IN"
+        }),
+      {
+        keepPreviousData: true,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+        onError: (err) => console.error("Error fetching direct data:", err),
+      }
+    );
+  
+    const rawResult = data?.data?.result;
+    const allData = Array.isArray(rawResult) 
+      ? rawResult 
+      : Array.isArray(rawResult?.data) 
+        ? rawResult?.data 
+        : Array.isArray(rawResult?.rows)
+          ? rawResult?.rows
+          : [];
+    
+    
   async function Payout() {
-    const reqbody = {
-      wallet_address: String(fk.values.walletAddress)?.trim(),
-      user_amount: Number(fk.values.amount)?.toFixed(3),
-      wallet_type: fk.values.wallet_type === "fund" ? "fund_wallet" : fk.values.wallet_type === "profit" ? "income_wallet" : "topup_wallet",
-    };
+    let walletType = "earning_wallet";
+    if (fk.values.wallet_type === "growth") {
+      walletType = fk.values.growth_type === "capital" ? "capital_wallet" : "growth_wallet";
+    }
 
+    const selectedPackage = allData.find(
+      (item) => `${item.tr07_trans_id}` === fk.values.growth_option
+    );
+    const packageId = selectedPackage?.tr09_id || null;
+
+    const reqbody = {
+      wallet_address: String(fk.values.walletAddress || user_profile?.lgn_wallet_add)?.trim(),
+      user_amount: Number(fk.values.amount)?.toFixed(3),
+      wallet_type: walletType,
+      package_id: packageId,
+    };
+    console.log(reqbody);
 
     if (!reqbody?.wallet_address || !reqbody?.user_amount) {
       Swal.fire({
         title: "⚠️ Incomplete Information",
         html: `<p style="font-size:14px; margin-bottom:8px;">Please provide both wallet address and amount.</p>`,
+        icon: "warning",
+        confirmButtonColor: "black",
+      });
+      return;
+    }
+    if (fk.values.wallet_type === "growth" && !packageId) {
+      Swal.fire({
+        title: "⚠️ Select a Package",
+        html: `<p style="font-size:14px;">Please select a capital or earning package.</p>`,
         icon: "warning",
         confirmButtonColor: "black",
       });
@@ -92,6 +148,11 @@ function Payout() {
     }
   );
   const user_profile = profile?.data?.result?.[0] || [];
+
+  const maxAmount = fk.values.wallet_type === "earning"
+        ? parseFloat(user_profile?.tr03_inc_wallet || 0)
+        : parseFloat(user_profile?.tr03_topup_wallet || 0);
+
 
   // Fixed Withdrawal Component — drop-in replacement for your return block
 
@@ -159,15 +220,15 @@ function Payout() {
                     </svg>
                     Balance
                   </div>
-                  <span className="text-green-400 font-bold text-lg">
-                    ${getFloatingValue(fk.values.wallet_type === "fund" ? user_profile?.tr03_fund_wallet : fk.values.wallet_type === "profit" ? user_profile?.tr03_inc_wallet : user_profile?.tr03_topup_wallet)}
+                  {fk.values.wallet_type === "earning" && <span className="text-green-400 font-bold text-lg">
+                    ${getFloatingValue(user_profile?.tr03_inc_wallet)}
                     <span className="text-gray-400 text-xs font-normal ml-1">USDT</span>
-                  </span>
+                  </span>}
                 </div>
 
                 {/* Wallet Type Radio */}
                 <div className="flex items-center gap-4 mb-4">
-                  <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                  {/* <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
                     <input
                       type="radio"
                       name="wallet_type"
@@ -177,28 +238,36 @@ function Payout() {
                       className="form-radio text-cyan-400 accent-cyan-400"
                     />
                     Fund Wallet
+                  </label> */}
+                  <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="wallet_type"
+                      value="earning"
+                      onChange={(e) => {
+                        fk.handleChange(e);
+                        fk.setFieldValue("amount", parseFloat(user_profile?.tr03_inc_wallet).toFixed(2));
+                      }}
+                      checked={fk.values.wallet_type === "earning"}
+                      className="form-radio text-cyan-400 accent-cyan-400"
+                    />
+                    Earning Wallet
                   </label>
                   <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
                     <input
                       type="radio"
                       name="wallet_type"
-                      value="profit"
-                      onChange={fk.handleChange}
-                      checked={fk.values.wallet_type === "profit"}
+                      value="growth"
+                      onChange={(e) => {
+                        fk.handleChange(e);
+                        fk.setFieldValue("growth_type", "capital"); // auto-select capital
+                        fk.setFieldValue("growth_option", "");
+                        fk.setFieldValue("amount", "");
+                      }}
+                      checked={fk.values.wallet_type === "growth"}
                       className="form-radio text-cyan-400 accent-cyan-400"
                     />
-                    Profit Wallet
-                  </label>
-                  <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="wallet_type"
-                      value="topup"
-                      onChange={fk.handleChange}
-                      checked={fk.values.wallet_type === "topup"}
-                      className="form-radio text-cyan-400 accent-cyan-400"
-                    />
-                    Topup Wallet
+                    Growth Wallet
                   </label>
                 </div>
 
@@ -215,10 +284,124 @@ function Payout() {
                     id="walletAddress"
                     name="walletAddress"
                     value={fk.values.walletAddress || user_profile?.lgn_wallet_add || ""}
-                    onChange={fk.handleChange}
+                    // onChange={fk.handleChange}
+                    readOnly
                     className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-gray-900/80 to-gray-800/90 text-cyan-100 text-sm border-2 border-gray-700 focus:border-cyan-400 focus:outline-none transition-all duration-300 font-semibold"
                   />
                 </div>
+               {fk.values.wallet_type === "growth" && (
+                  <div className="mb-4">
+                    {/* Capital / Earning radio buttons */}
+                    <div className="flex items-center gap-4 mb-3">
+                      <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="growth_type"
+                          value="capital"
+                          onChange={(e) => {
+                            fk.handleChange(e);
+                            fk.setFieldValue("growth_option", "");
+                            fk.setFieldValue("amount", "");
+                          }}
+                          checked={fk.values.growth_type === "capital"}
+                          className="accent-cyan-400"
+                        />
+                        Capital
+                      </label>
+                      <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="growth_type"
+                          value="earning"
+                          onChange={(e) => {
+                            fk.handleChange(e);
+                            fk.setFieldValue("growth_option", "");
+                            fk.setFieldValue("amount", "");
+                          }}
+                          checked={fk.values.growth_type === "earning"}
+                          className="accent-cyan-400"
+                        />
+                        Earning
+                      </label>
+                    </div>
+
+                    {/* Radio list — only shows after Capital or Earning is selected */}
+                    {fk.values.growth_type && (
+                      <div>
+                        <div className="flex items-center gap-2 text-gray-300 text-sm font-medium mb-2">
+                          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                          Select {fk.values.growth_type === "capital" ? "Capital" : "Earning"} Amount
+                        </div>
+
+                        <div className="space-y-2 mb-3 max-h-48 overflow-y-auto pr-1">
+                          {(() => {
+                            const filtered = allData.filter((item) => {
+                              const amount = fk.values.growth_type === "capital"
+                                ? item.tr09_real_amount
+                                : item.tr09_roi_amount;
+                              return amount && parseFloat(amount) > 0;
+                            });
+
+                            if (filtered.length === 0) {
+                              return (
+                                <p className="text-gray-500 text-xs text-center py-3">No records found</p>
+                              );
+                            }
+
+                            return filtered.map((item, idx) => {
+                              const amount = fk.values.growth_type === "capital"
+                                ? item.tr09_real_amount- item.tr09_withdraw_amount
+                                : item.tr09_roi_amount-item.tr09_withdraw_roi;
+                              const isSelected = fk.values.growth_option === `${item.tr07_trans_id}`;
+                              if(amount > 0){
+                                  return (
+                                  <label
+                                    className={`flex items-center justify-between px-4 py-2.5 rounded-lg border transition-all duration-200
+                                      ${fk.values.growth_type === "capital" && item.tr09_is_locked === 1
+                                        ? "border-gray-700/40 bg-gray-900/20 opacity-50 cursor-not-allowed"
+                                        : isSelected
+                                          ? "border-cyan-400/60 bg-cyan-900/30 cursor-pointer"
+                                          : "border-gray-700 bg-gray-900/40 hover:border-cyan-400/30 hover:bg-cyan-900/10 cursor-pointer"
+                                      }
+                                      `}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <input
+                                        type="radio"
+                                        name="growth_option"
+                                        value={item.tr07_trans_id}
+                                        onChange={() => {
+                                          if (fk.values.growth_type === "capital" && item.tr09_is_locked === 1) return;
+                                          fk.setFieldValue("growth_option", `${item.tr07_trans_id}`);
+                                          fk.setFieldValue("amount", parseFloat(amount).toFixed(2));
+                                        }}
+                                        checked={isSelected}
+                                        className="accent-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed"
+                                      />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      {fk.values.growth_type === "capital" && item.tr09_is_locked === 1 && (
+                                        <span className="text-[10px] text-red-400/80 font-medium border border-red-400/30 px-1.5 py-0.5 rounded">
+                                          Locked
+                                        </span>
+                                      )}
+                                      <span className={`text-sm font-bold ${isSelected ? "text-cyan-400" : item.tr09_is_locked == 1 ? "text-gray-500" : "text-gray-300"}`}>
+                                        ${parseFloat(amount).toFixed(2)}
+                                      </span>
+                                    </div>
+                                  </label>
+                                );
+                              }
+                              
+                            });
+                          })()}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Withdrawal Amount Label */}
                 <div className="flex items-center gap-2 text-gray-300 text-sm font-medium mb-2">
@@ -235,9 +418,17 @@ function Payout() {
                     id="amount"
                     name="amount"
                     value={fk.values.amount}
-                    onChange={fk.handleChange}
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value);
+                      if (e.target.value === "" || val <= maxAmount) {
+                        fk.handleChange(e);
+                      } else {
+                        fk.setFieldValue("amount", maxAmount.toFixed(2));
+                      }
+                    }}
                     type="number"
                     min="0"
+                    max={maxAmount}
                     className="w-full px-4 py-2 pr-16 rounded-lg bg-gradient-to-r from-gray-900/80 to-gray-800/90 text-cyan-100 text-sm border-2 border-gray-700 focus:border-cyan-400 focus:outline-none transition-all duration-300 font-semibold placeholder:text-gray-500"
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium pointer-events-none select-none">
@@ -254,9 +445,9 @@ function Payout() {
                       type="button"
                       onClick={() => {
                         if (amt === 'Max') {
-                          fk.setFieldValue('amount', getFloatingValue(fk.values.wallet_type === "fund" ? user_profile?.tr03_fund_wallet : fk.values.wallet_type === "profit" ? user_profile?.tr03_inc_wallet : user_profile?.tr03_topup_wallet));
+                          fk.setFieldValue('amount', maxAmount.toFixed(2));
                         } else {
-                          fk.setFieldValue('amount', amt);
+                          fk.setFieldValue('amount', Math.min(amt, maxAmount).toFixed(2));
                         }
                       }}
                       className="px-3 py-2 rounded-lg bg-cyan-900/20 border border-cyan-400/20 text-cyan-300 text-xs font-semibold hover:bg-cyan-900/40 hover:border-cyan-400/40 transition-all duration-200"
@@ -330,7 +521,7 @@ function Payout() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
       .bg-size-200 { background-size: 200% 100%; }
       .bg-pos-0 { background-position: 0% 0%; }
       .bg-pos-100 { background-position: 100% 0%; }
