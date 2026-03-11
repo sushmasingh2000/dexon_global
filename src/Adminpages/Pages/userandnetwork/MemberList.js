@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
 import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
-import { endpoint } from "../../../utils/APIRoutes";
+import { endpoint, frontend } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -152,7 +152,15 @@ const MemberList = () => {
       <span> {(page - 1) * (fk.values.count || 10) + index + 1}</span>,
       <span> {row.lgn_email}</span>,
       <span> {row.lgn_mobile}</span>,
-      <span> {row.lgn_cust_id}</span>,
+      <span
+
+        onClick={() => {
+          localStorage.setItem("logindataen", row.lgn_token);
+          localStorage.setItem("login_user", "User");
+          window.open(frontend + "/dashboard", "_blank");
+        }}
+
+      > {row.lgn_cust_id}</span>,
       <span>{row.lgn_name || "N/A"}</span>,
       <span>
         {revealedPassIndex === index ? (
@@ -186,7 +194,7 @@ const MemberList = () => {
         </button>
       </span>,
       <span> {getFloatingValue(row.tr03_topup_wallet)}</span>,
-      <span> {row.tr03_rank >0 ? "V"+row.tr03_rank : "--"}</span>,
+      <span> {row.tr03_rank > 0 ? "V" + row.tr03_rank : "--"}</span>,
       <span> {getFloatingValue(row.tr03_total_income)}</span>,
       <span> {getFloatingValue(row.tr03_inc_wallet)}</span>,
       <span> {getFloatingValue(row.tr03_fund_wallet)}</span>,
