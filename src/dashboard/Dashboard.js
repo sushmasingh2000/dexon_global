@@ -1,13 +1,13 @@
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
-import InsightsIcon from '@mui/icons-material/Insights';
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import CandlestickChartIcon from "@mui/icons-material/CandlestickChart";
+import InsightsIcon from "@mui/icons-material/Insights";
 import PaidIcon from "@mui/icons-material/Paid";
-import PieChartIcon from '@mui/icons-material/PieChart';
-import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import PieChartIcon from "@mui/icons-material/PieChart";
+import StackedBarChartIcon from "@mui/icons-material/StackedBarChart";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import copy from "copy-to-clipboard";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
@@ -17,12 +17,12 @@ import { apiConnectorGet } from "../utils/APIConnector";
 import { endpoint, frontend } from "../utils/APIRoutes";
 import { getFloatingValue } from "../utils/utilityFun";
 import tether from "../images/tether.png";
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-import Groups2Icon from '@mui/icons-material/Groups2';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import Groups2Icon from "@mui/icons-material/Groups2";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
   const colors = {
     cyan: {
@@ -104,35 +104,50 @@ const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
     <TrendingUpIcon color={currentColor.iconColor} />,
     <CandlestickChartIcon color={currentColor.iconColor} />,
     <StackedBarChartIcon color={currentColor.iconColor} />,
-    <AutoGraphIcon color={currentColor.iconColor} />
-  ]
+    <AutoGraphIcon color={currentColor.iconColor} />,
+  ];
 
   return (
     <div
       onClick={() => path && navigate(path)}
       className={`bg-gradient-to-br ${currentColor.gradient} rounded-2xl p-6 border ${currentColor.border} shadow-xl ${currentColor.shadow} relative overflow-hidden group transition-all duration-300`}
     >
-
       {/* Animated background effects */}
-      <div className={`absolute top-0 right-0 w-40 h-40 ${currentColor.glow} rounded-full blur-3xl transition-all duration-500`}></div>
-      <div className={`absolute -bottom-10 -left-10 w-32 h-32 ${currentColor.glowSmall} rounded-full blur-2xl`}></div>
+      <div
+        className={`absolute top-0 right-0 w-40 h-40 ${currentColor.glow} rounded-full blur-3xl transition-all duration-500`}
+      ></div>
+      <div
+        className={`absolute -bottom-10 -left-10 w-32 h-32 ${currentColor.glowSmall} rounded-full blur-2xl`}
+      ></div>
 
       {/* Accent line */}
-      <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentColor.accent}`}></div>
+      <div
+        className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentColor.accent}`}
+      ></div>
 
       {/* Decorative corner elements */}
-      <div className={`absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 ${currentColor.border} rounded-tr-2xl opacity-50`}></div>
-      <div className={`absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 ${currentColor.border} rounded-bl-2xl opacity-30`}></div>
+      <div
+        className={`absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 ${currentColor.border} rounded-tr-2xl opacity-50`}
+      ></div>
+      <div
+        className={`absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 ${currentColor.border} rounded-bl-2xl opacity-30`}
+      ></div>
 
       {/* Content */}
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-2">
-          <div className={`w-2 h-2 rounded-full ${currentColor.pulseColor} animate-pulse`}></div>
-          <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">{title}</p>
+          <div
+            className={`w-2 h-2 rounded-full ${currentColor.pulseColor} animate-pulse`}
+          ></div>
+          <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
+            {title}
+          </p>
         </div>
 
         <h2 className="text-3xl font-bold mb-1">
-          <span className={`text-transparent bg-clip-text bg-gradient-to-r ${currentColor.text}`}>
+          <span
+            className={`text-transparent bg-clip-text bg-gradient-to-r ${currentColor.text}`}
+          >
             {value}
           </span>
         </h2>
@@ -142,32 +157,47 @@ const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
       <div className="absolute top-4 right-4 w-16 h-16 flex items-center justify-center">
         <div className="relative">
           {/* Glow effect behind icon */}
-          <div className={`absolute inset-0 ${currentColor.iconGlow} rounded-full blur-xl animate-pulse`}></div>
+          <div
+            className={`absolute inset-0 ${currentColor.iconGlow} rounded-full blur-xl animate-pulse`}
+          ></div>
 
           {/* Icon container with gradient border */}
-          <div className={`relative w-16 h-16 rounded-full bg-gradient-to-br ${currentColor.iconBg} to-transparent p-0.5`}>
+          <div
+            className={`relative w-16 h-16 rounded-full bg-gradient-to-br ${currentColor.iconBg} to-transparent p-0.5`}
+          >
             <div className="w-full h-full rounded-full bg-[#0d1519] flex items-center justify-center backdrop-blur-sm">
-              <div className={`${currentColor.iconColor} transform group-hover:scale-110 transition-transform duration-300 text-xl`}>
-                {icon === "user" ? <AccountTreeIcon /> : chart[Math.floor(Math.random() * chart.length)] || <PaidIcon />}
+              <div
+                className={`${currentColor.iconColor} transform group-hover:scale-110 transition-transform duration-300 text-xl`}
+              >
+                {icon === "user" ? (
+                  <AccountTreeIcon />
+                ) : (
+                  chart[Math.floor(Math.random() * chart.length)] || (
+                    <PaidIcon />
+                  )
+                )}
               </div>
             </div>
           </div>
 
           {/* Orbiting dot */}
           <div className="absolute top-1/2 left-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2">
-            <div className={`absolute top-0 left-1/2 w-1.5 h-1.5 ${currentColor.orbiting} rounded-full -translate-x-1/2 animate-ping`}></div>
+            <div
+              className={`absolute top-0 left-1/2 w-1.5 h-1.5 ${currentColor.orbiting} rounded-full -translate-x-1/2 animate-ping`}
+            ></div>
           </div>
         </div>
       </div>
 
       {/* Shine effect on hover */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-${color}-400/5 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000`}></div>
+        <div
+          className={`absolute inset-0 bg-gradient-to-r from-transparent via-${color}-400/5 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000`}
+        ></div>
       </div>
     </div>
   );
 };
-
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -185,7 +215,7 @@ const Dashboard = () => {
       retry: false,
       retryOnMount: false,
       refetchOnWindowFocus: false,
-    }
+    },
   );
   const user_profile = profile_data?.data?.result?.[0] || [];
 
@@ -198,20 +228,21 @@ const Dashboard = () => {
       retry: false,
       retryOnMount: false,
       refetchOnWindowFocus: false,
-    }
+    },
   );
   const dashboard = dashboard_Api?.data?.result?.[0] || [];
-  const { data: dashboard_Business_Api, isLoading: isBusinessLoading } = useQuery(
-    ["dashboard_business_api"],
-    () => apiConnectorGet(endpoint?.user_dashboard_business_api),
-    {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      retry: false,
-      retryOnMount: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data: dashboard_Business_Api, isLoading: isBusinessLoading } =
+    useQuery(
+      ["dashboard_business_api"],
+      () => apiConnectorGet(endpoint?.user_dashboard_business_api),
+      {
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: false,
+        retryOnMount: false,
+        refetchOnWindowFocus: false,
+      },
+    );
   const dashboardBusiness = dashboard_Business_Api?.data?.result || [];
   const { data: newsAndUpdatesApi, isLoading: isNewsLoading } = useQuery(
     ["get_news_and_updates"],
@@ -222,15 +253,18 @@ const Dashboard = () => {
       retry: false,
       retryOnMount: false,
       refetchOnWindowFocus: false,
-    }
+    },
   );
   const newsAndUpdates = newsAndUpdatesApi?.data?.result || [];
 
   return (
     <div className="min-h-screen  text-white px-2 ">
       <Loader isLoading={profileloading || isLoading || isNewsLoading} />
-      <NewsTicker items={newsAndUpdates?.filter((i) => i.m01_nw_status)
-        ?.map((i) => i.m01_nw_news)} />
+      <NewsTicker
+        items={newsAndUpdates
+          ?.filter((i) => i.m01_nw_status)
+          ?.map((i) => i.m01_nw_news)}
+      />
       {/* ===== TOP ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
         {/* Current Slab */}
@@ -368,7 +402,6 @@ const Dashboard = () => {
         </div> */}
         {/* Active Topup & Balance Card */}
         <div className="bg-gradient-to-br from-[#060d1a] via-[#080f1e] to-[#060a14] rounded-2xl p-6 border border-blue-400/30 shadow-xl shadow-blue-400/10 relative overflow-hidden group hover:shadow-blue-400/20 transition-all duration-300">
-
           {/* Animated background effects */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-400/5 rounded-full blur-3xl group-hover:bg-blue-400/10 transition-all duration-500"></div>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl"></div>
@@ -387,8 +420,14 @@ const Dashboard = () => {
 
           {/* Particles */}
           <div className="absolute top-10 left-10 w-1 h-1 bg-cyan-400 rounded-full opacity-60 animate-ping"></div>
-          <div className="absolute bottom-20 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-20 w-1 h-1 bg-blue-500 rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+          <div
+            className="absolute bottom-20 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-20 w-1 h-1 bg-blue-500 rounded-full opacity-60 animate-ping"
+            style={{ animationDelay: "2s" }}
+          ></div>
 
           {/* ===== TOP SECTION - Active Topup ===== */}
           <div className="relative z-10 mb-5">
@@ -397,7 +436,9 @@ const Dashboard = () => {
                 {/* Label */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
-                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Capital Wallet</p>
+                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
+                    Capital Wallet
+                  </p>
                 </div>
 
                 {/* Value */}
@@ -412,7 +453,9 @@ const Dashboard = () => {
                   <div className=" rounded-full  flex items-center justify-center ">
                     <img src={tether} alt="" className="w-6 h-6" />
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">Active Topup</span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    Active Topup
+                  </span>
                 </div>
               </div>
 
@@ -434,7 +477,8 @@ const Dashboard = () => {
             {/* Notice text */}
             <div className="mt-4 bg-blue-950/30 rounded-lg py-2 px-3 border border-blue-400/10">
               <p className="text-blue-400/70 text-xs text-center italic">
-                Topup/Re-Topup Your Account to continue earning profit &amp; Rewards
+                Topup/Re-Topup Your Account to continue earning profit &amp;
+                Rewards
               </p>
             </div>
           </div>
@@ -445,7 +489,9 @@ const Dashboard = () => {
                 {/* Label */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
-                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Growth Wallet</p>
+                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
+                    Growth Wallet
+                  </p>
                 </div>
 
                 {/* Value */}
@@ -460,7 +506,9 @@ const Dashboard = () => {
                   <div className=" rounded-full  flex items-center justify-center ">
                     <img src={tether} alt="" className="w-6 h-6" />
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">Active Auto Compound</span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    Active Auto Compound
+                  </span>
                 </div>
               </div>
 
@@ -487,39 +535,53 @@ const Dashboard = () => {
             </div> */}
           </div>
           <div className="mt-4 space-y-2">
-              {/* Progress Bar */}
-              <div className="flex items-center gap-2">
-                <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
-                    style={{
-                      width: `${Math.min(
-                        (Number(dashboard?.growth_wallet - user_profile?.tr03_topup_wallet || 0) / (2 * Number(user_profile?.tr03_topup_wallet || 1))) * 100,
-                        100
-                      )}%`
-                    }}
-                  ></div>
-                </div>
-                <span className="text-xs text-yellow-400 font-semibold">
-                  {Math.min(
-                    Math.floor((Number(dashboard?.growth_wallet - user_profile?.tr03_topup_wallet || 0) / (2 * Number(user_profile?.tr03_topup_wallet || 1))) * 100),
-                    100
-                  )}%
-                </span>
+            {/* Progress Bar */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
+                  style={{
+                    width: `${(() => {
+                      const val = Math.min(
+                        (Number(
+                          dashboard?.growth_wallet -
+                            user_profile?.tr03_topup_wallet || 0,
+                        ) /
+                          (2 * Number(user_profile?.tr03_topup_wallet || 1))) *
+                          100,
+                        100,
+                      );
+                      return isNaN(val) ? 0 : val;
+                    })()}%`,
+                  }}
+                ></div>
               </div>
-
-              {/* Caption */}
-              <p className="text-[11px] text-gray-500 italic tracking-wide text-center">
-                ⚡ Capping calculated at{" "}
-                <span className="text-yellow-400/80 font-semibold not-italic">
-                  2× Trade Profit
-                </span>{" "}
-                — Max:{" "}
-                <span className="text-yellow-400/80 font-semibold not-italic">
-                  ${Number(user_profile?.tr03_topup_wallet || 0) * 2}
-                </span>
-              </p>
+              <span className="text-xs text-yellow-400 font-semibold">
+                {(() => {
+                  const val = Math.min(
+                    Math.floor(
+                      (Number(dashboard?.growth_wallet - user_profile?.tr03_topup_wallet || 0) /
+                        (2 * Number(user_profile?.tr03_topup_wallet || 1) || 0)) * 100
+                    ),
+                    100
+                  );
+                  return isNaN(val) ? 0 : val;
+                })()}%
+              </span>
             </div>
+
+            {/* Caption */}
+            <p className="text-[11px] text-gray-500 italic tracking-wide text-center">
+              ⚡ Capping calculated at{" "}
+              <span className="text-yellow-400/80 font-semibold not-italic">
+                2× Trade Profit
+              </span>{" "}
+              — Max:{" "}
+              <span className="text-yellow-400/80 font-semibold not-italic">
+                ${Number(user_profile?.tr03_topup_wallet || 0) * 2}
+              </span>
+            </p>
+          </div>
 
           {/* Divider */}
           <div className="relative z-10 flex items-center gap-3 mb-5">
@@ -535,7 +597,9 @@ const Dashboard = () => {
                 {/* Label */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Fund Wallet</p>
+                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
+                    Fund Wallet
+                  </p>
                 </div>
 
                 {/* Value */}
@@ -550,7 +614,9 @@ const Dashboard = () => {
                   <div className=" rounded-full  flex items-center justify-center ">
                     <img src={tether} alt="" className="w-6 h-6" />
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">Available Fund</span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    Available Fund
+                  </span>
                 </div>
               </div>
 
@@ -577,10 +643,22 @@ const Dashboard = () => {
                 {/* Label */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
-                  <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  <svg
+                    className="w-4 h-4 text-cyan-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
                   </svg>
-                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Current Balance</p>
+                  <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
+                    Earning Balance
+                  </p>
                 </div>
 
                 {/* Value */}
@@ -595,7 +673,9 @@ const Dashboard = () => {
                   <div className=" rounded-full  flex items-center justify-center ">
                     <img src={tether} alt="" className="w-6 h-6" />
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">Wallet Balance</span>
+                  <span className="text-xs text-gray-500 font-medium">
+                    Wallet Balance
+                  </span>
                 </div>
               </div>
 
@@ -622,18 +702,32 @@ const Dashboard = () => {
                   <div
                     className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
                     style={{
-                      width: `${Math.min(
-                        (Number(user_profile?.tr03_total_income || 0) / (2 * Number(user_profile?.tr03_topup_wallet || 1))) * 100,
-                        100
-                      )}%`
+                      width: `${(() => {
+                        const val = Math.min(
+                          (Number(user_profile?.tr03_total_income || 0) /
+                            (2 *
+                              Number(user_profile?.tr03_topup_wallet || 1))) *
+                            100,
+                          100,
+                        );
+                        return isNaN(val) ? 0 : val;
+                      })()}%`,
                     }}
                   ></div>
                 </div>
                 <span className="text-xs text-yellow-400 font-semibold">
-                  {Math.min(
-                    Math.floor((Number(user_profile?.tr03_total_income || 0) / (2 * Number(user_profile?.tr03_topup_wallet || 1))) * 100),
-                    100
-                  )}%
+                  {(() => {
+                    const val = Math.min(
+                      Math.floor(
+                        (Number(user_profile?.tr03_total_income || 0) /
+                          (2 * Number(user_profile?.tr03_topup_wallet || 1))) *
+                          100,
+                      ),
+                      100,
+                    );
+                    return isNaN(val) ? 0 : val;
+                  })()}
+                  %
                 </span>
               </div>
 
@@ -650,11 +744,9 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-
         </div>
         {/* Referral */}
         <div className="bg-gradient-to-br from-[#060f1a] via-[#0d1519] to-[#0a1420] rounded-2xl p-6 border border-blue-400/30 shadow-xl shadow-blue-400/10 relative overflow-hidden group hover:shadow-blue-400/20 transition-all duration-300">
-
           {/* Animated background effects */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-400/5 rounded-full blur-3xl group-hover:bg-blue-400/10 transition-all duration-500"></div>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl"></div>
@@ -668,8 +760,18 @@ const Dashboard = () => {
 
           {/* Decorative link icon */}
           <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-blue-400/10 flex items-center justify-center border border-blue-400/30">
-            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            <svg
+              className="w-5 h-5 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+              />
             </svg>
           </div>
 
@@ -678,7 +780,9 @@ const Dashboard = () => {
             {/* Header */}
             <div className="flex items-center justify-center gap-2 mb-3">
               <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
-              <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">Referral Link</p>
+              <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
+                Referral Link
+              </p>
               <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
             </div>
 
@@ -693,15 +797,13 @@ const Dashboard = () => {
                 onClick={() =>
                   functionTOCopy(
                     frontend +
-                    "/register?startapp=" +
-                    user_profile?.lgn_cust_id
+                      "/register?startapp=" +
+                      user_profile?.lgn_cust_id,
                   )
                 }
                 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-400 to-blue-500 text-sm break-all text-center font-medium cursor-pointer hover:scale-[1.02] transition-transform duration-200 relative z-10"
               >
-                {frontend +
-                  "/register?startapp=" +
-                  user_profile?.lgn_cust_id}
+                {frontend + "/register?startapp=" + user_profile?.lgn_cust_id}
               </p>
             </div>
 
@@ -711,8 +813,8 @@ const Dashboard = () => {
                 onClick={() =>
                   functionTOCopy(
                     frontend +
-                    "/register?startapp=" +
-                    user_profile?.lgn_cust_id
+                      "/register?startapp=" +
+                      user_profile?.lgn_cust_id,
                   )
                 }
                 className="relative px-6 py-2.5 rounded-lg font-semibold text-sm overflow-hidden group/btn transition-all duration-300 hover:scale-105"
@@ -725,8 +827,18 @@ const Dashboard = () => {
 
                 {/* Button content */}
                 <span className="relative z-10 flex items-center gap-2 text-white">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
                   </svg>
                   Copy Link
                 </span>
@@ -747,7 +859,9 @@ const Dashboard = () => {
 
             {/* Address Section */}
             <div className="text-center">
-              <p className="text-gray-400 text-xs font-medium tracking-wide uppercase mb-2">My Customer ID</p>
+              <p className="text-gray-400 text-xs font-medium tracking-wide uppercase mb-2">
+                My Customer ID
+              </p>
               <div className="bg-gradient-to-r from-blue-950/20 to-blue-900/10 rounded-lg p-3 border border-blue-400/10 backdrop-blur-sm">
                 <p className="text-blue-400 text-sm break-all font-medium">
                   {user_profile?.lgn_cust_id || "N/A"}
@@ -758,8 +872,14 @@ const Dashboard = () => {
 
           {/* Particles effect */}
           <div className="absolute top-10 left-10 w-1 h-1 bg-blue-400 rounded-full opacity-60 animate-ping"></div>
-          <div className="absolute bottom-20 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-20 w-1 h-1 bg-blue-500 rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+          <div
+            className="absolute bottom-20 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-20 w-1 h-1 bg-blue-500 rounded-full opacity-60 animate-ping"
+            style={{ animationDelay: "2s" }}
+          ></div>
 
           {/* Shine effect on hover */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -769,7 +889,6 @@ const Dashboard = () => {
 
         {/* Team Stats Card */}
         <div className="bg-gradient-to-br from-[#060d1a] via-[#0a1220] to-[#060f1a] rounded-2xl p-6 border border-blue-500/30 shadow-xl shadow-blue-500/10 relative overflow-hidden group hover:shadow-blue-500/20 transition-all duration-300 mb-6">
-
           {/* Animated background effects */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-all duration-500"></div>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-yellow-500/5 rounded-full blur-2xl"></div>
@@ -795,43 +914,71 @@ const Dashboard = () => {
           <div className="relative z-10 space-y-3">
             {/* Direct Team */}
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
-              <div className="flex items-center gap-2 text-[#FFD700]" >
+              <div className="flex items-center gap-2 text-[#FFD700]">
                 <Diversity3Icon />
-                <span className="text-gray-300 text-sm font-medium">Direct Member</span>
+                <span className="text-gray-300 text-sm font-medium">
+                  Direct Member
+                </span>
               </div>
-              <span className="text-blue-500 font-bold text-sm  underline" onClick={() => navigate("/referral")}>{user_profile?.tr03_dir_mem || 0}</span>
+              <span
+                className="text-blue-500 font-bold text-sm  underline"
+                onClick={() => navigate("/referral")}
+              >
+                {user_profile?.tr03_dir_mem || 0}
+              </span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
-              <div className="flex items-center gap-2 text-[#FFD700]" >
+              <div className="flex items-center gap-2 text-[#FFD700]">
                 <Diversity3Icon />
-                <span className="text-gray-300 text-sm font-medium">Team Member</span>
+                <span className="text-gray-300 text-sm font-medium">
+                  Team Member
+                </span>
               </div>
-              <span className="text-blue-500 font-bold text-sm underline" onClick={() => navigate("/downline")}>{user_profile?.tr03_team_mem || 0}</span>
+              <span
+                className="text-blue-500 font-bold text-sm underline"
+                onClick={() => navigate("/downline")}
+              >
+                {user_profile?.tr03_team_mem || 0}
+              </span>
             </div>
 
             {/* Direct TopUp Member */}
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
-              <div className="flex items-center gap-2 text-[#FFD700]" >
+              <div className="flex items-center gap-2 text-[#FFD700]">
                 <CurrencyExchangeIcon />
-                <span className="text-gray-300 text-sm font-medium">Direct Business</span>
+                <span className="text-gray-300 text-sm font-medium">
+                  Direct Business
+                </span>
               </div>
-              <span className="text-green-500 font-bold text-sm">{getFloatingValue(dashboardBusiness?.direct_business)}</span>
+              <span className="text-green-500 font-bold text-sm">
+                {getFloatingValue(dashboardBusiness?.direct_business)}
+              </span>
             </div>
 
             {/* Total Income */}
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
-              <div className="flex items-center gap-2 text-[#FFD700]" >
+              <div className="flex items-center gap-2 text-[#FFD700]">
                 <CurrencyExchangeIcon />
-                <span className="text-gray-300 text-sm font-medium">Team Bussiness</span>
+                <span className="text-gray-300 text-sm font-medium">
+                  Team Bussiness
+                </span>
               </div>
-              <span className="text-green-500 font-bold text-sm">{getFloatingValue(dashboardBusiness?.team_business)}</span>
+              <span className="text-green-500 font-bold text-sm">
+                {getFloatingValue(dashboardBusiness?.team_business)}
+              </span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
-              <div className="flex items-center gap-2 text-[#FFD700]" >
+              <div className="flex items-center gap-2 text-[#FFD700]">
                 <EmojiEventsIcon />
-                <span className="text-gray-300 text-sm font-medium">Current Rank</span>
+                <span className="text-gray-300 text-sm font-medium">
+                  Current Rank
+                </span>
               </div>
-              <span className="text-green-500 font-bold text-sm">{user_profile?.tr03_rank > 0 ? 'V'+user_profile?.tr03_rank : "—"}</span>
+              <span className="text-green-500 font-bold text-sm">
+                {user_profile?.tr03_rank > 0
+                  ? "V" + user_profile?.tr03_rank
+                  : "—"}
+              </span>
             </div>
 
             {/* TopUp Amount */}
@@ -863,13 +1010,28 @@ const Dashboard = () => {
 
           {/* Particles effect */}
           <div className="absolute top-10 left-10 w-1 h-1 bg-yellow-400 rounded-full opacity-60 animate-ping"></div>
-          <div className="absolute bottom-20 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-20 w-1 h-1 bg-yellow-500 rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+          <div
+            className="absolute bottom-20 right-16 w-1 h-1 bg-blue-300 rounded-full opacity-60 animate-ping"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-20 w-1 h-1 bg-yellow-500 rounded-full opacity-60 animate-ping"
+            style={{ animationDelay: "2s" }}
+          ></div>
 
           {/* Extra Particles (added) */}
-          <div className="absolute top-6 right-8 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-70 animate-ping" style={{ animationDelay: '0.4s' }}></div>
-          <div className="absolute bottom-6 left-16 w-2 h-2 bg-purple-400 rounded-full opacity-60 animate-pulse" style={{ animationDelay: '0.9s' }}></div>
-          <div className="absolute top-1/3 right-4 w-1 h-1 bg-blue-200 rounded-full opacity-50 animate-ping" style={{ animationDelay: '1.6s' }}></div>
+          <div
+            className="absolute top-6 right-8 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-70 animate-ping"
+            style={{ animationDelay: "0.4s" }}
+          ></div>
+          <div
+            className="absolute bottom-6 left-16 w-2 h-2 bg-purple-400 rounded-full opacity-60 animate-pulse"
+            style={{ animationDelay: "0.9s" }}
+          ></div>
+          <div
+            className="absolute top-1/3 right-4 w-1 h-1 bg-blue-200 rounded-full opacity-50 animate-ping"
+            style={{ animationDelay: "1.6s" }}
+          ></div>
 
           {/* Shine effect on hover */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -879,8 +1041,19 @@ const Dashboard = () => {
           {/* Signature / watermark */}
           <div className="absolute bottom-3 right-3 text-xs text-white/20 italic tracking-wide rotate-[-6deg] pointer-events-none">
             <div className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-white/10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                className="w-4 h-4 text-white/10"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+                  stroke="currentColor"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               <span>Verified Team Stats</span>
             </div>
@@ -935,7 +1108,7 @@ const Dashboard = () => {
           path="/income/salary"
           navigate={navigate}
         />
-        
+
         <Card
           title="Dexon Global Reward Pool"
           value={`$${getFloatingValue(dashboard?.reward_bonus || 0)}`}
@@ -990,11 +1163,13 @@ const NewsTicker = ({ items }) => {
     <div
       className="relative w-full overflow-hidden flex items-center my-2"
       style={{
-        background: 'linear-gradient(90deg, rgba(6,13,20,0.98) 0%, rgba(10,18,25,0.95) 100%)',
-        border: '1px solid rgba(34,211,238,0.15)',
-        borderRadius: '0.75rem',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(34,211,238,0.06)',
-        height: '42px',
+        background:
+          "linear-gradient(90deg, rgba(6,13,20,0.98) 0%, rgba(10,18,25,0.95) 100%)",
+        border: "1px solid rgba(34,211,238,0.15)",
+        borderRadius: "0.75rem",
+        boxShadow:
+          "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(34,211,238,0.06)",
+        height: "42px",
       }}
     >
       {/* Top shimmer */}
@@ -1004,15 +1179,16 @@ const NewsTicker = ({ items }) => {
       <div
         className="flex-shrink-0 flex items-center gap-1.5 px-4 h-full z-10 relative"
         style={{
-          background: 'linear-gradient(90deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)',
-          borderRight: '1px solid rgba(34,211,238,0.2)',
-          minWidth: '72px',
+          background:
+            "linear-gradient(90deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)",
+          borderRight: "1px solid rgba(34,211,238,0.2)",
+          minWidth: "72px",
         }}
       >
         <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse flex-shrink-0" />
         <span
           className="text-[10px] font-black tracking-widest uppercase"
-          style={{ color: 'rgba(34,211,238,0.9)' }}
+          style={{ color: "rgba(34,211,238,0.9)" }}
         >
           LIVE
         </span>
@@ -1021,7 +1197,10 @@ const NewsTicker = ({ items }) => {
       {/* Left fade overlay */}
       <div
         className="absolute left-[72px] top-0 bottom-0 w-8 z-10 pointer-events-none"
-        style={{ background: 'linear-gradient(90deg, rgba(10,18,25,0.95), transparent)' }}
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(10,18,25,0.95), transparent)",
+        }}
       />
 
       {/* Scrolling ticker track */}
@@ -1032,14 +1211,14 @@ const NewsTicker = ({ items }) => {
             <div key={i} className="flex items-center flex-shrink-0">
               <span
                 className="text-sm font-medium px-2"
-                style={{ color: 'rgba(203,213,225,0.85)' }}
+                style={{ color: "rgba(203,213,225,0.85)" }}
               >
                 {item}
               </span>
               {/* Separator dot */}
               <span
                 className="w-1 h-1 rounded-full flex-shrink-0 mx-3"
-                style={{ background: 'rgba(34,211,238,0.4)' }}
+                style={{ background: "rgba(34,211,238,0.4)" }}
               />
             </div>
           ))}
@@ -1049,7 +1228,10 @@ const NewsTicker = ({ items }) => {
       {/* Right fade overlay */}
       <div
         className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none z-10"
-        style={{ background: 'linear-gradient(270deg, rgba(6,13,20,0.98), transparent)' }}
+        style={{
+          background:
+            "linear-gradient(270deg, rgba(6,13,20,0.98), transparent)",
+        }}
       />
 
       {/* Bottom accent line */}
@@ -1073,4 +1255,3 @@ const NewsTicker = ({ items }) => {
     </div>
   );
 };
-
