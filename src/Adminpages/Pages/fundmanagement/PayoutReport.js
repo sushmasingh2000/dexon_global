@@ -116,7 +116,7 @@ const PayoutReport = () => {
        `
       } >{row?.tr11_status}</span>,
       <span className="flex gap-2">
-        {row?.tr11_status === "Pending" ? (
+        {row?.tr11_status === "Pending" && row?.tr11_wallet_type === "Capital Wallet" ? (
           <>
             <button
               className="px-2 py-1 rounded bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition"
