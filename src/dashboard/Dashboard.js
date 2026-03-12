@@ -657,7 +657,7 @@ const Dashboard = () => {
                     />
                   </svg>
                   <p className="text-gray-400 text-sm font-medium tracking-wide uppercase">
-                    Earning Balance
+                    Earning Wallet
                   </p>
                 </div>
 
