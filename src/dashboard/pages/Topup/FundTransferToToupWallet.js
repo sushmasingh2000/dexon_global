@@ -232,7 +232,7 @@ function FundTransferToToupWallet() {
                     checked={fk.values.wallet_type === "topup"}
                     className="form-radio text-cyan-400"
                   />
-                  Topup Wallet
+                  Capital Wallet
                 </label>
               </div>
 
