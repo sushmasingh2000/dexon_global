@@ -189,6 +189,18 @@ export const all_Data = [
   },
   {
     id: 7,
+    navLink: "/ticket_support",
+    navItem: "Ticket & Support",
+    navIcon: (
+      <span>
+        <Person sx={{ color: "#749df5" }} fontSize="medium" />
+      </span>
+    ),
+    subcomponent: [
+    ],
+  },
+  {
+    id: 7,
     navLink: "/newsAnnouncement",
     navItem: "News & Announcement",
     navIcon: (
@@ -211,6 +223,17 @@ export const all_Data = [
     subcomponent: [
     ],
   },
-
+  {
+    id: 7,
+    navLink: "/tickets",
+    navItem: "Ticket and Support",
+    navIcon: (
+      <span>
+        <CampaignIcon sx={{ color: "#749df5" }} fontSize="medium" />
+      </span>
+    ),
+    subcomponent: [
+    ],
+  },
 
 ];

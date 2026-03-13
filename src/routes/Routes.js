@@ -29,6 +29,7 @@ import GlobalDashboard from "../dashboard/pages/globalhistory/GlobalDashboard";
 import AutoCompounding from "../dashboard/pages/income/AutoCompounding";
 import TopupByRandomQR from "../dashboard/pages/Topup/TopupByRandomQR";
 import TopupUpWithoutPull from "../dashboard/pages/Topup/TopupUpWithoutPull";
+import TicketSupport from "../dashboard/pages/ticketSupport"
 
 export const routes = [
   {
@@ -264,6 +265,14 @@ export const routes = [
     element: (
       <MainLayout>
         <AutoCompounding />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/ticket_support",
+    element: (
+      <MainLayout>
+        <TicketSupport />{" "}
       </MainLayout>
     ),
   },

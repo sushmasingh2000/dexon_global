@@ -17,6 +17,7 @@ import TradePair from "../Pages/tradePair/TradePair";
 import UpdateROICond from "../Pages/income/UpdateROICond";
 import RankBonus from "../Pages/income/RankBonus";
 import RewardBonus from "../Pages/income/RewardBonus";
+import Ticket from "../Pages/Ticket/ticket"
 
 export const adminroutes = [
   {
@@ -128,6 +129,12 @@ export const adminroutes = [
     path: "/rewardBonus",
     component: <RewardBonus />,
     navItem: "Dexon Global Reward Pool",
+  },
+  {
+    id: 52,
+    path: "/tickets",
+    component: <Ticket />,
+    navItem: "Dexon Global Tickets",
   },
 
 ];

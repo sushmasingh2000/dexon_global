@@ -91,6 +91,11 @@ const menu = [
 
     ]
   },
+  {
+    title: "Ticket & Support",
+    icon: <CurrencyExchangeIcon />,
+    path: "/ticket_support"
+  },
   // {
   //   title: "Master Account",
   //   icon: <CurrencyExchangeIcon />,
