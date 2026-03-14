@@ -1,19 +1,19 @@
+import { Block, CheckCircle, Edit } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
 import {
-  apiConnectorGetAdmin,
-  apiConnectorPostAdmin,
+  apiConnectorPostAdmin
 } from "../../../utils/APIConnector";
 import { endpoint, frontend } from "../../../utils/APIRoutes";
 import { getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
-import { Edit, Block, CheckCircle } from "@mui/icons-material";
-import toast from "react-hot-toast";
+import { Switch } from "@mui/material";
 
 // ── Reusable styled input ─────────────────────────────────────────────────────
 const ModalInput = ({ label, name, type = "text", value, onChange, placeholder = "", required = false, mono = false, rightSlot }) => (
@@ -68,16 +68,16 @@ const EyeToggle = ({ visible, onToggle }) => (
 
 // ── Edit Profile Modal ────────────────────────────────────────────────────────
 const EditProfileModal = ({ row, onClose, onSaved }) => {
-  const [loading, setLoading]         = useState(false);
-  const [showPass, setShowPass]       = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const fk = useFormik({
     initialValues: {
-      name:            row?.lgn_name    || "",
-      email:           row?.lgn_email   || "",
-      mobile:          row?.lgn_mobile  || "",
-      password:        "",
+      name: row?.lgn_name || "",
+      email: row?.lgn_email || "",
+      mobile: row?.lgn_mobile || "",
+      password: "",
       confirmPassword: "",
     },
     enableReinitialize: true,
@@ -106,9 +106,9 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
       try {
         const res = await apiConnectorPostAdmin(endpoint?.update_profile, {
           editUserId: row?.lgn_jnr_id || row?.tr03_reg_id,
-          name:    values.name,
-          email:   values.email,
-          mobile:  values.mobile,
+          name: values.name,
+          email: values.email,
+          mobile: values.mobile,
           newPass: values.password || undefined,
           type: 1,
         });
@@ -168,8 +168,8 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
                 <span className="flex-1 h-px bg-cyan-400/10" />Basic Info<span className="flex-1 h-px bg-cyan-400/10" />
               </p>
               <div className="space-y-3">
-                <ModalInput label="Name"   name="name"   value={fk.values.name}   onChange={fk.handleChange} required />
-                <ModalInput label="Email"  name="email"  type="email" value={fk.values.email}  onChange={fk.handleChange} required />
+                <ModalInput label="Name" name="name" value={fk.values.name} onChange={fk.handleChange} required />
+                <ModalInput label="Email" name="email" type="email" value={fk.values.email} onChange={fk.handleChange} required />
                 <ModalInput label="Mobile" name="mobile" value={fk.values.mobile} onChange={fk.handleChange} />
               </div>
             </div>
@@ -217,10 +217,10 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
 // ── Main MemberList ───────────────────────────────────────────────────────────
 const MemberList = () => {
   const navigate = useNavigate();
-  const [loading, setLoading]                   = useState(false);
-  const [page, setPage]                         = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
   const [revealedPassIndex, setRevealedPassIndex] = useState(null);
-  const [editRow, setEditRow]                   = useState(null);
+  const [editRow, setEditRow] = useState(null);
   const client = useQueryClient();
 
   const initialValues = { search: "", count: 10, start_date: "", end_date: "" };
@@ -229,7 +229,7 @@ const MemberList = () => {
   const { data, isLoading } = useQuery(
     ["get_member_list", fk.values.search, fk.values.start_date, fk.values.end_date, fk.values.count, page],
     () => apiConnectorPostAdmin(endpoint?.member_list, {
-      search:     fk.values.search,
+      search: fk.values.search,
       created_at: fk.values.start_date,
       updated_at: fk.values.end_date,
       page,
@@ -273,7 +273,7 @@ const MemberList = () => {
     try {
       const res = await apiConnectorPostAdmin(endpoint?.update_profile, {
         editUserId: row?.lgn_jnr_id || row?.tr03_reg_id,
-        isBlocked:  isCurrentlyBlocked ? false : true,
+        isBlocked: isCurrentlyBlocked ? false : true,
         type: 1,
       });
 
@@ -290,33 +290,96 @@ const MemberList = () => {
     setLoading(false);
   }
 
-  // ── Business popup ─────────────────────────────────────────────────────────
-  async function showBusiness(userId) {
+  // withdrwal permisson
+  async function toggleWithdrawal(row) {
+    const isAllowed = Number(row?.tr03_active_for_payout) === 0;
+    const action = isAllowed ? "Block Withdrawal" : "Allow Withdrawal";
+
+    const result = await Swal.fire({
+      title: `<span style="color:#22d3ee;font-size:1rem;">${action}?</span>`,
+      html: `<p style="color:#94a3b8;font-size:0.85rem;">
+      ${isAllowed
+          ? `Stop withdrawal for <strong style="color:#ef4444">${row?.lgn_name}</strong>?`
+          : `Allow withdrawal for <strong style="color:#22d3ee">${row?.lgn_name}</strong>?`
+        }</p>`,
+      icon: "question",
+      background: "#101827",
+      showCancelButton: true,
+      confirmButtonColor: "#22d3ee",
+      cancelButtonColor: "#374151",
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!result.isConfirmed) return;
+
     setLoading(true);
+
     try {
-      const { data } = await apiConnectorGetAdmin(endpoint?.user_dashboard_business_api, { userId });
-      const directBusiness = getFloatingValue(data?.result?.direct_business);
-      const teamBusiness   = getFloatingValue(data?.result?.team_business);
-      Swal.fire({
-        title: '<span style="color:#22d3ee;font-weight:700;font-size:1.2rem;">Total Business</span>',
-        html: `<div style="display:flex;gap:1.5rem;justify-content:center;align-items:center;margin-top:1rem;">
-          <div style="background:linear-gradient(135deg,#0a192f 60%,#22d3ee 100%);border-radius:1rem;padding:1.2rem 2.2rem;box-shadow:0 4px 24px #22d3ee33;display:flex;flex-direction:column;align-items:center;">
-            <div style="font-size:0.9rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Direct Business</div>
-            <div style="font-size:1.3rem;color:#22d3ee;font-weight:700;margin-top:0.2rem;">$${directBusiness}</div>
-          </div>
-          <div style="background:linear-gradient(135deg,#0a192f 60%,#38bdf8 100%);border-radius:1rem;padding:1.2rem 2.2rem;box-shadow:0 4px 24px #38bdf833;display:flex;flex-direction:column;align-items:center;">
-            <div style="font-size:0.9rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Team Business</div>
-            <div style="font-size:1.3rem;color:#38bdf8;font-weight:700;margin-top:0.2rem;">$${teamBusiness}</div>
-          </div>
-        </div>`,
-        background: "#101827", icon: "info",
-        confirmButtonColor: "#22d3ee", confirmButtonText: "OK",
+      const res = await apiConnectorPostAdmin(endpoint?.member_withdrawal_permission, {
+        customer_id: row?.tr03_reg_id,
+        status: isAllowed ? 1 : 0,
       });
-    } catch {
-      Swal.fire({ title: "Error", text: "Failed to fetch business data.", icon: "error" });
+
+      if (String(res?.data?.success) === "true") {
+        toast.success(res?.data?.message || "Withdrawal permission updated.");
+        client.invalidateQueries(["get_member_list"]);
+      } else {
+        toast.error(res?.data?.message || "Failed to update withdrawal permission.");
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Something went wrong.");
     }
+
     setLoading(false);
   }
+ 
+
+  async function toggleTrade(row) {
+  const isAllowed = Number(row?.tr03_active_for_trade) === 1;
+
+  const result = await Swal.fire({
+    title: `<span style="color:#22d3ee;font-size:1rem;">Change Trade Permission?</span>`,
+    html: `<p style="color:#94a3b8;font-size:0.85rem;">
+      ${
+        isAllowed
+          ? `Block trading for <strong style="color:#ef4444">${row?.lgn_name}</strong>?`
+          : `Allow trading for <strong style="color:#22d3ee">${row?.lgn_name}</strong>?`
+      }
+    </p>`,
+    icon: "question",
+    background: "#101827",
+    showCancelButton: true,
+    confirmButtonColor: "#22d3ee",
+    cancelButtonColor: "#374151",
+    confirmButtonText: "Yes",
+    cancelButtonText: "Cancel",
+  });
+
+  if (!result.isConfirmed) return;
+
+  setLoading(true);
+
+  try {
+    const res = await apiConnectorPostAdmin(endpoint?.member_trade_permission, {
+      customer_id: row?.tr03_reg_id,
+      status: isAllowed ? 0 : 1,
+    });
+
+    if (String(res?.data?.success) === "true") {
+      toast.success(res?.data?.message || "Trade permission updated.");
+      client.invalidateQueries(["get_member_list"]);
+    } else {
+      toast.error(res?.data?.message || "Failed to update trade permission.");
+    }
+  } catch (e) {
+    console.error(e);
+    toast.error("Something went wrong.");
+  }
+
+  setLoading(false);
+}
 
   const copyWalletAddress = async (walletAddress) => {
     if (!walletAddress) { Swal.fire({ title: "Not Available", text: "Wallet address is not available.", icon: "info" }); return; }
@@ -346,6 +409,8 @@ const MemberList = () => {
     <span>Fund Wallet</span>,
     <span>Status</span>,
     <span>Edit</span>,
+    <span>Withdrawal</span>,
+    <span>Trade</span>,
     <span>Block</span>,
   ];
 
@@ -399,6 +464,18 @@ const MemberList = () => {
         className="p-1 rounded-lg hover:bg-cyan-400/10 transition-colors">
         <Edit sx={{ color: "#749df5", fontSize: 20 }} />
       </button>,
+
+      <Switch
+        checked={Number(row?.tr03_active_for_payout) === 1}
+        onChange={() => toggleWithdrawal(row)}
+        color="success"
+      />,
+
+       <Switch
+        checked={Number(row?.tr03_active_for_trade) === 1}
+        onChange={() => toggleTrade(row)}
+        color="success"
+      />,
 
       // ── Block / Unblock button ──
       <button

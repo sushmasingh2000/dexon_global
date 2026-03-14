@@ -1,7 +1,7 @@
-// export const localdomain = "http://192.168.18.101:9010";
+// export const domain = "http://192.168.18.101:9010";
 // export const domain = "http://192.168.18.214:9010";
-// export const domain = "https://dexon.global";
-export const domain = "http://localhost:2000";
+export const domain = "https://dexon.global";
+// export const domain = "http://localhost:2000";
 
 export const frontend = "https://dexon.global";
 
@@ -115,4 +115,10 @@ export const endpoint = {
   user_message: `${domain}/api/v9/user-message`,
   admin_reply: `${domain}/api/v9/admin-reply`,
   get_user_message: `${domain}/api/v9/get-user-messages`,
+
+  member_withdrawal_permission: `${domain}/api/v9/member-withd-perm`,
+  member_trade_permission: `${domain}/api/v9/member-trade-perm`,
+  
+
+  
 };
