@@ -103,20 +103,33 @@ const Sidebar = () => {
                   navigate(nav.navLink);
                   if (hasChildren) handleCollapse(nav.navLink);
                 }}
+                onContextMenu={(e) => {
+                  if (!hasChildren) {
+                    e.preventDefault();
+                    window.open(nav.navLink, "_blank");
+                  }
+                }}
                 title={!openSlide ? nav.navItem : undefined}
                 className={`
-                w-full flex items-center gap-3 rounded-xl mb-1 transition-all duration-200
-                ${openSlide ? "px-3 py-3" : "px-0 py-3 justify-center"}
-                group relative overflow-hidden
-                ${isActive
-                    ? "text-white"
-                    : "text-cyan-300/70 hover:text-cyan-100"
+                  w-full flex items-center gap-3 rounded-xl mb-1 transition-all duration-200
+                  ${openSlide ? "px-3 py-3" : "px-0 py-3 justify-center"}
+                  group relative overflow-hidden
+                  ${
+                    isActive
+                      ? "text-white"
+                      : "text-cyan-300/70 hover:text-cyan-100"
                   }
-              `}
-                style={isActive ? {
-                  background: 'linear-gradient(135deg, rgba(6,182,212,0.25) 0%, rgba(14,116,144,0.15) 100%)',
-                  boxShadow: 'inset 0 0 0 1px rgba(34,211,238,0.3), 0 4px 16px rgba(6,182,212,0.15)',
-                } : {}}
+                `}
+                style={
+                  isActive
+                    ? {
+                        background:
+                          "linear-gradient(135deg, rgba(6,182,212,0.25) 0%, rgba(14,116,144,0.15) 100%)",
+                        boxShadow:
+                          "inset 0 0 0 1px rgba(34,211,238,0.3), 0 4px 16px rgba(6,182,212,0.15)",
+                      }
+                    : {}
+                }
               >
                 {/* Hover bg */}
                 {!isActive && (
@@ -163,6 +176,10 @@ const Sidebar = () => {
                       <button
                         key={subNav.id}
                         onClick={() => navigate(subNav.navLink)}
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+                            window.open(subNav.navLink, "_blank");
+                        }}
                         title={!openSlide ? subNav.navItem : undefined}
                         className={`
                         w-full flex items-center gap-3 rounded-lg mb-0.5 transition-all duration-200

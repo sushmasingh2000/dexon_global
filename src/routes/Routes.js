@@ -30,6 +30,7 @@ import AutoCompounding from "../dashboard/pages/income/AutoCompounding";
 import TopupByRandomQR from "../dashboard/pages/Topup/TopupByRandomQR";
 import TopupUpWithoutPull from "../dashboard/pages/Topup/TopupUpWithoutPull";
 import TicketSupport from "../dashboard/pages/ticketSupport"
+import CapitalPayout from "../dashboard/pages/capitalPayout"
 
 export const routes = [
   {
@@ -53,6 +54,14 @@ export const routes = [
     element: (
       <MainLayout>
         <Payout />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/capital-with",
+    element: (
+      <MainLayout>
+        <CapitalPayout />{" "}
       </MainLayout>
     ),
   },

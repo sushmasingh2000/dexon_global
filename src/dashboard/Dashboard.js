@@ -1,12 +1,5 @@
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import CandlestickChartIcon from "@mui/icons-material/CandlestickChart";
-import InsightsIcon from "@mui/icons-material/Insights";
 import PaidIcon from "@mui/icons-material/Paid";
-import PieChartIcon from "@mui/icons-material/PieChart";
-import StackedBarChartIcon from "@mui/icons-material/StackedBarChart";
-import TimelineIcon from "@mui/icons-material/Timeline";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import copy from "copy-to-clipboard";
 import toast from "react-hot-toast";
@@ -17,12 +10,20 @@ import { apiConnectorGet } from "../utils/APIConnector";
 import { endpoint, frontend } from "../utils/APIRoutes";
 import { getFloatingValue } from "../utils/utilityFun";
 import tether from "../images/tether.png";
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import Groups2Icon from "@mui/icons-material/Groups2";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import Diversity3Icon from "@mui/icons-material/Diversity3";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import {
+  FaChartBar,
+  FaChartPie,
+  FaChartLine,
+  FaLightbulb,
+  FaLayerGroup,
+  FaRobot,
+  FaUsers,
+  FaUserFriends,
+  FaTrophy,
+} from "react-icons/fa";
+import { BiSolidBusiness } from "react-icons/bi";
+import { MdCurrencyExchange} from "react-icons/md";
+import { GiTwoCoins} from "react-icons/gi";
 const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
   const colors = {
     cyan: {
@@ -97,14 +98,14 @@ const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
 
   const currentColor = colors[color];
   const chart = [
-    <BarChartIcon color={currentColor.iconColor} />,
-    <PieChartIcon color={currentColor.iconColor} />,
-    <TimelineIcon color={currentColor.iconColor} />,
-    <InsightsIcon color={currentColor.iconColor} />,
+    <FaChartBar />,
+    <FaChartPie />,
+    <FaChartLine />,
+    <FaLightbulb />,
     <TrendingUpIcon color={currentColor.iconColor} />,
-    <CandlestickChartIcon color={currentColor.iconColor} />,
-    <StackedBarChartIcon color={currentColor.iconColor} />,
-    <AutoGraphIcon color={currentColor.iconColor} />,
+    <FaLayerGroup />,
+    <FaRobot />,
+    <GiTwoCoins />,
   ];
 
   return (
@@ -905,7 +906,7 @@ const Dashboard = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-xl animate-pulse"></div>
               <div className="flex items-center justify-center text-[#FFD700]">
-                <Diversity3Icon className="!text-9xl" />
+                <FaUsers style={{ fontSize: "6rem" }} />
               </div>
             </div>
           </div>
@@ -915,7 +916,7 @@ const Dashboard = () => {
             {/* Direct Team */}
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
               <div className="flex items-center gap-2 text-[#FFD700]">
-                <Diversity3Icon />
+                <FaUserFriends />
                 <span className="text-gray-300 text-sm font-medium">
                   Direct Member
                 </span>
@@ -929,7 +930,7 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
               <div className="flex items-center gap-2 text-[#FFD700]">
-                <Diversity3Icon />
+                <FaUsers />
                 <span className="text-gray-300 text-sm font-medium">
                   Team Member
                 </span>
@@ -945,7 +946,7 @@ const Dashboard = () => {
             {/* Direct TopUp Member */}
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
               <div className="flex items-center gap-2 text-[#FFD700]">
-                <CurrencyExchangeIcon />
+                <BiSolidBusiness />
                 <span className="text-gray-300 text-sm font-medium">
                   Direct Business
                 </span>
@@ -958,7 +959,7 @@ const Dashboard = () => {
             {/* Total Income */}
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
               <div className="flex items-center gap-2 text-[#FFD700]">
-                <CurrencyExchangeIcon />
+                <MdCurrencyExchange />
                 <span className="text-gray-300 text-sm font-medium">
                   Team Bussiness
                 </span>
@@ -969,7 +970,7 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center justify-between py-2 border-b border-blue-400/10">
               <div className="flex items-center gap-2 text-[#FFD700]">
-                <EmojiEventsIcon />
+                <FaTrophy />
                 <span className="text-gray-300 text-sm font-medium">
                   Current Rank
                 </span>
@@ -1104,7 +1105,7 @@ const Dashboard = () => {
         <Card
           title="Leadership Rank Bonus"
           value={`$${getFloatingValue(dashboard?.salary_bonus || 0)}`}
-          color="red"
+          color="yellow"
           path="/income/salary"
           navigate={navigate}
         />

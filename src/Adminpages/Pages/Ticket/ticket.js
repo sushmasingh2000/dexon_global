@@ -81,8 +81,8 @@ const TicketAndSupport = () => {
     ],
     () =>
       apiConnectorPostAdmin(endpoint?.get_user_message, {
-        start_date: fk.values.start_date,   // ✅ fixed: was "created_at"
-        end_date:   fk.values.end_date,     // ✅ fixed: was "updated_at"
+        start_date: fk.values.start_date,
+        end_date:   fk.values.end_date, 
         page,
         count: fk.values.count,
         order: "DESC",

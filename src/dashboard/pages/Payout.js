@@ -77,8 +77,8 @@ function Payout() {
     const reqbody = {
       wallet_address: String(fk.values.walletAddress || user_profile?.lgn_wallet_add)?.trim(),
       user_amount: Number(fk.values.amount)?.toFixed(3),
-      wallet_type: walletType,
       package_id: packageId,
+      wallet_type: walletType,
     };
     console.log(reqbody);
 
@@ -102,7 +102,6 @@ function Payout() {
     }
 
     setLoding(true);
-
     try {
       const res = await apiConnectorPost(
         endpoint?.member_payout,
@@ -149,10 +148,19 @@ function Payout() {
   );
   const user_profile = profile?.data?.result?.[0] || [];
 
-  const maxAmount = fk.values.wallet_type === "earning"
-        ? parseFloat(user_profile?.tr03_inc_wallet || 0)
-        : parseFloat(user_profile?.tr03_topup_wallet || 0);
+  const selectedPackage = allData.find(
+    (item) => `${item.tr07_trans_id}` === fk.values.growth_option
+  );
 
+const maxAmount = fk.values.wallet_type === "earning"
+  ? parseFloat(user_profile?.tr03_inc_wallet || 0)
+  : fk.values.wallet_type === "growth" && selectedPackage
+    ? parseFloat(
+        fk.values.growth_type === "capital"
+          ? (selectedPackage.tr09_real_amount - selectedPackage.tr09_withdraw_amount)
+          : (selectedPackage.tr09_roi_amount - selectedPackage.tr09_withdraw_roi)
+      )
+    : parseFloat(user_profile?.tr03_topup_wallet || 0);
 
   // Fixed Withdrawal Component — drop-in replacement for your return block
 
