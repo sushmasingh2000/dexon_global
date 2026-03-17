@@ -99,6 +99,12 @@ export const all_Data = [
         navItem: "Member Topup History",
         navIcon: <span><FaHistory style={iconStyle} /></span>,
       },
+      {
+        id: 7.6,
+        navLink: "/p2pTransferHistory",
+        navItem: "P2P Transfer History",
+        navIcon: <span><FaExchangeAlt style={iconStyle} /></span>,
+      },
     ],
   },
 

@@ -10,8 +10,9 @@ import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
 import { apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint, frontend } from "../../../utils/APIRoutes";
-import { getFloatingValue } from "../../../utils/utilityFun";
+import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
+import moment from "moment";
 
 // ── Reusable styled input ─────────────────────────────────────────────────────
 const ModalInput = ({ label, name, type = "text", value, onChange, placeholder = "", required = false, mono = false, rightSlot }) => (
@@ -370,6 +371,7 @@ const MemberList = () => {
     <span>Mobile</span>,
     <span>Customer Id</span>,
     <span>Name</span>,
+    <span>Registration Date</span>,
     <span>Password</span>,
     <span>Spon Id</span>,
     <span>Spon Name</span>,
@@ -412,6 +414,7 @@ const MemberList = () => {
       >{row.lgn_cust_id}</span>,
 
       <span>{row.lgn_name || "N/A"}</span>,
+      <span>{formatedDate(moment,row.tr03_reg_date)}</span>,
 
       // Password reveal
       <span>

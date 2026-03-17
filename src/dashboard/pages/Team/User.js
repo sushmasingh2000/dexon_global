@@ -104,7 +104,7 @@ const UserDetail = () => {
 
   const tablerow = data?.data?.map((i, index) => {
     return [
-      <span>{index + 1}</span>,
+       <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
       <span
         className={`${i?.lgn_token ? "!text-blue-600" : "!text-black"}`}
         onClick={() =>

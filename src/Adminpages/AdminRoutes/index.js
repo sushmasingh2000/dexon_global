@@ -19,6 +19,7 @@ import RankBonus from "../Pages/income/RankBonus";
 import RewardBonus from "../Pages/income/RewardBonus";
 import Ticket from "../Pages/Ticket/ticket"
 import SubadminPermission from "../Pages/subadmin/subadminPer"
+import P2PFundTrasnfer from "../Pages/fundmanagement/p2pFundTransfer";
 
 export const adminroutes = [
   {
@@ -141,6 +142,12 @@ export const adminroutes = [
     id: 53,
     path: "/subadmin-permission",
     component: <SubadminPermission />,
+    navItem: "Subadmin Permission",
+  },
+  {
+    id: 53,
+    path: "/p2pTransferHistory",
+    component: <P2PFundTrasnfer />,
     navItem: "Subadmin Permission",
   },
 ];

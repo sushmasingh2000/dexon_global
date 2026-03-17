@@ -65,7 +65,7 @@ const PayoutReport = () => {
   ];
   const tablerow = allData?.data?.map((row, index) => {
     return [
-      <span>{index + 1}</span>,
+       <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
       <span>{row?.tr11_transacton_id}</span>,
       <span>{formatedDate(moment, row?.tr11_created_at)}</span>,
       <span>{row.tr11_wallet_type}</span>,

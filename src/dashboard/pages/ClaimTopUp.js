@@ -76,7 +76,7 @@ const ClaimTopUp = () => {
   ];
   const tablerow = allData?.data?.map((row, index) => {
     return [
-      <span>{index + 1}</span>,
+      <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
       <span>{row?.m06_trans_id}</span>,
       <span>{getFloatingValue(row.m06_rece_amount, 3)}</span>,
       <span>{formatedDate(moment, row?.m06_created_at)}</span>,
