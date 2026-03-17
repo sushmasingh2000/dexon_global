@@ -18,6 +18,7 @@ import UpdateROICond from "../Pages/income/UpdateROICond";
 import RankBonus from "../Pages/income/RankBonus";
 import RewardBonus from "../Pages/income/RewardBonus";
 import Ticket from "../Pages/Ticket/ticket"
+import SubadminPermission from "../Pages/subadmin/subadminPer"
 
 export const adminroutes = [
   {
@@ -136,5 +137,10 @@ export const adminroutes = [
     component: <Ticket />,
     navItem: "Dexon Global Tickets",
   },
-
+  {
+    id: 53,
+    path: "/subadmin-permission",
+    component: <SubadminPermission />,
+    navItem: "Subadmin Permission",
+  },
 ];

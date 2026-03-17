@@ -154,4 +154,11 @@ export const all_Data = [
     navIcon: <span><FaChartLine style={iconStyle} /></span>,
     subcomponent: [],
   },
+  {
+    id: 12,
+    navLink: "/subadmin-permission",
+    navItem: "Subadmin Permission",
+    navIcon: <span><FaChartLine style={iconStyle} /></span>,
+    subcomponent: [],
+  },
 ];

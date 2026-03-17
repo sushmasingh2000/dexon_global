@@ -120,5 +120,12 @@ export const endpoint = {
   member_trade_permission: `${domain}/api/v9/member-trade-perm`,
   
 
+  // ── Sub-Admin management (Admin only) ────────────────────────────────────────
+  get_subadmins:`${domain}/api/v9/get-subadmins`,
+  update_subadmin_permissions:`${domain}/api/v9/update-subadmin-permissions`,
+  toggle_subadmin_status:`${domain}/api/v9/toggle-subadmin-status`,
+ 
+  // ── Sub-Admin self (called after SubAdmin login) ─────────────────────────────
+ toggle_subadmin_access:`${domain}/api/v9/toggle-subadmin-access`
   
 };
