@@ -23,7 +23,7 @@ export default function MobileNavigation() {
     <>
       {/* ─── TOP APP BAR ─── */}
       <div
-        className="flex items-center justify-between px-4 py-3 md:hidden flex-shrink-0"
+        className="flex items-center justify-between px-4 py-3 flex-shrink-0"
         style={{
           background: "linear-gradient(90deg, #060d14 0%, #0a1219 100%)",
           borderBottom: "1px solid rgba(34,211,238,0.15)",
@@ -66,7 +66,7 @@ export default function MobileNavigation() {
       {/* ─── BACKDROP ─── */}
       {drawerOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm "
           onClick={() => setDrawerOpen(false)}
         />
       )}
@@ -74,7 +74,7 @@ export default function MobileNavigation() {
       {/* ─── DRAWER ─── */}
       <div
         className={`
-          fixed top-0 left-0 z-50 h-full w-72 md:hidden
+          fixed top-0 left-0 z-50 h-full w-72 
           flex flex-col
           transition-transform duration-300 ease-in-out
           ${drawerOpen ? "translate-x-0" : "-translate-x-full"}
