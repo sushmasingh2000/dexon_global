@@ -19,27 +19,20 @@ const Navbar = () => {
   return (
     <nav
       className="
-        sticky top-0 z-50 
-        bg-[#0d1519] 
+        sticky top-0 z-50
+        bg-[#0d1519]
         backdrop-blur-md
         border-b border-cyan-400/40
         shadow-[0_4px_20px_rgba(0,255,255,0.15)]
       "
     >
-      <div className="flex items-center justify-between px-6 py-3">
-        {/* Left (Menu / Logo space) */}
-        <div className="flex items-center gap-4">
-          <button className="lg:hidden text-cyan-400 text-2xl focus:outline-none">
-            ☰
-          </button>
-        </div>
-
-        {/* Right (User) */}
+      <div className="flex items-center justify-end px-6 py-3">
+        {/* Right: User avatar / ID */}
         <div className="flex items-center gap-3">
           <div
             className="
-              w-9 h-9 rounded-full 
-              border border-cyan-400 
+              w-9 h-9 rounded-full
+              border border-cyan-400
               flex items-center justify-center
               shadow-[0_0_10px_rgba(0,255,255,0.6)]
             "
