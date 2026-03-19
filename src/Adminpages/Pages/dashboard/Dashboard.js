@@ -37,6 +37,10 @@ const Dashboard = () => {
       label: "Total Deposit Amount",
       value: `${dollar} ${getFloatingValue(dashboard?.total_deposit)}`,
     },
+      {
+      label: "Capital Withdrawal",
+      value: `${dollar} ${getFloatingValue(dashboard?.capital_wallet, 0)}`,
+    },
     {
       label: "Total Withdrawal (Success)",
       value: `${dollar} ${getFloatingValue(dashboard?.total_success_withdrawal)}`,
