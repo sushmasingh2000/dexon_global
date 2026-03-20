@@ -164,6 +164,12 @@ const CustomTable = ({
           height: 8px;
         }
 
+        thead tr:first-child th[colspan] {
+          display: none !important;
+          height: 0 !important;
+          padding: 0 !important;
+        }
+
         .custom-scrollbar::-webkit-scrollbar-track {
           background: rgba(13, 21, 25, 0.5);
           border-radius: 4px;
