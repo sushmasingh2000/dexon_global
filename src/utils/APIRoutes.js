@@ -4,6 +4,7 @@ export const domain = "https://dexon.global";
 // export const domain = "http://localhost:9036";
 
 export const frontend = "https://dexon.global";
+// export const frontend = "http://localhost:3000";
 
 
 // const isProduction = process.env.NODE_ENV === "production";

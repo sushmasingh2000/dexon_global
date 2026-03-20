@@ -163,8 +163,6 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
   );
 };
 
-// ── SubAdmin Access Toggle ─────────────────────────────────────────────────────
-// Custom pill toggle that matches the dark cyber aesthetic (not MUI Switch)
 const SubAdminToggle = ({ enabled, onChange, loading }) => (
   <button
     onClick={onChange}
