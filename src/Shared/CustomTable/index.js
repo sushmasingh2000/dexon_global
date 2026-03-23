@@ -159,7 +159,7 @@ const CustomTable = ({
       )}
 
       {/* Custom Scrollbar Styles */}
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           height: 8px;
         }

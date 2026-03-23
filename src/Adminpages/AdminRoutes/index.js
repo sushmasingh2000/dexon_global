@@ -20,6 +20,7 @@ import RewardBonus from "../Pages/income/RewardBonus";
 import Ticket from "../Pages/Ticket/ticket"
 import SubadminPermission from "../Pages/subadmin/subadminPer"
 import P2PFundTrasnfer from "../Pages/fundmanagement/p2pFundTransfer";
+import MasterConfig from "../Pages/masterConfig/masterConfig"
 
 export const adminroutes = [
   {
@@ -27,6 +28,12 @@ export const adminroutes = [
     path: "/admindashboard",
     component: <Dashboard />,
     navItem: "Dashboard",
+  },
+  {
+    id: 3,
+    path: "/masterConfig",
+    component: <MasterConfig />,
+    navItem: "Master Config",
   },
   {
     id: 19,

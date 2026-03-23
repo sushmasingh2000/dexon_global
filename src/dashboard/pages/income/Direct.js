@@ -43,7 +43,7 @@ const Direct = () => {
   ];
 
   const tablerow = allData?.data?.map((row, index) => [
-    <span>{index + 1}</span>,
+    <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
     <span>{row.tr07_trans_id}</span>,
     <span>{formatedDate(moment, row.tr07_created_at)}</span>,
     <span>{getFloatingValue(row.tr07_tr_amount)}</span>,

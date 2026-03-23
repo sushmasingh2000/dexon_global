@@ -258,7 +258,7 @@ function TopupByRandomQR() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
       .bg-size-200 {
         background-size: 200% 100%;
       }

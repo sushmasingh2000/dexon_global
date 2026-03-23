@@ -1,10 +1,10 @@
 // export const domain = "http://192.168.18.101:9010";
 // export const domain = "http://192.168.18.214:9010";
-export const domain = "https://dexon.global";
-// export const domain = "http://localhost:9036";
+// export const domain = "https://dexon.global";
+export const domain = "http://localhost:9036";
 
-export const frontend = "https://dexon.global";
-// export const frontend = "http://localhost:3000";
+// export const frontend = "https://dexon.global";
+export const frontend = "http://localhost:3000";
 
 
 // const isProduction = process.env.NODE_ENV === "production";
@@ -112,6 +112,8 @@ export const endpoint = {
   inr_payout_data: `${domain}/api/v9/get-withdrawal-details-admin`,
   update_trade_profit: `${domain}/api/v9/update-trade-profit`,
   verify_totp: `${domain}/api/v9/verify_totp`,
+  get_master_config: `${domain}/api/v9/get-master-data`,
+  update_master_config:`${domain}/api/v9/update-master-data`,
 
   user_message: `${domain}/api/v9/user-message`,
   admin_reply: `${domain}/api/v9/admin-reply`,

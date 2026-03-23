@@ -17,6 +17,8 @@ import {
   FaHeadset,
   FaBullhorn,
   FaChartLine,
+  FaCogs,
+  FaUserShield,
 } from "react-icons/fa";
 
 const iconStyle = { color: "#749df5", fontSize: "1.25rem" };
@@ -27,6 +29,13 @@ export const all_Data = [
     navLink: "/admindashboard",
     navItem: "Dashboard",
     navIcon: <span><FaChartPie style={iconStyle} /></span>,
+    subcomponent: [],
+  },
+  {
+    id: 3,
+    navLink: "/masterConfig",
+    navItem: "Master Config",
+    navIcon: <span><FaCogs style={iconStyle} /></span>,
     subcomponent: [],
   },
 
@@ -161,10 +170,10 @@ export const all_Data = [
     subcomponent: [],
   },
   {
-    id: 12,
+    id: 13,
     navLink: "/subadmin-permission",
     navItem: "Subadmin Permission",
-    navIcon: <span><FaChartLine style={iconStyle} /></span>,
+    navIcon: <span><FaUserShield style={iconStyle} /></span>,
     subcomponent: [],
   },
 ];

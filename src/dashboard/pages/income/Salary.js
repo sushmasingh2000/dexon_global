@@ -41,7 +41,7 @@ const Salary = () => {
   ];
 
   const tablerow = allData?.data?.map((row, index) => [
-    <span>{index + 1}</span>,
+    <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
     <span>{moment(row.ledger_created_at)?.format("DD-MM-YYYY")}</span>,
     <span>{row.ledger_amount || "$0.00"}</span>,
     <span>{row.ledger_des || "N/A"}</span>,
