@@ -6,9 +6,11 @@ import CustomTable from "../../Shared/CustomTable";
 import CustomToPagination from "../../Shared/Pagination";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/APIConnector";
 import { endpoint } from "../../utils/APIRoutes";
-import { formatedDate } from "../../utils/utilityFun";
+import { formatedDate, swalAlert } from "../../utils/utilityFun";
 import { Visibility, AddCircleOutline } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const StatusBadge = ({ status }) => {
   const isPending = Number(status) === 0;
@@ -154,6 +156,27 @@ const UserTickets = () => {
       <Visibility sx={{ color: "#749df5", fontSize: 20 }} />
     </button>,
   ]);
+
+  const { data: profile, isLoading: profileLoading } = useQuery(
+      ["get_profile"],
+      () => apiConnectorGet(endpoint?.profile_api),
+      {
+        refetchOnMount: true,      
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+      }
+    );
+    const user_profile = profile?.data?.result?.[0] || {};
+
+  const navigate = useNavigate();
+    if (user_profile.lgn_update_prof === "Deactive") {
+      swalAlert(
+        Swal,
+        "Warning",
+        "Please update all required fields in your profile to withdraw funds",
+        () => navigate("/Profile")
+      );
+    }
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (

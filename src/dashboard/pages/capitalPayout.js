@@ -7,7 +7,7 @@ import Loader from "../../Shared/Loader";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/APIConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import { enCryptData } from "../../utils/Secret";
-import { getFloatingValue } from "../../utils/utilityFun";
+import { getFloatingValue, swalAlert } from "../../utils/utilityFun";
 
 function CapitalWithdraw() {
   const [loading, setLoading] = useState(false);
@@ -184,6 +184,16 @@ function CapitalWithdraw() {
     }
     setLoading(false);
   }
+
+  const navigate = useNavigate();
+    if (user_profile.lgn_update_prof === "Deactive") {
+      swalAlert(
+        Swal,
+        "Warning",
+        "Please update all required fields in your profile to withdraw funds",
+        () => navigate("/Profile")
+      );
+    }
 
   return (
     <>

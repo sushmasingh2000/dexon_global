@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../../Shared/Loader";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/APIConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import { enCryptData } from "../../utils/Secret";
-import { getFloatingValue } from "../../utils/utilityFun";
+import { getFloatingValue, swalAlert } from "../../utils/utilityFun";
 
 function Payout() {
   const [loding, setLoding] = useState(false);
@@ -163,7 +163,15 @@ const maxAmount = fk.values.wallet_type === "earning"
     : parseFloat(user_profile?.tr03_topup_wallet || 0);
 
   // Fixed Withdrawal Component — drop-in replacement for your return block
-
+  const navigate = useNavigate();
+  if (user_profile.lgn_update_prof === "Deactive") {
+    swalAlert(
+      Swal,
+      "Warning",
+      "Please update all required fields in your profile to withdraw funds",
+      () => navigate("/Profile")
+    );
+  }
   return (
     <>
       <Loader isLoading={loding} />
