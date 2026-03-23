@@ -100,7 +100,7 @@ export const endpoint = {
   create_trade_pair_api: `${domain}/api/v9/create-trade-pair`,
   get_trade_api: `${domain}/api/v9/get-trade-pair`,
   update_trade_pair_api: `${domain}/api/v9/update-trade-pair-status`,
-  delete_trade_pair_api: `${domain}/api/v9//delete-trade-pair`,
+  delete_trade_pair_api: `${domain}/api/v9/delete-trade-pair`,
   topup_api: `${domain}/api/v9/admin-topup-id`,
   cp_topup_api: `${domain}/api/v9/team-topup-fund-added-by-admin`,
   get_topup_api: `${domain}/api/v9/get-topup-details-admin`,
