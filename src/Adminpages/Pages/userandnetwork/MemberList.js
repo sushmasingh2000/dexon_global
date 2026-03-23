@@ -248,8 +248,15 @@ const MemberList = () => {
   }
 
   // ── Withdrawal permission ──────────────────────────────────────────────────
-  async function toggleWithdrawal(row) {
-    const isAllowed = Number(row?.tr03_active_for_payout) === 0;
+  async function toggleWithdrawal(row,walletType) {
+    let isAllowed ;
+    if(walletType=== "Growth"){
+      isAllowed=Number(row?.tr03_active_for_growth_payout);
+    }
+    else{
+      isAllowed=Number(row?.tr03_active_for_earning_payout)
+    }
+    
     const result = await Swal.fire({
       title: `<span style="color:#22d3ee;font-size:1rem;">${isAllowed ? "Block Withdrawal" : "Allow Withdrawal"}?</span>`,
       html: `<p style="color:#94a3b8;font-size:0.85rem;">${isAllowed
@@ -263,7 +270,7 @@ const MemberList = () => {
     setLoading(true);
     try {
       const res = await apiConnectorPostAdmin(endpoint?.member_withdrawal_permission, {
-        customer_id: row?.tr03_reg_id, status: isAllowed ? 1 : 0,
+        customer_id: row?.tr03_reg_id, status: isAllowed ? 0 : 1,walletType,
       });
       if (String(res?.data?.success) === "true") {
         toast.success(res?.data?.message || "Withdrawal permission updated.");
@@ -381,7 +388,8 @@ const MemberList = () => {
     <span>Fund Wallet</span>,
     <span>Status</span>,
     <span>Edit</span>,
-    <span>Withdrawal</span>,
+    <span>Growth Withdraw</span>,
+    <span>Earning Withdraw</span>,
     <span>Trade</span>,
     // ── New column ──
     <span className="flex items-center gap-1">
@@ -451,7 +459,9 @@ const MemberList = () => {
       </button>,
 
       // Withdrawal
-      <Switch checked={Number(row?.tr03_active_for_payout) === 1} onChange={() => toggleWithdrawal(row)} color="success" />,
+      <Switch checked={Number(row?.tr03_active_for_growth_payout) === 1} onChange={() => toggleWithdrawal(row,"Growth",)} color="success" />,
+
+      <Switch checked={Number(row?.tr03_active_for_earning_payout) === 1} onChange={() => toggleWithdrawal(row,"Earning")} color="success" />,
 
       // Trade
       <Switch checked={Number(row?.tr03_active_for_trade) === 1} onChange={() => toggleTrade(row)} color="success" />,
