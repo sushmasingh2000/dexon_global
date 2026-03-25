@@ -164,7 +164,7 @@ const maxAmount = fk.values.wallet_type === "earning"
 
   // Fixed Withdrawal Component — drop-in replacement for your return block
   const navigate = useNavigate();
-  if (user_profile.lgn_update_prof === "Deactive") {
+  if (user_profile.lgn_update_prof === "Deactive" && user_profile?.tr03_topup_date !== null) {
     swalAlert(
       Swal,
       "Warning",

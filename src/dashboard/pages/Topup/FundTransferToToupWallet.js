@@ -128,7 +128,7 @@ function FundTransferToToupWallet() {
   }, [fk.values.customer_id]);
 
 
-  if (user_profile?.lgn_update_prof === "Deactive") {
+  if (user_profile?.lgn_update_prof === "Deactive" && user_profile?.tr03_topup_date !== null) {
     swalAlert(
       Swal,
       "Warning",

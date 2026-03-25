@@ -169,11 +169,11 @@ const UserTickets = () => {
     const user_profile = profile?.data?.result?.[0] || {};
 
   const navigate = useNavigate();
-    if (user_profile.lgn_update_prof === "Deactive") {
+  if (user_profile.lgn_update_prof === "Deactive" && user_profile?.tr03_topup_date !== null) {
       swalAlert(
         Swal,
         "Warning",
-        "Please update all required fields in your profile to withdraw funds",
+        "Please update all required fields in your profile to raise tickets",
         () => navigate("/Profile")
       );
     }
