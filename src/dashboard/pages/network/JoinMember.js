@@ -8,21 +8,17 @@ import { endpoint } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 
 const JoinMember = () => {
-  const [level, setLevel] = useState(1);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [searchTrigger, setSearchTrigger] = useState(0);
+  const [limit] = useState(10);
 
   const { isLoading, data: team_data } = useQuery(
-    ["get_direct_member", level, searchTrigger, page, limit],
+    ["get_direct_member", page, limit],
     () =>
-      apiConnectorPost(
-        `${endpoint?.team_data_api}`, {
+      apiConnectorPost(`${endpoint?.team_data_api}`, {
         level_id: 1,
         page: page,
-        limit: limit
-      }
-      ),
+        limit: limit,
+      }),
     {
       refetchOnMount: false,
       refetchOnReconnect: false,
@@ -31,136 +27,140 @@ const JoinMember = () => {
       refetchOnWindowFocus: false,
     }
   );
+
   const data = team_data?.data?.result || [];
-
-
 
   const tablehead = [
     <span>S.No.</span>,
-    <span>Cust Id</span>,
+    <span>Cust ID</span>,
     <span>Name</span>,
     <span>Level</span>,
-    <span>TopUp Amount ($)</span>,
+    <span>TopUp ($)</span>,
     <span>Join Date</span>,
     <span>TopUp Date</span>,
   ];
-  const tablerow = data?.data?.map((row, index) => {
-    return [
-      <span> {index + 1}</span>,
-      <span>{row.lgn_cust_id}</span>,
-      <span>{row.lgn_name}</span>,
-      <span>{row.level_id || "N/A"}</span>,
-      <span>{getFloatingValue(row.tr03_topup_wallet)}</span>,
-      <span>{formatedDate(moment, row.tr03_reg_date)}</span>,
-      <span>
-        {formatedDate(moment, row.tr03_topup_date)}
-      </span>,
-    ];
-  });
+
+  const tablerow = data?.data?.map((row, index) => [
+    <span>{index + 1}</span>,
+    <span>{row.lgn_cust_id}</span>,
+    <span>{row.lgn_name}</span>,
+    <span>{row.level_id || "N/A"}</span>,
+    <span>{getFloatingValue(row.tr03_topup_wallet)}</span>,
+    <span>{formatedDate(moment, row.tr03_reg_date)}</span>,
+    <span>{formatedDate(moment, row.tr03_topup_date)}</span>,
+  ]);
+
   return (
-    <div className="p-2">
-      {/* Heading */}
-      <h2
-        className="
-        text-xl font-semibold mb-4 text-gray-200
-        px-4 py-2 rounded-md
-        bg-black
-        shadow-md shadow-white/30  text-center
-      "
+    <div
+      className="p-4 min-h-screen"
+      style={{ background: "linear-gradient(135deg, #060d1a 0%, #080f1e 50%, #060a14 100%)" }}
+    >
+      {/* Decorative blobs */}
+      <div className="fixed top-0 right-0 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="fixed bottom-0 left-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none"></div>
+
+      {/* Page Heading */}
+      <div className="relative mb-6">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-1 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full"></div>
+          <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-sky-400 tracking-wide">
+            My Direct Members
+          </h2>
+        </div>
+        <div className="ml-4 h-px bg-gradient-to-r from-cyan-400/40 to-transparent"></div>
+      </div>
+
+      {/* Stats Card */}
+      <div
+        className="relative rounded-xl p-4 mb-5 border border-cyan-400/20 overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(6,13,26,0.9) 0%, rgba(8,15,30,0.9) 100%)" }}
       >
-        My Direct Members
-      </h2>
+        <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-cyan-400/20 rounded-tr-xl pointer-events-none"></div>
 
-      {/* Controls + Stats */}
-      {/* <div
-        className="
-        bg-black rounded-lg
-        border border-gray-700
-        p-4 mb-4
-        shadow-md shadow-white/20
-        text-white
-      "
-      >
-        <div className="mb-4">
-          <p className="text-text-color mb-2 text-sm">
-            {localStorage.getItem("isCP") === "Yes" ? "Enter" : "Select"} Level:
-          </p>
+        <div className="flex flex-wrap gap-3">
+          <div
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-400/20"
+            style={{ background: "rgba(34,211,238,0.06)" }}
+          >
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">Total Count:</span>
+            <span className="text-cyan-400 font-bold text-sm">{data?.data?.length || 0}</span>
+          </div>
 
-          <div className="flex flex-col md:flex-row gap-3">
-            {localStorage.getItem("isCP") === "No" ? (
-              <Select
-                value={level}
-                onChange={(e) => handleLevelChange(Number(e.target.value))}
-                className="bg-white rounded text-black w-full md:w-1/2"
-              >
-                {[...Array(1)].map((_, index) => (
-                  <MenuItem key={index} value={index + 1}>
-                    Level {index + 1}
-                  </MenuItem>
-                ))}
-              </Select>
-            ) : (
-              <input
-                type="number"
-                placeholder="Enter Level"
-                value={limit}
-                onChange={(e) => setLimit(e.target.value)}
-                className="px-4 py-2 rounded w-full md:w-1/2 bg-white text-black"
-              />
-            )}
-
-            {localStorage.getItem("isCP") === "Yes" && (
-              <Button
-                onClick={() => setSearchTrigger((prev) => prev + 1)}
-                size="small"
-                variant="contained"
-                className="md:self-center"
-              >
-                Search
-              </Button>
-            )}
+          <div
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-sky-400/20"
+            style={{ background: "rgba(56,189,248,0.06)" }}
+          >
+            <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+            <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">Total Business:</span>
+            <span className="text-sky-400 font-bold text-sm">
+              $
+              {data?.data
+                ?.reduce((a, b) => a + Number(b?.tr03_topup_wallet || 0), 0)
+                ?.toFixed(2) || "0.00"}
+            </span>
           </div>
         </div>
-
-        <div className="flex flex-wrap justify-between text-sm">
-          <p>
-            Total Count:{" "}
-            <span className="text-gold-color font-bold">
-              {data?.length || 0}
-            </span>
-          </p>
-
-          <p>
-            Total Buss:{" "}
-            <span className="text-gold-color font-bold">
-              {data
-                ?.reduce((a, b) => a + Number(b?.jnr_topup_wallet || 0), 0)
-                ?.toFixed(2)}
-              $
-            </span>
-          </p>
-        </div>
-      </div> */}
-
-      {/* Table Section */}
-      <div
-        className="
-        rounded-lg py-3
-        text-white
-        bg-black
-        border border-gray-700
-        shadow-md shadow-white/20
-      "
-      >
-        <CustomTable
-          tablehead={tablehead}
-          tablerow={tablerow}
-          isLoading={isLoading}
-        />
-
-        {/* Pagination (optional) */}
-        <CustomToPagination page={page} setPage={setPage} data={data} />
       </div>
+
+      {/* Table Card */}
+      <div
+        className="relative rounded-xl border border-cyan-400/20 overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(6,13,26,0.95) 0%, rgba(8,15,30,0.95) 100%)" }}
+      >
+        {/* Top accent line */}
+        <div className="h-0.5 bg-gradient-to-r from-cyan-400 via-sky-400 to-transparent"></div>
+
+        {/* Corner accent */}
+        <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-cyan-400/10 rounded-tr-xl pointer-events-none"></div>
+
+        {/* Table header label */}
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-cyan-400/10">
+          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></div>
+          <span className="text-cyan-400 text-xs font-semibold uppercase tracking-widest">
+            Direct (Level 1) Members
+          </span>
+        </div>
+
+        <div className="px-2 py-3">
+          <CustomTable
+            tablehead={tablehead}
+            tablerow={tablerow}
+            isLoading={isLoading}
+          />
+        </div>
+
+        <div className="border-t border-cyan-400/10 px-4 py-3">
+          <CustomToPagination page={page} setPage={setPage} data={data} />
+        </div>
+      </div>
+
+      {/* Table override styles — cyan theme */}
+      <style>{`
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        thead tr {
+          background: linear-gradient(90deg, rgba(34,211,238,0.12), rgba(56,189,248,0.08)) !important;
+          border-bottom: 1px solid rgba(34,211,238,0.25) !important;
+        }
+        thead th {
+          color: #22d3ee !important;
+          font-size: 12px !important;
+          font-weight: 700 !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.6px !important;
+          padding: 12px 14px !important;
+          white-space: nowrap !important;
+        }
+        thead th span, thead th div { white-space: nowrap !important; display: inline-block; }
+        tbody tr {
+          border-bottom: 1px solid rgba(34,211,238,0.07) !important;
+          transition: background 0.2s ease !important;
+        }
+        tbody tr:hover { background: rgba(34,211,238,0.05) !important; }
+        tbody tr:nth-child(even) { background: rgba(34,211,238,0.03) !important; }
+        tbody tr:nth-child(even):hover { background: rgba(34,211,238,0.07) !important; }
+        tbody td { color: #cffafe !important; font-size: 13px !important; padding: 11px 14px !important; }
+      `}</style>
     </div>
   );
 };

@@ -408,7 +408,7 @@ const DappRegistration = () => {
         </div>
 
         {/* Enhanced Custom Animations */}
-        <style jsx>{`
+        <style>{`
         .bg-size-200 {
           background-size: 200% 100%;
         }

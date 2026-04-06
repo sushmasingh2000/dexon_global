@@ -26,7 +26,7 @@ const ModalInput = ({ label, name, type = "text", value, onChange, placeholder =
         className={`w-full px-4 py-2.5 rounded-lg text-sm outline-none transition-all duration-200 placeholder:text-gray-700 ${mono ? "font-mono" : ""} ${rightSlot ? "pr-10" : ""}`}
         style={{ background: "rgba(34,211,238,0.04)", border: "1px solid rgba(34,211,238,0.14)", color: "rgba(224,242,254,0.9)" }}
         onFocus={(e) => { e.target.style.borderColor = "rgba(34,211,238,0.4)"; e.target.style.boxShadow = "0 0 0 3px rgba(34,211,238,0.07)"; }}
-        onBlur={(e)  => { e.target.style.borderColor = "rgba(34,211,238,0.14)"; e.target.style.boxShadow = "none"; }}
+        onBlur={(e) => { e.target.style.borderColor = "rgba(34,211,238,0.14)"; e.target.style.boxShadow = "none"; }}
       />
       {rightSlot && <div className="absolute right-3 top-1/2 -translate-y-1/2">{rightSlot}</div>}
     </div>
@@ -50,8 +50,8 @@ const EyeToggle = ({ visible, onToggle }) => (
 
 // ── Edit Profile Modal ────────────────────────────────────────────────────────
 const EditProfileModal = ({ row, onClose, onSaved }) => {
-  const [loading,     setLoading]     = useState(false);
-  const [showPass,    setShowPass]    = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const fk = useFormik({
@@ -122,8 +122,8 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
                 <span className="flex-1 h-px bg-cyan-400/10" />Basic Info<span className="flex-1 h-px bg-cyan-400/10" />
               </p>
               <div className="space-y-3">
-                <ModalInput label="Name"   name="name"   value={fk.values.name}   onChange={fk.handleChange} required />
-                <ModalInput label="Email"  name="email"  type="email" value={fk.values.email}  onChange={fk.handleChange} required />
+                <ModalInput label="Name" name="name" value={fk.values.name} onChange={fk.handleChange} required />
+                <ModalInput label="Email" name="email" type="email" value={fk.values.email} onChange={fk.handleChange} required />
                 <ModalInput label="Mobile" name="mobile" value={fk.values.mobile} onChange={fk.handleChange} />
               </div>
             </div>
@@ -145,8 +145,8 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
             <button type="button" onClick={onClose}
               className="flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200"
               style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.18)", color: "rgba(252,165,165,0.75)" }}
-              onMouseEnter={e => { e.currentTarget.style.background="rgba(239,68,68,0.13)"; e.currentTarget.style.color="rgba(252,165,165,1)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background="rgba(239,68,68,0.06)"; e.currentTarget.style.color="rgba(252,165,165,0.75)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.13)"; e.currentTarget.style.color = "rgba(252,165,165,1)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(239,68,68,0.06)"; e.currentTarget.style.color = "rgba(252,165,165,0.75)"; }}
             >Cancel</button>
             <button type="submit" disabled={loading}
               className="flex-1 py-2.5 rounded-xl text-xs font-bold overflow-hidden relative transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -163,8 +163,6 @@ const EditProfileModal = ({ row, onClose, onSaved }) => {
   );
 };
 
-// ── SubAdmin Access Toggle ─────────────────────────────────────────────────────
-// Custom pill toggle that matches the dark cyber aesthetic (not MUI Switch)
 const SubAdminToggle = ({ enabled, onChange, loading }) => (
   <button
     onClick={onChange}
@@ -190,14 +188,87 @@ const SubAdminToggle = ({ enabled, onChange, loading }) => (
   </button>
 );
 
+
+const PayoutModal = ({ row, onClose, onSaved }) => {
+  const [loading, setLoading] = useState(false);
+
+  const fk = useFormik({
+    initialValues: {
+      payout: row?.tr03_max_payout || "",
+    },
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const res = await apiConnectorPostAdmin(endpoint?.update_member_max_payout, {
+          user_id: row?.lgn_jnr_id || row?.tr03_reg_id,
+          max_payout: values.payout,
+        });
+
+        if (String(res?.data?.success) === "true") {
+          toast.success("Payout updated successfully");
+          onSaved();
+          onClose();
+        } else {
+          toast.error(res?.data?.message || "Update failed");
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error("Something went wrong");
+      }
+      setLoading(false);
+    },
+  });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+      <div className="bg-[#0f172a] p-6 rounded-xl w-full max-w-sm border border-cyan-400/20">
+
+        <h2 className="text-cyan-400 text-lg mb-4 font-bold">
+          Update Maximum Payout
+        </h2>
+
+        <form onSubmit={fk.handleSubmit} className="space-y-4">
+          <input
+            type="number"
+            name="payout"
+            value={fk.values.payout}
+            onChange={fk.handleChange}
+            className="w-full px-4 py-2 rounded bg-black border border-gray-600 text-white"
+            placeholder="Enter amount"
+          />
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-2 bg-red-500/20 border border-red-400 text-red-300 rounded"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-2 bg-cyan-500/20 border border-cyan-400 text-cyan-300 rounded"
+            >
+              {loading ? "Updating..." : "Update"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 // ── Main MemberList ───────────────────────────────────────────────────────────
 const MemberList = () => {
-  const navigate  = useNavigate();
-  const [loading,            setLoading]            = useState(false);
-  const [subAdminLoadingId,  setSubAdminLoadingId]  = useState(null); // tracks which row is loading
-  const [page,               setPage]               = useState(1);
-  const [revealedPassIndex,  setRevealedPassIndex]  = useState(null);
-  const [editRow,            setEditRow]            = useState(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [subAdminLoadingId, setSubAdminLoadingId] = useState(null); // tracks which row is loading
+  const [page, setPage] = useState(1);
+  const [revealedPassIndex, setRevealedPassIndex] = useState(null);
+  const [editRow, setEditRow] = useState(null);
+  const [payoutRow, setPayoutRow] = useState(null);
   const client = useQueryClient();
 
   const initialValues = { search: "", count: 10, start_date: "", end_date: "" };
@@ -206,7 +277,7 @@ const MemberList = () => {
   const { data, isLoading } = useQuery(
     ["get_member_list", fk.values.search, fk.values.start_date, fk.values.end_date, fk.values.count, page],
     () => apiConnectorPostAdmin(endpoint?.member_list, {
-      search:     fk.values.search,
+      search: fk.values.search,
       created_at: fk.values.start_date,
       updated_at: fk.values.end_date,
       page,
@@ -220,7 +291,7 @@ const MemberList = () => {
   // ── Block / Unblock ────────────────────────────────────────────────────────
   async function toggleBlock(row) {
     const isCurrentlyBlocked = row?.lgn_is_blocked === "Yes";
-    const action      = isCurrentlyBlocked ? "Unblock" : "Block";
+    const action = isCurrentlyBlocked ? "Unblock" : "Block";
     const confirmColor = isCurrentlyBlocked ? "#22d3ee" : "#ef4444";
 
     const result = await Swal.fire({
@@ -250,8 +321,15 @@ const MemberList = () => {
   }
 
   // ── Withdrawal permission ──────────────────────────────────────────────────
-  async function toggleWithdrawal(row) {
-    const isAllowed = Number(row?.tr03_active_for_payout) === 0;
+  async function toggleWithdrawal(row, walletType) {
+    let isAllowed;
+    if (walletType === "Growth") {
+      isAllowed = Number(row?.tr03_active_for_growth_payout);
+    }
+    else {
+      isAllowed = Number(row?.tr03_active_for_earning_payout)
+    }
+
     const result = await Swal.fire({
       title: `<span style="color:#22d3ee;font-size:1rem;">${isAllowed ? "Block Withdrawal" : "Allow Withdrawal"}?</span>`,
       html: `<p style="color:#94a3b8;font-size:0.85rem;">${isAllowed
@@ -265,7 +343,7 @@ const MemberList = () => {
     setLoading(true);
     try {
       const res = await apiConnectorPostAdmin(endpoint?.member_withdrawal_permission, {
-        customer_id: row?.tr03_reg_id, status: isAllowed ? 1 : 0,
+        customer_id: row?.tr03_reg_id, status: isAllowed ? 0 : 1, walletType,
       });
       if (String(res?.data?.success) === "true") {
         toast.success(res?.data?.message || "Withdrawal permission updated.");
@@ -304,7 +382,7 @@ const MemberList = () => {
   // ── SubAdmin Access Toggle ─────────────────────────────────────────────────
   async function toggleSubAdminAccess(row) {
     const isCurrentlySubAdmin = row?.lgn_user_type === "SubAdmin";
-    const action      = isCurrentlySubAdmin ? "Revoke" : "Grant";
+    const action = isCurrentlySubAdmin ? "Revoke" : "Grant";
     const confirmColor = isCurrentlySubAdmin ? "#ef4444" : "#a855f7";
 
     const result = await Swal.fire({
@@ -325,8 +403,8 @@ const MemberList = () => {
     setSubAdminLoadingId(row?.login_id);
     try {
       const res = await apiConnectorPostAdmin(endpoint?.toggle_subadmin_access, {
-        login_id:    row?.tr03_lgn_id,
-        user_type:   isCurrentlySubAdmin ? "User" : "SubAdmin",
+        login_id: row?.tr03_lgn_id,
+        user_type: isCurrentlySubAdmin ? "User" : "SubAdmin",
       });
 
       if (String(res?.data?.success) === "true") {
@@ -383,7 +461,9 @@ const MemberList = () => {
     <span>Fund Wallet</span>,
     <span>Status</span>,
     <span>Edit</span>,
-    <span>Withdrawal</span>,
+    <span>Maximum Payout</span>,
+    <span>Growth Withdraw</span>,
+    <span>Earning Withdraw</span>,
     <span>Trade</span>,
     // ── New column ──
     <span className="flex items-center gap-1">
@@ -394,8 +474,8 @@ const MemberList = () => {
   ];
 
   const tablerow = allData?.data?.map((row, index) => {
-    const isBlocked        = row?.lgn_is_blocked === "Yes";
-    const isSubAdmin       = row?.lgn_user_type === "SubAdmin";
+    const isBlocked = row?.lgn_is_blocked === "Yes";
+    const isSubAdmin = row?.lgn_user_type === "SubAdmin";
     const isThisRowLoading = subAdminLoadingId === row?.login_id;
 
     return [
@@ -414,7 +494,7 @@ const MemberList = () => {
       >{row.lgn_cust_id}</span>,
 
       <span>{row.lgn_name || "N/A"}</span>,
-      <span>{formatedDate(moment,row.tr03_reg_date)}</span>,
+      <span>{formatedDate(moment, row.tr03_reg_date)}</span>,
 
       // Password reveal
       <span>
@@ -424,7 +504,7 @@ const MemberList = () => {
         }
       </span>,
 
-      <span>{row.spon_id   || "N/A"}</span>,
+      <span>{row.spon_id || "N/A"}</span>,
       <span>{row.spon_name || "N/A"}</span>,
 
       // Wallet
@@ -452,8 +532,18 @@ const MemberList = () => {
         <Edit sx={{ color: "#749df5", fontSize: 20 }} />
       </button>,
 
+      <span
+        onClick={() => setPayoutRow(row)}
+        className="cursor-pointer text-cyan-400 hover:underline"
+      >
+        {Number(row?.tr03_max_payout)?.toFixed(0)}
+      </span>,
+
+
       // Withdrawal
-      <Switch checked={Number(row?.tr03_active_for_payout) === 1} onChange={() => toggleWithdrawal(row)} color="success" />,
+      <Switch checked={Number(row?.tr03_active_for_growth_payout) === 1} onChange={() => toggleWithdrawal(row, "Growth",)} color="success" />,
+
+      <Switch checked={Number(row?.tr03_active_for_earning_payout) === 1} onChange={() => toggleWithdrawal(row, "Earning")} color="success" />,
 
       // Trade
       <Switch checked={Number(row?.tr03_active_for_trade) === 1} onChange={() => toggleTrade(row)} color="success" />,
@@ -487,7 +577,7 @@ const MemberList = () => {
       >
         {isBlocked
           ? <CheckCircle sx={{ color: "#4ade80", fontSize: 20 }} />
-          : <Block      sx={{ color: "#f87171", fontSize: 20 }} />
+          : <Block sx={{ color: "#f87171", fontSize: 20 }} />
         }
       </button>,
     ];
@@ -504,7 +594,13 @@ const MemberList = () => {
           onCountChange={(value) => { fk.setFieldValue("count", value); setPage(1); }}
         />
       </div>
-
+      {payoutRow && (
+        <PayoutModal
+          row={payoutRow}
+          onClose={() => setPayoutRow(null)}
+          onSaved={() => client.invalidateQueries(["get_member_list"])}
+        />
+      )}
       {editRow && (
         <EditProfileModal row={editRow} onClose={() => setEditRow(null)}
           onSaved={() => client.invalidateQueries(["get_member_list"])}
