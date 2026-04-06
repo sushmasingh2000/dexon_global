@@ -1,5 +1,5 @@
 // export const domain = "http://192.168.18.101:9010";
-// export const domain = "http://192.168.18.214:9010";
+// export const domain = "http://192.168.18.214:9036";
 export const domain = "https://dexon.global";
 // export const domain = "http://localhost:9036";
 
@@ -30,7 +30,7 @@ export const endpoint = {
   profile_api: `${domain}/api/v9/member-profile-details`,
   user_dashboard_api: `${domain}/api/v9/member-dashboard-details`,
   user_dashboard_business_api: `${domain}/api/v9/member-dashboard-business`,
-  get_topup_qr: `${domain}/api/v9/get-topup-qr`,
+  get_topup_qr: `${domain}/api/v9/user-payin-crypto-fit`,
   member_self_topup: `${domain}/api/v9/member-self-topup`,
   get_report_details: `${domain}/api/v9/get-report-details`,
   get_global_payout_history: `${domain}/api/v9/get-global-payout-history`,
@@ -111,6 +111,7 @@ export const endpoint = {
   inr_payout_data: `${domain}/api/v9/get-withdrawal-details-admin`,
   update_trade_profit: `${domain}/api/v9/update-trade-profit`,
   verify_totp: `${domain}/api/v9/verify_totp`,
+  get_master_data: `${domain}/api/v9/get-master-data`,
 
   user_message: `${domain}/api/v9/user-message`,
   admin_reply: `${domain}/api/v9/admin-reply`,

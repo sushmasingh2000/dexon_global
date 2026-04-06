@@ -31,6 +31,8 @@ import TopupByRandomQR from "../dashboard/pages/Topup/TopupByRandomQR";
 import TopupUpWithoutPull from "../dashboard/pages/Topup/TopupUpWithoutPull";
 import TicketSupport from "../dashboard/pages/ticketSupport"
 import CapitalPayout from "../dashboard/pages/capitalPayout"
+import CryptofitGateway from "../dashboard/pages/Topup/CryptoFitGateway";
+import GatwayMaster from "../dashboard/pages/Topup/GatewayMaster";
 
 export const routes = [
   {
@@ -69,11 +71,19 @@ export const routes = [
   //   path: '/topup_data',
   //   element: ( <MainLayout><ActivationWithFSTAndPull /> </MainLayout>),
   // },
-  {
+  // {
+  //   path: "/topup_data",
+  //   element: (
+  //     <MainLayout>
+  //       <TopupUpWithoutPull />{" "}
+  //     </MainLayout>
+  //   ),
+  // },
+   {
     path: "/topup_data",
     element: (
       <MainLayout>
-        <TopupUpWithoutPull />{" "}
+        <GatwayMaster />{" "}
       </MainLayout>
     ),
   },
