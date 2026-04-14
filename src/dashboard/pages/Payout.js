@@ -391,7 +391,8 @@ const maxAmount = fk.values.wallet_type === "earning"
                                         onChange={() => {
                                           if (fk.values.growth_type === "capital" && item.tr09_is_locked === 1) return;
                                           fk.setFieldValue("growth_option", `${item.tr07_trans_id}`);
-                                          fk.setFieldValue("amount", parseFloat(amount).toFixed(2));
+                                          fk.setFieldValue("amount", "");
+                                          // fk.setFieldValue("amount", parseFloat(amount).toFixed(2));
                                         }}
                                         checked={isSelected}
                                         className="accent-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -494,7 +495,7 @@ const maxAmount = fk.values.wallet_type === "earning"
               <div>
                 <p className="text-amber-300 text-xs font-semibold mb-1">Important Notice</p>
                 <p className="text-amber-400/80 text-xs leading-relaxed">
-                  Withdrawals are processed automatically. Minimum withdrawal amount is $1.
+                  Withdrawals are processed automatically. Minimum withdrawal amount is $1.10.
                 </p>
               </div>
             </div>
