@@ -155,7 +155,6 @@ const Profile = () => {
   const user_profile = profile?.data?.result?.[0] || {}; // Changed to empty object for safer access
 
 
-
   const fkProfile = useFormik({
     initialValues: {
       name: user_profile?.lgn_name || "",
@@ -490,7 +489,7 @@ const Profile = () => {
                       {fkProfile.values.wallet_address || "Not set"}
                     </p>
                   </div>
-                  <button
+                  {/* <button
                     onClick={() => setShowWalletModal(true)}
                     className="flex-shrink-0 px-5 py-2 rounded-lg text-xs font-bold transition-all duration-200 hover:scale-105"
                     style={{
@@ -515,7 +514,7 @@ const Profile = () => {
                       </svg>
                       {fkProfile.values.wallet_address ? "Update" : "Add"}
                     </span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </Card>

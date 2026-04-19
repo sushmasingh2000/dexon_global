@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { domain, frontend } from "../../utils/APIRoutes";
+import { deCryptData } from "../../utils/Secret";
 
 const axiosInstance = axios.create({
   baseURL: domain,
@@ -9,8 +10,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     config.headers = {
-      Authorization: `Bearer ${localStorage.getItem("logindataen")}`,
-      token: `Bearer ${localStorage.getItem("logindataen")}`,
+      Authorization: `Bearer ${deCryptData(localStorage.getItem("logindataen"))}`,
+      token: `Bearer ${deCryptData(localStorage.getItem("logindataen"))}`,
       ...config.headers,
     };
     return config;

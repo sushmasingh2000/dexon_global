@@ -16,11 +16,47 @@ import { routes } from "./routes/Routes";
 import DappLogin from "./authentication/DappLogin";
 import DappRegistration from "./authentication/DappRegistration";
 import Main from "./Dexon";
+import { useEffect } from "react";
+import { deCryptData } from "./utils/Secret";
 
 const App = () => {
-  const user = localStorage.getItem("logindataen");
+  const user = deCryptData(localStorage.getItem("logindataen"));
   const admin = localStorage.getItem("logindataen_admin");
 
+  // Block inspect element shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // F12
+      if (e.keyCode === 123) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C
+      if (
+        (e.ctrlKey &&
+          e.shiftKey &&
+          (e.key === "I" ||
+            e.key === "i" ||
+            e.key === "J" ||
+            e.key === "j" ||
+            e.key === "C" ||
+            e.key === "c")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "u"))
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("contextmenu", handleContextMenu);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
 
   return (
     <Router>

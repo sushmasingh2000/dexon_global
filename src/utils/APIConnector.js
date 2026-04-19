@@ -1,8 +1,9 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { frontend } from "./APIRoutes";
+import { deCryptData } from "./Secret";
 
-const getUserToken  = () => localStorage.getItem("logindataen");
+const getUserToken = () => deCryptData(localStorage.getItem("logindataen"));
 const getAdminToken = () =>
   localStorage.getItem("logindataen_admin") || localStorage.getItem("token");
 
@@ -62,7 +63,7 @@ export const apiConnectorGetAdmin = async (endpoint, params) => {
       params,
     });
     if (handleInvalidToken(response)) return;
-    if (handleNoPermission(response))  return response;
+    if (handleNoPermission(response)) return response;
     return response;
   } catch (e) {
     return { msg: e?.message };
@@ -75,7 +76,7 @@ export const apiConnectorPostAdmin = async (endpoint, reqBody) => {
       headers: { Authorization: `Bearer ${getAdminToken()}` },
     });
     if (handleInvalidToken(response)) return;
-    if (handleNoPermission(response))  return response;
+    if (handleNoPermission(response)) return response;
     return response;
   } catch (e) {
     return { msg: e?.message };
@@ -94,7 +95,11 @@ export const apiConnectorGetWithoutToken = async (endpoint, params, token) => {
   }
 };
 
-export const apiConnectorPostWithdouToken = async (endpoint, reqBody, token) => {
+export const apiConnectorPostWithdouToken = async (
+  endpoint,
+  reqBody,
+  token,
+) => {
   try {
     const response = await axios.post(endpoint, reqBody, {
       headers: { Authorization: `Bearer ${token}` },

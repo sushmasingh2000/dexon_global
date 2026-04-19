@@ -16,6 +16,7 @@ import logo from "../assets/logo.png";
 import toast from "react-hot-toast";
 import { ethers } from "ethers";
 import { swalObj } from "../utils/Swal";
+import { deCryptData, enCryptData } from "../utils/Secret";
 
 const DappRegistration = () => {
   const [loading, setLoading] = useState(false);
@@ -112,10 +113,9 @@ const DappRegistration = () => {
     }
 
     const reqBodyy = {
-      wallet_address: String(walletAddress)?.toLocaleLowerCase(),
+      wallet_address_user_ka: String(walletAddress)?.toLocaleLowerCase(),
       // referral_id: String(datatele?.id)
       referral_id: String(referralInput || ""),
-
     };
     // const reqBodyy = {
     //   mobile: String("9876543210"),
@@ -127,13 +127,22 @@ const DappRegistration = () => {
     // };
 
     try {
-      const response = await axios.post(endpoint?.member_dapp_log_reg, reqBodyy, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+      const response_ = await axios.post(
+        endpoint?.member_dapp_log_reg,
+        {
+          payload: enCryptData(reqBodyy),
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        },
+      );
 
+      const response = {
+        data: deCryptData(response_?.data?.apiRes),
+      };
       setLoading(false);
       if (response?.data?.message === "Credential not found in our record") {
         return;
@@ -143,7 +152,10 @@ const DappRegistration = () => {
         dispatch(saveToken(response?.data?.result?.[0]?.token));
         dispatch(saveUsername(reqBodyy?.wallet_address));
         dispatch(saveUserCP(response?.data?.result?.[0]?.isCP));
-        localStorage.setItem("logindataen", response?.data?.result?.[0]?.token);
+        localStorage.setItem(
+          "logindataen",
+          enCryptData(response?.data?.result?.[0]?.token),
+        );
         localStorage.setItem("uid", reqBodyy?.wallet_address);
         localStorage.setItem("username", reqBodyy?.wallet_address);
         localStorage.setItem("isCP", response?.data?.result?.[0]?.isCP);
@@ -209,8 +221,14 @@ const DappRegistration = () => {
 
         {/* Multiple floating orbs */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-r from-cyan-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-l from-blue-500/20 to-indigo-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-br from-violet-400/10 to-pink-400/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div
+          className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-l from-blue-500/20 to-indigo-500/20 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-br from-violet-400/10 to-pink-400/10 rounded-full blur-2xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
 
         {/* Enhanced star field */}
         <div className="absolute inset-0 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:50px_50px] opacity-10 animate-pulse"></div>
@@ -218,9 +236,18 @@ const DappRegistration = () => {
 
         {/* Enhanced floating particles */}
         <div className="absolute top-20 left-20 w-3 h-3 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full opacity-80 animate-ping"></div>
-        <div className="absolute bottom-40 right-32 w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-70 animate-ping" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-cyan-300 rounded-full opacity-60 animate-ping" style={{ animationDelay: '2.5s' }}></div>
-        <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-violet-400 rounded-full opacity-50 animate-ping" style={{ animationDelay: '3s' }}></div>
+        <div
+          className="absolute bottom-40 right-32 w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-70 animate-ping"
+          style={{ animationDelay: "1.5s" }}
+        ></div>
+        <div
+          className="absolute top-1/3 right-1/4 w-1 h-1 bg-cyan-300 rounded-full opacity-60 animate-ping"
+          style={{ animationDelay: "2.5s" }}
+        ></div>
+        <div
+          className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-violet-400 rounded-full opacity-50 animate-ping"
+          style={{ animationDelay: "3s" }}
+        ></div>
 
         {/* Registration Card */}
         <div className="relative z-10 w-full max-w-md mx-1">
@@ -230,7 +257,6 @@ const DappRegistration = () => {
 
           {/* Main card */}
           <div className="relative bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-cyan-400/40 rounded-3xl px-3 py-12 shadow-2xl shadow-cyan-400/30 overflow-hidden">
-
             {/* Enhanced decorative background effects */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-cyan-400/10 via-purple-400/5 to-transparent rounded-full blur-3xl"></div>
             <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-violet-500/10 via-blue-500/5 to-transparent rounded-full blur-2xl"></div>
@@ -250,12 +276,21 @@ const DappRegistration = () => {
                 <div className="relative group">
                   {/* Multi-layered logo glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/40 via-purple-400/40 to-cyan-400/40 rounded-full blur-3xl animate-pulse group-hover:scale-110 transition-transform duration-500"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-violet-400/30 rounded-full blur-xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                  <div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-violet-400/30 rounded-full blur-xl animate-pulse"
+                    style={{ animationDelay: "0.5s" }}
+                  ></div>
 
                   {/* Logo container */}
                   <div className="relative   group-hover:border-cyan-400/60 transition-all duration-500 group-hover:scale-105">
-                    <img src={logo} alt="Hyperchainx" className="h-20 w-auto relative z-10 drop-shadow-lg" 
-                    onClick={() => window.open("https://web.dexon.global", "_blank")}/>
+                    <img
+                      src={logo}
+                      alt="Hyperchainx"
+                      className="h-20 w-auto relative z-10 drop-shadow-lg"
+                      onClick={() =>
+                        window.open("https://web.dexon.global", "_blank")
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -265,7 +300,9 @@ const DappRegistration = () => {
                 <h2 className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-purple-400 via-violet-400 to-cyan-400 text-3xl font-bold mb-3 tracking-wide">
                   Create Account
                 </h2>
-                <p className="text-slate-300 text-base font-medium">Join the future of blockchain technology</p>
+                <p className="text-slate-300 text-base font-medium">
+                  Join the future of blockchain technology
+                </p>
 
                 {/* Enhanced decorative divider */}
                 <div className="flex items-center justify-center gap-3 mt-6">
@@ -280,8 +317,18 @@ const DappRegistration = () => {
                 {/* Sponsor Address Field */}
                 <div className="relative group">
                   <label className="block text-cyan-300 text-sm font-semibold mb-2 flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
                     </svg>
                     Sponsor ID
                   </label>
@@ -300,8 +347,18 @@ const DappRegistration = () => {
                 {/* Wallet Address Field */}
                 <div className="relative group">
                   <label className="block text-cyan-300 text-sm font-semibold mb-2 flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
                     </svg>
                     Your Wallet Address
                   </label>
@@ -339,12 +396,32 @@ const DappRegistration = () => {
 
                   {/* Button content */}
                   <span className="relative z-10 flex items-center justify-center gap-4 text-white">
-                    <svg className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    <svg
+                      className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                      />
                     </svg>
                     Create Account
-                    <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    <svg
+                      className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
                     </svg>
                   </span>
 
@@ -357,8 +434,18 @@ const DappRegistration = () => {
                 {/* Validation hint */}
                 {(!walletAddress || !referralInput) && (
                   <div className="mt-3 flex items-center gap-2 text-slate-400 text-xs">
-                    <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    <svg
+                      className="w-4 h-4 text-amber-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
+                      />
                     </svg>
                     <span>
                       {!walletAddress && !referralInput
@@ -374,7 +461,9 @@ const DappRegistration = () => {
               {/* Enhanced Divider */}
               <div className="flex items-center gap-4 my-8">
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-400/40 via-purple-400/40 to-transparent"></div>
-                <span className="text-slate-400 text-sm font-medium bg-slate-800/50 px-4 py-2 rounded-full border border-slate-600/50">OR</span>
+                <span className="text-slate-400 text-sm font-medium bg-slate-800/50 px-4 py-2 rounded-full border border-slate-600/50">
+                  OR
+                </span>
                 <div className="flex-1 h-px bg-gradient-to-l from-transparent via-purple-400/40 via-cyan-400/40 to-transparent"></div>
               </div>
 
@@ -387,8 +476,18 @@ const DappRegistration = () => {
                     className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-violet-400 font-bold cursor-pointer hover:from-cyan-300 hover:via-purple-300 hover:to-violet-300 transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
                   >
                     Sign In
-                    <svg className="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    <svg
+                      className="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform duration-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                      />
                     </svg>
                   </span>
                 </p>
@@ -397,11 +496,23 @@ const DappRegistration = () => {
               {/* Enhanced Security Badge */}
               <div className="flex items-center justify-center gap-3 text-slate-400 text-xs bg-slate-800/30 backdrop-blur-sm rounded-full px-4 py-3 border border-slate-600/30">
                 <div className="p-1 bg-green-500/20 rounded-full">
-                  <svg className="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  <svg
+                    className="w-4 h-4 text-green-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
                   </svg>
                 </div>
-                <span className="font-medium">Secured registration process</span>
+                <span className="font-medium">
+                  Secured registration process
+                </span>
               </div>
             </div>
           </div>
@@ -440,7 +551,6 @@ const DappRegistration = () => {
       </div>
     </>
   );
-
 };
 
 export default DappRegistration;
