@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { Menu, MenuItem } from '@mui/material';
+import moment from 'moment/moment';
+import React, { useEffect, useRef, useState } from 'react';
 import Tree from 'react-d3-tree';
 import { FaUser } from 'react-icons/fa';
-import { Menu, MenuItem } from '@mui/material';
 import { useQuery } from 'react-query';
-import WidgetsIcon from '@mui/icons-material/Widgets';
-import { endpoint } from '../../../utils/APIRoutes';
-import { apiConnectorGet, apiConnectorGetAdmin } from '../../../utils/APIConnector';
-import moment from 'moment/moment';
 import { useLocation } from 'react-router-dom';
+import { apiConnectorGetAdmin } from '../../../utils/APIConnector';
+import { endpoint } from '../../../utils/APIRoutes';
 
 const AdminTree = () => {
   const [verticaa, setVertica] = useState('vertical');

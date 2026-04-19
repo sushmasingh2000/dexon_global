@@ -1,10 +1,9 @@
 // export const localdomain = "http://192.168.18.101:9010";
-// export const domain = "http://192.168.18.214:9010";
-export const domain = "https://dexon.global";
+export const domain = "http://10.101.61.100:9010";
+// export const domain = "https://dexon.global";
 // export const domain = "http://localhost:2000";
 
 export const frontend = "https://dexon.global";
-
 
 // const isProduction = process.env.NODE_ENV === "production";
 // export const domain = isProduction ? livedomain : livedomain;
@@ -22,7 +21,6 @@ export const withdrawalAddress = "0xa8656e6ae3b543129b614287cd2ebb687c28d8b6";
 export const depositAddress = "0xE7eE24e4e544686b7474E50993447515bBE14004";
 
 export const endpoint = {
-
   login_api: `${domain}/api/v9/member-login`,
   member_dapp_log_reg: `${domain}/api/v9/member-dapp-log-reg`,
   registration_api: `${domain}/api/v9/member-registration`,
