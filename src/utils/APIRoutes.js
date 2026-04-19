@@ -1,9 +1,10 @@
-// export const localdomain = "http://192.168.18.101:9010";
-export const domain = "http://10.101.61.100:9010";
+// export const domain = "http://192.168.18.101:9010";
+export const domain = "http://10.101.61.100:9036";
 // export const domain = "https://dexon.global";
-// export const domain = "http://localhost:2000";
+// export const domain = "http://localhost:9036";
 
 export const frontend = "https://dexon.global";
+// export const frontend = "http://localhost:3000";
 
 // const isProduction = process.env.NODE_ENV === "production";
 // export const domain = isProduction ? livedomain : livedomain;
@@ -28,7 +29,7 @@ export const endpoint = {
   profile_api: `${domain}/api/v9/member-profile-details`,
   user_dashboard_api: `${domain}/api/v9/member-dashboard-details`,
   user_dashboard_business_api: `${domain}/api/v9/member-dashboard-business`,
-  get_topup_qr: `${domain}/api/v9/get-topup-qr`,
+  get_topup_qr: `${domain}/api/v9/user-payin-crypto-fit`,
   member_self_topup: `${domain}/api/v9/member-self-topup`,
   get_report_details: `${domain}/api/v9/get-report-details`,
   get_global_payout_history: `${domain}/api/v9/get-global-payout-history`,
@@ -44,6 +45,8 @@ export const endpoint = {
   member_payout_report: `${domain}/api/v9/member-payout-report`,
   withdrawal_approval_from_admin: `${domain}/api/v9/withdrawal-approval-from-admin`,
   update_profile: `${domain}/api/v9/change-member-profile-by-user`,
+  update_member_max_payout: `${domain}/api/v9/update-member-max-payout`,
+
   get_news_and_updates: `${domain}/api/v9/get-news-and-updates`,
   update_news_and_updates: `${domain}/api/v9/update-news-and-updates`,
   update_news_and_updates_status: `${domain}/api/v9/update-news-and-updates-status`,
@@ -97,7 +100,7 @@ export const endpoint = {
   create_trade_pair_api: `${domain}/api/v9/create-trade-pair`,
   get_trade_api: `${domain}/api/v9/get-trade-pair`,
   update_trade_pair_api: `${domain}/api/v9/update-trade-pair-status`,
-  delete_trade_pair_api: `${domain}/api/v9//delete-trade-pair`,
+  delete_trade_pair_api: `${domain}/api/v9/delete-trade-pair`,
   topup_api: `${domain}/api/v9/admin-topup-id`,
   cp_topup_api: `${domain}/api/v9/team-topup-fund-added-by-admin`,
   get_topup_api: `${domain}/api/v9/get-topup-details-admin`,
@@ -109,4 +112,22 @@ export const endpoint = {
   inr_payout_data: `${domain}/api/v9/get-withdrawal-details-admin`,
   update_trade_profit: `${domain}/api/v9/update-trade-profit`,
   verify_totp: `${domain}/api/v9/verify_totp`,
+  get_master_data: `${domain}/api/v9/get-master-data`,
+  get_master_config: `${domain}/api/v9/get-master-data`,
+  update_master_config: `${domain}/api/v9/update-master-data`,
+
+  user_message: `${domain}/api/v9/user-message`,
+  admin_reply: `${domain}/api/v9/admin-reply`,
+  get_user_message: `${domain}/api/v9/get-user-messages`,
+
+  member_withdrawal_permission: `${domain}/api/v9/member-withd-perm`,
+  member_trade_permission: `${domain}/api/v9/member-trade-perm`,
+
+  // ── Sub-Admin management (Admin only) ────────────────────────────────────────
+  get_subadmins: `${domain}/api/v9/get-subadmins`,
+  update_subadmin_permissions: `${domain}/api/v9/update-subadmin-permissions`,
+  toggle_subadmin_status: `${domain}/api/v9/toggle-subadmin-status`,
+
+  // ── Sub-Admin self (called after SubAdmin login) ─────────────────────────────
+  toggle_subadmin_access: `${domain}/api/v9/toggle-subadmin-access`,
 };

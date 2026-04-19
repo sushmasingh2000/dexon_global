@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../../Shared/Loader";
 import { apiConnectorGet, apiConnectorPost } from "../../utils/APIConnector";
 import { endpoint } from "../../utils/APIRoutes";
 import { enCryptData } from "../../utils/Secret";
-import { getFloatingValue } from "../../utils/utilityFun";
+import { getFloatingValue, swalAlert } from "../../utils/utilityFun";
 
 function Payout() {
   const [loding, setLoding] = useState(false);
@@ -23,7 +23,7 @@ function Payout() {
       amount: "",
       walletAddress: "",
       wallet_type: "earning",
-      growth_type: "",
+      growth_type: "earning",
       growth_option: "",
     },
     enableReinitialize: true,
@@ -77,8 +77,8 @@ function Payout() {
     const reqbody = {
       wallet_address: String(fk.values.walletAddress || user_profile?.lgn_wallet_add)?.trim(),
       user_amount: Number(fk.values.amount)?.toFixed(3),
-      wallet_type: walletType,
       package_id: packageId,
+      wallet_type: walletType,
     };
     console.log(reqbody);
 
@@ -102,7 +102,6 @@ function Payout() {
     }
 
     setLoding(true);
-
     try {
       const res = await apiConnectorPost(
         endpoint?.member_payout,
@@ -149,13 +148,30 @@ function Payout() {
   );
   const user_profile = profile?.data?.result?.[0] || [];
 
-  const maxAmount = fk.values.wallet_type === "earning"
-        ? parseFloat(user_profile?.tr03_inc_wallet || 0)
-        : parseFloat(user_profile?.tr03_topup_wallet || 0);
+  const selectedPackage = allData.find(
+    (item) => `${item.tr07_trans_id}` === fk.values.growth_option
+  );
 
+const maxAmount = fk.values.wallet_type === "earning"
+  ? parseFloat(user_profile?.tr03_inc_wallet || 0)
+  : fk.values.wallet_type === "growth" && selectedPackage
+    ? parseFloat(
+        fk.values.growth_type === "capital"
+          ? (selectedPackage.tr09_real_amount - selectedPackage.tr09_withdraw_amount)
+          : (selectedPackage.tr09_roi_amount - selectedPackage.tr09_withdraw_roi)
+      )
+    : parseFloat(user_profile?.tr03_topup_wallet || 0);
 
   // Fixed Withdrawal Component — drop-in replacement for your return block
-
+  const navigate = useNavigate();
+  if (user_profile.lgn_update_prof === "Deactive" && user_profile?.tr03_topup_date !== null) {
+    swalAlert(
+      Swal,
+      "Warning",
+      "Please update all required fields in your profile to withdraw funds",
+      () => navigate("/Profile")
+    );
+  }
   return (
     <>
       <Loader isLoading={loding} />
@@ -260,7 +276,7 @@ function Payout() {
                       value="growth"
                       onChange={(e) => {
                         fk.handleChange(e);
-                        fk.setFieldValue("growth_type", "capital"); // auto-select capital
+                        fk.setFieldValue("growth_type", "earning"); // auto-select capital
                         fk.setFieldValue("growth_option", "");
                         fk.setFieldValue("amount", "");
                       }}
@@ -293,7 +309,7 @@ function Payout() {
                   <div className="mb-4">
                     {/* Capital / Earning radio buttons */}
                     <div className="flex items-center gap-4 mb-3">
-                      <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                      {/* <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
                         <input
                           type="radio"
                           name="growth_type"
@@ -307,7 +323,7 @@ function Payout() {
                           className="accent-cyan-400"
                         />
                         Capital
-                      </label>
+                      </label> */}
                       <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
                         <input
                           type="radio"
@@ -375,7 +391,8 @@ function Payout() {
                                         onChange={() => {
                                           if (fk.values.growth_type === "capital" && item.tr09_is_locked === 1) return;
                                           fk.setFieldValue("growth_option", `${item.tr07_trans_id}`);
-                                          fk.setFieldValue("amount", parseFloat(amount).toFixed(2));
+                                          fk.setFieldValue("amount", "");
+                                          // fk.setFieldValue("amount", parseFloat(amount).toFixed(2));
                                         }}
                                         checked={isSelected}
                                         className="accent-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -478,7 +495,7 @@ function Payout() {
               <div>
                 <p className="text-amber-300 text-xs font-semibold mb-1">Important Notice</p>
                 <p className="text-amber-400/80 text-xs leading-relaxed">
-                  Withdrawals are processed automatically. Minimum withdrawal amount is $1.
+                  Withdrawals are processed automatically. Minimum withdrawal amount is $1.10.
                 </p>
               </div>
             </div>
@@ -489,8 +506,9 @@ function Payout() {
               type="button"
               className="relative w-full py-4 rounded-xl font-bold text-base overflow-hidden group transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-600 to-red-600 bg-size-200 bg-pos-0 group-hover:bg-pos-100 transition-all duration-500"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 bg-size-200 bg-pos-0 group-hover:bg-pos-100 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+              
               <span className="relative z-10 flex items-center justify-center gap-3 text-white">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

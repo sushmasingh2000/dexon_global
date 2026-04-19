@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import Loader from "../../../Shared/Loader";
 import { apiConnectorGet, apiConnectorPost } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
-import { areYouSureFn } from "../../../utils/utilityFun";
+import { areYouSureFn, swalAlert } from "../../../utils/utilityFun";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -85,11 +85,6 @@ function FundTransferToToupWallet() {
     setLoding(false);
   }
 
-
-
-
-
-
   const { data: profile_data, isLoading: profileloading } = useQuery(
     ["profile_api"],
     () => apiConnectorGet(endpoint?.profile_api),
@@ -133,6 +128,14 @@ function FundTransferToToupWallet() {
   }, [fk.values.customer_id]);
 
 
+  if (user_profile?.lgn_update_prof === "Deactive" && user_profile?.tr03_topup_date !== null) {
+    swalAlert(
+      Swal,
+      "Warning",
+      "Please update all required fields in your profile to withdraw funds",
+      () => navigate("/Profile")
+    );
+  }
 
   return (
     <>

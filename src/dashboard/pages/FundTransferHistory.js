@@ -62,7 +62,7 @@ const FundTransferHistory = () => {
   ];
   const tablerow = allData?.data?.map((row, index) => {
     return [
-      <span>{index + 1}</span>,
+      <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
       <span>{row?.tr07_trans_id}</span>,
       <span>{getFloatingValue(row.tr07_tr_amount)}</span>,
       <span>{formatedDate(moment, row?.tr07_created_at)}</span>,

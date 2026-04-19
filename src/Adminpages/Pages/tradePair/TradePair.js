@@ -119,7 +119,7 @@ const TradePair = () => {
     ];
     const tablerow = allData?.data?.map((row, index) => {
         return [
-            <span>{index + 1}</span>,
+            <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
             <span>{row?.m07_pair_name}</span>,
             <span className={row?.m07_status === 0 ? "text-red-500" : "text-green-500"}>
                 <Switch

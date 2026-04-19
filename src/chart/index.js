@@ -70,7 +70,7 @@ export const Barchart = ({ color = "#22d3ee" }) => {
             ))}
         </div>
 
-        {/* <style jsx>{`
+        {/* <style>{`
     @keyframes slideUp {
       from {
         height: 0%;
@@ -343,7 +343,7 @@ export const AnimatedBars = ({ color = "#22d3ee" }) => {
             })}
         </div>
 
-        <style jsx>{`
+        <style>{`
     @keyframes slideUp {
       from {
         transform: scaleY(0);

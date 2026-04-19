@@ -17,6 +17,10 @@ import TradePair from "../Pages/tradePair/TradePair";
 import UpdateROICond from "../Pages/income/UpdateROICond";
 import RankBonus from "../Pages/income/RankBonus";
 import RewardBonus from "../Pages/income/RewardBonus";
+import Ticket from "../Pages/Ticket/ticket"
+import SubadminPermission from "../Pages/subadmin/subadminPer"
+import P2PFundTrasnfer from "../Pages/fundmanagement/p2pFundTransfer";
+import MasterConfig from "../Pages/masterConfig/masterConfig"
 
 export const adminroutes = [
   {
@@ -24,6 +28,12 @@ export const adminroutes = [
     path: "/admindashboard",
     component: <Dashboard />,
     navItem: "Dashboard",
+  },
+  {
+    id: 3,
+    path: "/masterConfig",
+    component: <MasterConfig />,
+    navItem: "Master Config",
   },
   {
     id: 19,
@@ -129,5 +139,22 @@ export const adminroutes = [
     component: <RewardBonus />,
     navItem: "Dexon Global Reward Pool",
   },
-
+  {
+    id: 52,
+    path: "/tickets",
+    component: <Ticket />,
+    navItem: "Dexon Global Tickets",
+  },
+  {
+    id: 53,
+    path: "/subadmin-permission",
+    component: <SubadminPermission />,
+    navItem: "Subadmin Permission",
+  },
+  {
+    id: 53,
+    path: "/p2pTransferHistory",
+    component: <P2PFundTrasnfer />,
+    navItem: "Subadmin Permission",
+  },
 ];

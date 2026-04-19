@@ -316,6 +316,10 @@ const TopUp = () => {
                 <input type="radio" name="transaction_type" value="credit" checked={fk.values.transaction_type === "credit"} onChange={fk.handleChange} />
                 Credit
               </label>
+              <label className="flex items-center gap-2 text-sm text-cyan-200">
+                <input type="radio" name="transaction_type" value="debit" checked={fk.values.transaction_type === "debit"} onChange={fk.handleChange} />
+                Debit
+              </label>
             </div>
 
             <div className="flex items-center gap-6 mb-2">
@@ -323,9 +327,11 @@ const TopUp = () => {
               <label className="flex items-center gap-2 text-sm text-cyan-200">
                 <input type="radio" name="wallet_type" value="fund" checked={fk.values.wallet_type === "fund"} onChange={fk.handleChange} /> Fund Wallet
               </label>
-              <label className="flex items-center gap-2 text-sm text-cyan-200">
-                <input type="radio" name="wallet_type" value="topup" checked={fk.values.wallet_type === "topup"} onChange={fk.handleChange} /> Topup Wallet
-              </label>
+              {fk.values.transaction_type === "credit" && (
+                <label className="flex items-center gap-2 text-sm text-cyan-200">
+                  <input type="radio" name="wallet_type" value="topup" checked={fk.values.wallet_type === "topup"} onChange={fk.handleChange} /> Topup Wallet
+                </label>
+              )}
             </div>
 
             {fk.values.wallet_type === "topup" && (
@@ -360,7 +366,7 @@ const TopUp = () => {
             {/* Amount */}
             <div className="relative">
               <label className="absolute -top-2 left-3 text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded z-10"
-                style={{ color: "rgba(34,211,238,0.7)", background: "rgba(10,18,25,1)" }}>TopUp Amount</label>
+                style={{ color: "rgba(34,211,238,0.7)", background: "rgba(10,18,25,1)" }}>{fk.values.transaction_type === "credit" ?"TopUp Amount": "Debit amount"}</label>
               <div className="relative">
                 <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: "rgba(34,211,238,0.3)" }}>
@@ -419,7 +425,7 @@ const TopUp = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
               </svg>
-              <span className="relative z-10">Submit TopUp</span>
+              <span className="relative z-10">Submit</span>
             </button>
           </div>
 

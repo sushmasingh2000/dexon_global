@@ -29,6 +29,10 @@ import GlobalDashboard from "../dashboard/pages/globalhistory/GlobalDashboard";
 import AutoCompounding from "../dashboard/pages/income/AutoCompounding";
 import TopupByRandomQR from "../dashboard/pages/Topup/TopupByRandomQR";
 import TopupUpWithoutPull from "../dashboard/pages/Topup/TopupUpWithoutPull";
+import TicketSupport from "../dashboard/pages/ticketSupport"
+import CapitalPayout from "../dashboard/pages/capitalPayout"
+import CryptofitGateway from "../dashboard/pages/Topup/CryptoFitGateway";
+import GatwayMaster from "../dashboard/pages/Topup/GatewayMaster";
 
 export const routes = [
   {
@@ -55,15 +59,31 @@ export const routes = [
       </MainLayout>
     ),
   },
+  {
+    path: "/capital-with",
+    element: (
+      <MainLayout>
+        <CapitalPayout />{" "}
+      </MainLayout>
+    ),
+  },
   // {
   //   path: '/topup_data',
   //   element: ( <MainLayout><ActivationWithFSTAndPull /> </MainLayout>),
   // },
-  {
+  // {
+  //   path: "/topup_data",
+  //   element: (
+  //     <MainLayout>
+  //       <TopupUpWithoutPull />{" "}
+  //     </MainLayout>
+  //   ),
+  // },
+   {
     path: "/topup_data",
     element: (
       <MainLayout>
-        <TopupUpWithoutPull />{" "}
+        <GatwayMaster />{" "}
       </MainLayout>
     ),
   },
@@ -264,6 +284,14 @@ export const routes = [
     element: (
       <MainLayout>
         <AutoCompounding />{" "}
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/ticket_support",
+    element: (
+      <MainLayout>
+        <TicketSupport />{" "}
       </MainLayout>
     ),
   },

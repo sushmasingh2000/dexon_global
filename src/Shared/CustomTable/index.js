@@ -159,9 +159,15 @@ const CustomTable = ({
       )}
 
       {/* Custom Scrollbar Styles */}
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           height: 8px;
+        }
+
+        thead tr:first-child th[colspan] {
+          display: none !important;
+          height: 0 !important;
+          padding: 0 !important;
         }
 
         .custom-scrollbar::-webkit-scrollbar-track {
