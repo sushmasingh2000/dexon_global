@@ -17,10 +17,10 @@ import TradePair from "../Pages/tradePair/TradePair";
 import UpdateROICond from "../Pages/income/UpdateROICond";
 import RankBonus from "../Pages/income/RankBonus";
 import RewardBonus from "../Pages/income/RewardBonus";
-import Ticket from "../Pages/Ticket/ticket"
-import SubadminPermission from "../Pages/subadmin/subadminPer"
+import Ticket from "../Pages/Ticket/ticket";
+import SubadminPermission from "../Pages/subadmin/subadminPer";
 import P2PFundTrasnfer from "../Pages/fundmanagement/p2pFundTransfer";
-import MasterConfig from "../Pages/masterConfig/masterConfig"
+import MasterConfig from "../Pages/masterConfig/masterConfig";
 
 export const adminroutes = [
   {
@@ -59,8 +59,6 @@ export const adminroutes = [
     component: <MemberList />,
     navItem: "Member List",
   },
-
-
   {
     id: 43,
     path: "/down_team",
