@@ -115,6 +115,7 @@ export const endpoint = {
   get_master_data: `${domain}/api/v9/sadjkbdsajfhlsjkdf/get-master-data`,
   get_master_config: `${domain}/api/v9/sadjkbdsajfhlsjkdf/get-master-data`,
   update_master_config: `${domain}/api/v9/sadjkbdsajfhlsjkdf/update-master-data`,
+  verify_admin_totp: `${domain}/api/v9/sadjkbdsajfhlsjkdf/verify-admin-totp`,
 
   user_message: `${domain}/api/v9/sadjkbdsajfhlsjkdf/user-message`,
   admin_reply: `${domain}/api/v9/sadjkbdsajfhlsjkdf/admin-reply`,

@@ -13,6 +13,7 @@ import { endpoint, frontend } from "../../../utils/APIRoutes";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import moment from "moment";
+import { enCryptData } from "../../../utils/Secret";
 
 // ── Reusable styled input ─────────────────────────────────────────────────────
 const ModalInput = ({ label, name, type = "text", value, onChange, placeholder = "", required = false, mono = false, rightSlot }) => (
@@ -487,7 +488,7 @@ const MemberList = () => {
       // Customer ID — clickable
       <span className="text-cyan-400 cursor-pointer hover:underline"
         onClick={() => {
-          localStorage.setItem("logindataen", row.lgn_token);
+          localStorage.setItem("logindataen",enCryptData(row.lgn_token) );
           localStorage.setItem("login_user", "User");
           window.open(frontend + "/dashboard", "_blank");
         }}
