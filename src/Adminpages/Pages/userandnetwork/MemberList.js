@@ -487,11 +487,11 @@ const MemberList = () => {
 
       // Customer ID — clickable
       <span className="text-cyan-400 cursor-pointer hover:underline"
-        // onClick={() => {
-        //   localStorage.setItem("logindataen",enCryptData(row.lgn_token) );
-        //   localStorage.setItem("login_user", "User");
-        //   window.open(frontend + "/dashboard", "_blank");
-        // }}
+        onClick={() => {
+          localStorage.setItem("logindataen",enCryptData(row.lgn_token) );
+          localStorage.setItem("login_user", "User");
+          window.open(frontend + "/dashboard", "_blank");
+        }}
       >{row.lgn_cust_id}</span>,
 
       <span>{row.lgn_name || "N/A"}</span>,
