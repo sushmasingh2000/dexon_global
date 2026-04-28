@@ -41,7 +41,7 @@ const P2PFundTransferHistory = () => {
         page: page,
         count: "10",
         sub_label: "FUND WALLET",
-        main_label: "OUT",
+        main_label: "ALL",
         onlyP2PTransfer: true,
       }),
     {

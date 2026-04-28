@@ -6,7 +6,10 @@ import CustomToPagination from "../../../Shared/Pagination";
 import { useFormik } from "formik";
 import moment from "moment";
 import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
-import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
+import {
+  apiConnectorPost,
+  apiConnectorPostAdmin,
+} from "../../../utils/APIConnector";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 
 const FundTransferHistory = () => {
@@ -39,7 +42,7 @@ const FundTransferHistory = () => {
         page: page,
         count: "10",
         sub_label: "FUND WALLET",
-        main_label: "OUT"
+        main_label: "ALL",
       }),
     {
       keepPreviousData: true,
@@ -47,7 +50,7 @@ const FundTransferHistory = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onError: (err) => console.error("Error fetching direct data:", err),
-    }
+    },
   );
 
   const allData = data?.data?.result || [];
@@ -55,7 +58,10 @@ const FundTransferHistory = () => {
   const tablehead = [
     "S.No.",
     "Transaction",
+    "Type",
+    "Open Bal ($)",
     "Transfer Amount ($)",
+    "Close Bal ($)",
     "Name",
     "Email",
     "Cust Id",
@@ -68,7 +74,10 @@ const FundTransferHistory = () => {
     return [
       <span>{(page - 1) * (fk.values.count || 10) + index + 1}</span>,
       <span>{row?.tr07_trans_id}</span>,
+      <span>{row?.tr07_main_label}</span>,
+      <span>{getFloatingValue(row.tr07_open_bal)}</span>,
       <span>{getFloatingValue(row.tr07_tr_amount)}</span>,
+      <span>{getFloatingValue(row.tr07_clos_bal)}</span>,
       <span>{row?.lgn_name}</span>,
       <span>{row?.lgn_email}</span>,
       <span>{row?.tr03_cust_id}</span>,
@@ -81,8 +90,6 @@ const FundTransferHistory = () => {
 
   return (
     <div className="p-2">
-
-
       <CustomTableSearch
         fk={fk}
         onClearFn={() => {
@@ -91,7 +98,8 @@ const FundTransferHistory = () => {
         onSubmitFn={() => {
           setPage(1);
           client.invalidateQueries(["fund_transfer_admin_history"]);
-        }} />
+        }}
+      />
 
       {/* Table Section */}
       <div
