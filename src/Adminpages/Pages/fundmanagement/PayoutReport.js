@@ -4,9 +4,16 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import CustomTable from "../../../Shared/CustomTable";
 import CustomToPagination from "../../../Shared/Pagination";
-import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
+import {
+  apiConnectorPost,
+  apiConnectorPostAdmin,
+} from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
-import { areYouSureFn, formatedDate, getFloatingValue } from "../../../utils/utilityFun";
+import {
+  areYouSureFn,
+  formatedDate,
+  getFloatingValue,
+} from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import Swal from "sweetalert2";
 
@@ -49,7 +56,7 @@ const PayoutReport = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onError: (err) => console.error("Error fetching direct data:", err),
-    }
+    },
   );
 
   const allData = data?.data?.result || [];
@@ -68,18 +75,20 @@ const PayoutReport = () => {
     "Action",
     "Wallet Type",
     "Wallet Address",
-    "Hash"
+    "Hash",
   ];
 
   const handlePayoutAction = async (row, action) => {
     setLoading(true);
     try {
-
       const reqBody = {
         t_id: row?.tr11_id,
-        status_type: action
-      }
-      const apiRes = await apiConnectorPostAdmin(endpoint?.withdrawal_approval_from_admin, reqBody);
+        status_type: action,
+      };
+      const apiRes = await apiConnectorPostAdmin(
+        endpoint?.withdrawal_approval_from_admin,
+        reqBody,
+      );
       if (apiRes?.data?.status) {
         Swal.fire({
           title: "Success",
@@ -111,47 +120,66 @@ const PayoutReport = () => {
       <span>{getFloatingValue(row.tr11_amont)}</span>,
       <span>{getFloatingValue(row.tr11_charges)}</span>,
       <span>{getFloatingValue(row.tr11_net_amnt)}</span>,
-      <span className={`
+      <span
+        className={`
         ${row?.tr11_status === "Pending" ? "text-yellow-500" : row?.tr11_status === "Success" ? "text-green-500" : row?.tr11_status === "Failed" ? "text-red-500" : ""}
-       `
-      } >{row?.tr11_status}</span>,
+       `}
+      >
+        {row?.tr11_status}
+      </span>,
       <span className="flex gap-2">
-        {row?.tr11_status === "Pending" && row?.tr11_wallet_type === "Capital Wallet" ? (
+        {row?.tr11_status === "Pending" &&
+        row?.tr11_wallet_type === "Capital Wallet" ? (
           <>
             <button
               className="px-2 py-1 rounded bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition"
-              onClick={() => areYouSureFn(Swal, () => handlePayoutAction(row, 'Success'))}
-            >Accept</button>
+              onClick={() =>
+                areYouSureFn(Swal, () => handlePayoutAction(row, "Success"))
+              }
+            >
+              Accept
+            </button>
             <button
               className="px-2 py-1 rounded bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition"
-              onClick={() => areYouSureFn(Swal, () => handlePayoutAction(row, 'Reject'))}
-            >Reject</button>
+              onClick={() =>
+                areYouSureFn(Swal, () => handlePayoutAction(row, "Reject"))
+              }
+            >
+              Reject
+            </button>
           </>
         ) : (
           <>
             <button
               className="px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold cursor-not-allowed opacity-60"
               disabled
-            >Accept</button>
+            >
+              Accept
+            </button>
             <button
               className="px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold cursor-not-allowed opacity-60"
               disabled
-            >Reject</button>
+            >
+              Reject
+            </button>
           </>
         )}
       </span>,
       <span className="!text-white">{row?.tr11_wallet_type}</span>,
       <span className="!text-gold-color">{row?.tr11_payout_to}</span>,
-      <span className="!text-blue-600 underline cursor-pointer"
-        onClick={() => window.open(`https://bscscan.com/tx/${row?.tr11_hash}`, "_blank")}
-      >{row?.tr11_hash ? row?.tr11_hash?.substring(0, 10) : "--"}...</span>
+      <span
+        className="!text-blue-600 underline cursor-pointer"
+        onClick={() =>
+          window.open(`https://bscscan.com/tx/${row?.tr11_hash}`, "_blank")
+        }
+      >
+        {row?.tr11_hash ? row?.tr11_hash?.substring(0, 10) : "--"}...
+      </span>,
     ];
   });
 
   return (
     <div className="p-2">
-
-
       <CustomTableSearch
         fk={fk}
         onClearFn={() => {
@@ -160,7 +188,8 @@ const PayoutReport = () => {
         onSubmitFn={() => {
           setPage(1);
           client.invalidateQueries(["get_level_admin"]);
-        }} />
+        }}
+      />
 
       {/* Table Section */}
       <div
