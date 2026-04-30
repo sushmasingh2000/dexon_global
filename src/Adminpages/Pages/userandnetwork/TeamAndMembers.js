@@ -60,19 +60,47 @@ const TeamAndMembers = () => {
     setLoading(true);
     try {
       const { data } = await apiConnectorGetAdmin(endpoint?.user_dashboard_business_api, { userId: userId });
-      const directBusines = getFloatingValue(data?.result?.direct_business)
-      const TeamBusines = getFloatingValue(data?.result?.team_business)
+      const result = data?.result || {};
+      const currentRank = result?.current_rank ?? 0;
+      const directMembers = getFloatingValue(result?.dir_mem || 0);
+      const teamMembers = getFloatingValue(result?.team_mem || 0);
+      const directBusiness = getFloatingValue(result?.direct_business || 0);
+      const teamBusiness = getFloatingValue(result?.team_business || 0);
+      const fLegBusiness = getFloatingValue(result?.fleg_buss || 0);
+      const oLegBusiness = getFloatingValue(result?.oleg_buss || 0);
+
+      
       Swal.fire({
-        title: '<span style="color:#22d3ee;font-weight:700;font-size:1.2rem;">Total Business</span>',
+        title: '<span style="color:#22d3ee;font-weight:700;font-size:1.2rem;">User Business Details</span>',
         html: `
-          <div style="display:flex;gap:1.5rem;justify-content:center;align-items:center;margin-top:1rem;">
-            <div style="background:linear-gradient(135deg,#0a192f 60%,#22d3ee 100%);border-radius:1rem;padding:1.2rem 2.2rem;box-shadow:0 4px 24px #22d3ee33;display:flex;flex-direction:column;align-items:center;">
-              <div style="font-size:0.9rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Direct Business</div>
-              <div style="font-size:1.3rem;color:#22d3ee;font-weight:700;margin-top:0.2rem;">$${directBusines}</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1rem;">
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#22d3ee 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #22d3ee33;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Current Rank</div>
+              <div style="font-size:1.1rem;color:#22d3ee;font-weight:700;margin-top:0.2rem;">${currentRank}</div>
             </div>
-            <div style="background:linear-gradient(135deg,#0a192f 60%,#38bdf8 100%);border-radius:1rem;padding:1.2rem 2.2rem;box-shadow:0 4px 24px #38bdf833;display:flex;flex-direction:column;align-items:center;">
-              <div style="font-size:0.9rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Team Business</div>
-              <div style="font-size:1.3rem;color:#38bdf8;font-weight:700;margin-top:0.2rem;">$${TeamBusines}</div>
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#38bdf8 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #38bdf833;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Direct Members</div>
+              <div style="font-size:1.1rem;color:#38bdf8;font-weight:700;margin-top:0.2rem;">${directMembers}</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#06b6d4 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #06b6d433;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Team Members</div>
+              <div style="font-size:1.1rem;color:#06b6d4;font-weight:700;margin-top:0.2rem;">${teamMembers}</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#14b8a6 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #14b8a633;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Direct Business</div>
+              <div style="font-size:1.1rem;color:#14b8a6;font-weight:700;margin-top:0.2rem;">$${directBusiness}</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#2dd4bf 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #2dd4bf33;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">Team Business</div>
+              <div style="font-size:1.1rem;color:#2dd4bf;font-weight:700;margin-top:0.2rem;">$${teamBusiness}</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#0ea5e9 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #0ea5e933;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">F-Leg Business</div>
+              <div style="font-size:1.1rem;color:#0ea5e9;font-weight:700;margin-top:0.2rem;">$${fLegBusiness}</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#0a192f 60%,#0284c7 100%);border-radius:1rem;padding:1rem 1.2rem;box-shadow:0 4px 24px #0284c733;display:flex;flex-direction:column;align-items:flex-start;">
+              <div style="font-size:0.82rem;color:#bae6fd;letter-spacing:1px;font-weight:600;">O-Leg Business</div>
+              <div style="font-size:1.1rem;color:#0284c7;font-weight:700;margin-top:0.2rem;">$${oLegBusiness}</div>
             </div>
           </div>
         `,
