@@ -26,35 +26,59 @@ const App = () => {
   // Block inspect element shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // F12
-      if (e.keyCode === 123) {
+      const key = (e.key || "").toLowerCase();
+      const code = e.code || "";
+
+      // F12 (browser shortcut)
+      if (key === "f12" || code === "F12" || e.keyCode === 123) {
         e.preventDefault();
         e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+        return false;
       }
+
       // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C
       if (
-        (e.ctrlKey &&
+        ((e.ctrlKey || e.metaKey) &&
           e.shiftKey &&
-          (e.key === "I" ||
-            e.key === "i" ||
-            e.key === "J" ||
-            e.key === "j" ||
-            e.key === "C" ||
-            e.key === "c")) ||
-        (e.ctrlKey && (e.key === "U" || e.key === "u"))
+          (key === "i" || key === "j" || key === "c")) ||
+        ((e.ctrlKey || e.metaKey) && key === "u")
       ) {
         e.preventDefault();
         e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+        return false;
       }
+
+      return true;
     };
+
     const handleContextMenu = (e) => {
       e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      return false;
     };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("contextmenu", handleContextMenu);
+
+    // Capture phase helps intercept before most other handlers.
+    document.addEventListener("keydown", handleKeyDown, true);
+    document.addEventListener("keyup", handleKeyDown, true);
+    document.addEventListener("keypress", handleKeyDown, true);
+    window.addEventListener("keydown", handleKeyDown, true);
+    window.addEventListener("keyup", handleKeyDown, true);
+    window.addEventListener("keypress", handleKeyDown, true);
+    document.addEventListener("contextmenu", handleContextMenu, true);
+    window.addEventListener("contextmenu", handleContextMenu, true);
+
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown, true);
+      document.removeEventListener("keyup", handleKeyDown, true);
+      document.removeEventListener("keypress", handleKeyDown, true);
+      window.removeEventListener("keydown", handleKeyDown, true);
+      window.removeEventListener("keyup", handleKeyDown, true);
+      window.removeEventListener("keypress", handleKeyDown, true);
+      document.removeEventListener("contextmenu", handleContextMenu, true);
+      window.removeEventListener("contextmenu", handleContextMenu, true);
     };
   }, []);
 
@@ -64,6 +88,7 @@ const App = () => {
         {/* Public Routes */}
         {/* <Route path="/" element={<Layout><Home/></Layout>} /> */}
         <Route path="/" element={<Main />} />
+        {/* <Route path="/" element={<DappLogin />} /> */}
         <Route path="/login" element={<DappLogin />} />
         {/* <Route path="/login" element={<Login />} />  */}
         <Route path="/register" element={<DappRegistration />} />
@@ -91,7 +116,8 @@ const App = () => {
             />
           ))
         ) : (
-          <Route path="*" element={<Main />} />
+          <Route path="*" element={<DappLogin />} />
+          // <Route path="*" element={<Main />} />
         )}
         {/* Protected Routes */}
         {user ? (
@@ -99,7 +125,8 @@ const App = () => {
             <Route key={i} path={route.path} element={route.element} />
           ))
         ) : (
-          <Route path="*" element={<Main />} />
+          // <Route path="*" element={<Main />} />
+          <Route path="*" element={<DappLogin />} />
         )}
       </Routes>
     </Router>

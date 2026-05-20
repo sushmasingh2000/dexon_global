@@ -73,6 +73,7 @@ const PayoutReport = () => {
     "Net Amount ($)",
     "Status",
     "Action",
+    "API Response",
     "Wallet Type",
     "Wallet Address",
     "Hash",
@@ -128,8 +129,15 @@ const PayoutReport = () => {
         {row?.tr11_status}
       </span>,
       <span className="flex gap-2">
-        {row?.tr11_status === "Pending" &&
-        row?.tr11_wallet_type === "Capital Wallet" ? (
+        {row?.tr11_status === "Pending" ||
+        (row?.tr11_status === "Processing" &&
+          JSON.stringify(
+            JSON.parse(row?.tr11_api_res || "{}")?.message,
+            null,
+            2,
+          ) !==
+            `"Request Added in gateway it will take 1-2 hour to update your wallet."`) ? (
+          // &&  row?.tr11_wallet_type === "Capital Wallet" ?
           <>
             <button
               className="px-2 py-1 rounded bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition"
@@ -139,14 +147,14 @@ const PayoutReport = () => {
             >
               Accept
             </button>
-            <button
+            {/* <button
               className="px-2 py-1 rounded bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition"
               onClick={() =>
                 areYouSureFn(Swal, () => handlePayoutAction(row, "Reject"))
               }
             >
               Reject
-            </button>
+            </button> */}
           </>
         ) : (
           <>
@@ -156,13 +164,20 @@ const PayoutReport = () => {
             >
               Accept
             </button>
-            <button
+            {/* <button
               className="px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold cursor-not-allowed opacity-60"
               disabled
             >
               Reject
-            </button>
+            </button> */}
           </>
+        )}
+      </span>,
+      <span className="!text-white">
+        {JSON.stringify(
+          JSON.parse(row?.tr11_api_res || "{}")?.message,
+          null,
+          2,
         )}
       </span>,
       <span className="!text-white">{row?.tr11_wallet_type}</span>,

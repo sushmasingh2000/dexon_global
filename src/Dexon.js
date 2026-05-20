@@ -3,9 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 function Main() {
   const navigate = useNavigate();
+  const iframeOrigin = 'https://web.dexon.global';
 
   useEffect(() => {
     const handleMessage = (event) => {
+      if (event.origin !== iframeOrigin || typeof event.data !== 'string') {
+        return;
+      }
+
       if (event.data === 'goToLogin') {
         navigate('/login');
       } else if (event.data === 'goToregister') {
@@ -15,7 +20,7 @@ function Main() {
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [navigate]);
+  }, [navigate, iframeOrigin]);
 
   return (
     <iframe
