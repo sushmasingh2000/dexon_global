@@ -1,5 +1,4 @@
-// export const domain = "http://10.101.61.100:9036";
-// export const domain = "http://192.168.18.120:9036";
+// export const domain = "http://192.168.18.1:9036";
 export const domain = "https://dexon.global";
 // export const domain = "http://localhost:9036";
 

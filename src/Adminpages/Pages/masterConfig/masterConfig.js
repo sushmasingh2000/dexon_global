@@ -7,11 +7,13 @@ import { endpoint } from "../../../utils/APIRoutes";
 const CONFIG_FIELDS = [
   { id: 2, label: "Auto Payout", type: "toggle", hasComment: true, commentLabel: "Message to users" },
   { id: 3, label: "Topup", type: "toggle", hasComment: false },
+  { id: 16, label: "TOPUP BONUS (%)"},
   { id: 4, label: "Payout", type: "toggle", hasComment: true, commentLabel: "Service message" },
   { id: 5, label: "Minimum Pay-In ($)", type: "number", hasComment: false },
   { id: 6, label: "Fund Wallet Charges (%)", type: "percent", hasComment: true, commentLabel: "e.g. 0.05 = 5%" },
   { id: 7, label: "Earning Wallet Charges (%)", type: "percent", hasComment: true, commentLabel: "e.g. 0.05 = 5%" },
   { id: 8, label: "Capital Wallet Charges (%)", type: "percent", hasComment: true, commentLabel: "e.g. 0.05 = 5%" },
+  
 ];
 
 const MasterConfig = () => {
