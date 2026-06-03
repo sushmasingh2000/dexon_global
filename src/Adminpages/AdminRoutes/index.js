@@ -21,6 +21,8 @@ import Ticket from "../Pages/Ticket/ticket";
 import SubadminPermission from "../Pages/subadmin/subadminPer";
 import P2PFundTrasnfer from "../Pages/fundmanagement/p2pFundTransfer";
 import MasterConfig from "../Pages/masterConfig/masterConfig";
+import WebPopup from "../Pages/webpopup/WebPopup";
+import SocialMedia from "../Pages/socialmedia/SoacilaMedia";
 
 export const adminroutes = [
   {
@@ -155,4 +157,18 @@ export const adminroutes = [
     component: <P2PFundTrasnfer />,
     navItem: "Subadmin Permission",
   },
+   {
+    id: 48,
+    path: "/web_popup",
+    component: <WebPopup />,
+    navItem: "Web Popup",
+  },
+   {
+    id: 48,
+    path: "/social_media",
+    component: <SocialMedia />,
+    navItem: "Social Media Platform",
+  },
+
+  
 ];

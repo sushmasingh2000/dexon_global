@@ -176,4 +176,18 @@ export const all_Data = [
     navIcon: <span><FaUserShield style={iconStyle} /></span>,
     subcomponent: [],
   },
+    {
+    id: 9,
+    navLink: "/web_popup",
+    navItem: "Web Popup",
+    navIcon: <span><FaRobot style={iconStyle} /></span>,
+    subcomponent: [],
+  },
+    {
+    id: 9,
+    navLink: "/social_media",
+    navItem: "Social Media Platform",
+    navIcon: <span><FaRobot style={iconStyle} /></span>,
+    subcomponent: [],
+  },
 ];

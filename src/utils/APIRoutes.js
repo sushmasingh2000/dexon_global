@@ -1,4 +1,4 @@
-// export const domain = "http://192.168.18.101:9010";
+// export const domain = "http://192.168.18.126:9036";
 // export const domain = "http://10.101.61.100:9036";
 export const domain = "https://dexon.global";
 // export const domain = "http://localhost:9036";
@@ -131,4 +131,14 @@ export const endpoint = {
 
   // ── Sub-Admin self (called after SubAdmin login) ─────────────────────────────
   toggle_subadmin_access: `${domain}/api/v9/sadjkbdsajfhlsjkdf/toggle-subadmin-access`,
+
+  get_all_web_popup_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/web-popup/all`,
+  create_web_popup_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/web-popup/create`,
+  delete_web_popup_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/web-popup/delete`,
+
+  get_all_social_media_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/social-media/all`,
+  create_social_media_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/social-media/create`,
+  update_social_media_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/social-media/update`,
+  delete_social_media_api: `${domain}/api/v9/sadjkbdsajfhlsjkdf/social-media/delete`,
+
 };

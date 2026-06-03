@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Shared/Loader";
-import { apiConnectorGet } from "../utils/APIConnector";
+import { apiConnectorGet, apiConnectorPost } from "../utils/APIConnector";
 import { endpoint, frontend } from "../utils/APIRoutes";
 import { getFloatingValue } from "../utils/utilityFun";
 import tether from "../images/tether.png";
@@ -22,8 +22,9 @@ import {
   FaTrophy,
 } from "react-icons/fa";
 import { BiSolidBusiness } from "react-icons/bi";
-import { MdCurrencyExchange} from "react-icons/md";
-import { GiTwoCoins} from "react-icons/gi";
+import { MdCurrencyExchange } from "react-icons/md";
+import { GiTwoCoins } from "react-icons/gi";
+import { Instagram, Telegram, Twitter, WhatsApp, YouTube } from "@mui/icons-material";
 const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
   const colors = {
     cyan: {
@@ -258,6 +259,29 @@ const Dashboard = () => {
   );
   const newsAndUpdates = newsAndUpdatesApi?.data?.result || [];
 
+  const { data: social_media } = useQuery(
+    ["get_social_media"],
+    () =>
+      apiConnectorGet(endpoint?.get_all_social_media_api),
+    {
+      keepPreviousData: true,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onError: (err) => console.error("Social Media fetch error:", err),
+    }
+  );
+
+  const socialLinks = social_media?.data?.result || [];
+
+  const socialIcons = {
+    whatsaap: <WhatsApp className="text-green-500" />,
+    youtube: <YouTube className="text-red-500" />,
+    instagram: <Instagram className="text-pink-500" />,
+    telegram: <Telegram className="text-sky-500" />,
+    twitter: <Twitter className="text-blue-500" />,
+  };
+
   return (
     <div className="min-h-screen  text-white px-2 ">
       <Loader isLoading={profileloading || isLoading || isNewsLoading} />
@@ -445,7 +469,7 @@ const Dashboard = () => {
                 {/* Value */}
                 <h2 className="text-3xl font-bold mb-1">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">
-                    {getFloatingValue(user_profile?.tr03_topup_wallet)}USD
+                    {getFloatingValue(user_profile?.total_prenciple) - getFloatingValue(user_profile?.withdrawal_prenciple)}USD
                   </span>
                 </h2>
 
@@ -498,7 +522,10 @@ const Dashboard = () => {
                 {/* Value */}
                 <h2 className="text-3xl font-bold mb-1">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">
-                    {getFloatingValue(dashboard?.growth_wallet)}USD
+                    {(
+                      getFloatingValue(user_profile?.total_roi) -
+                      getFloatingValue(user_profile?.withdrawal_roi)
+                    ).toFixed(2)}USD
                   </span>
                 </h2>
 
@@ -546,10 +573,10 @@ const Dashboard = () => {
                       const val = Math.min(
                         (Number(
                           dashboard?.growth_wallet -
-                            user_profile?.tr03_topup_wallet || 0,
+                          user_profile?.tr03_topup_wallet || 0,
                         ) /
                           (2 * Number(user_profile?.tr03_topup_wallet || 1))) *
-                          100,
+                        100,
                         100,
                       );
                       return isNaN(val) ? 0 : val;
@@ -708,7 +735,7 @@ const Dashboard = () => {
                           (Number(user_profile?.tr03_total_income || 0) /
                             (2 *
                               Number(user_profile?.tr03_topup_wallet || 1))) *
-                            100,
+                          100,
                           100,
                         );
                         return isNaN(val) ? 0 : val;
@@ -722,7 +749,7 @@ const Dashboard = () => {
                       Math.floor(
                         (Number(user_profile?.tr03_total_income || 0) /
                           (2 * Number(user_profile?.tr03_topup_wallet || 1))) *
-                          100,
+                        100,
                       ),
                       100,
                     );
@@ -798,14 +825,37 @@ const Dashboard = () => {
                 onClick={() =>
                   functionTOCopy(
                     frontend +
-                      "/register?startapp=" +
-                      user_profile?.lgn_cust_id,
+                    "/register?startapp=" +
+                    user_profile?.lgn_cust_id,
                   )
                 }
                 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-400 to-blue-500 text-sm break-all text-center font-medium cursor-pointer hover:scale-[1.02] transition-transform duration-200 relative z-10"
               >
                 {frontend + "/register?startapp=" + user_profile?.lgn_cust_id}
               </p>
+              <div className="flex justify-center mt-4 gap-3 relative z-50">
+                {socialLinks.map((item) => {
+                  const key = item.m09_soc_name?.toLowerCase()?.trim();
+
+                  return (
+                    <div
+                      key={item.m09_id}
+                      className="cursor-pointer hover:scale-110 transition"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const url = item.m09_soc_url.startsWith("http")
+                          ? item.m09_soc_url
+                          : `https://${item.m09_soc_url}`;
+
+                        window.open(url, "_blank", "noopener,noreferrer");
+                      }}
+                    >
+                      {socialIcons[key]}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Copy Button */}
@@ -814,8 +864,8 @@ const Dashboard = () => {
                 onClick={() =>
                   functionTOCopy(
                     frontend +
-                      "/register?startapp=" +
-                      user_profile?.lgn_cust_id,
+                    "/register?startapp=" +
+                    user_profile?.lgn_cust_id,
                   )
                 }
                 className="relative px-6 py-2.5 rounded-lg font-semibold text-sm overflow-hidden group/btn transition-all duration-300 hover:scale-105"
@@ -1124,6 +1174,13 @@ const Dashboard = () => {
           path="/income/salary"
           navigate={navigate}
         /> */}
+        <Card
+          title="Total Payout"
+          value={`$${getFloatingValue(dashboard?.payout || 0)}`}
+          color="green"
+          path="/payout-report"
+          navigate={navigate}
+        />
         <Card
           title="Total Earning"
           value={`$${getFloatingValue(dashboard?.total_income || 0)}`}
