@@ -21,6 +21,41 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script>
+    (function () {
+      function blockInspect(e) {
+        var key = (e.key || "").toLowerCase();
+        var code = e.code || "";
+        var isF12 = key === "f12" || code === "F12" || e.keyCode === 123;
+        var isInspectCombo =
+          ((e.ctrlKey || e.metaKey) && e.shiftKey && (key === "i" || key === "j" || key === "c")) ||
+          ((e.ctrlKey || e.metaKey) && key === "u");
+
+        if (isF12 || isInspectCombo) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+          return false;
+        }
+      }
+
+      function blockContext(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+        return false;
+      }
+
+      document.addEventListener("keydown", blockInspect, true);
+      document.addEventListener("keyup", blockInspect, true);
+      document.addEventListener("keypress", blockInspect, true);
+      window.addEventListener("keydown", blockInspect, true);
+      window.addEventListener("keyup", blockInspect, true);
+      window.addEventListener("keypress", blockInspect, true);
+      document.addEventListener("contextmenu", blockContext, true);
+      window.addEventListener("contextmenu", blockContext, true);
+    })();
+  </script>
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
