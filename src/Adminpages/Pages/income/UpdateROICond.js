@@ -10,6 +10,7 @@ import { formatedDate, getFloatingValue } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import { Edit } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { hasPermission } from "../../../utils/permissions";
 
 const UpdateROICond = () => {
   const [page, setPage] = useState(1);
@@ -128,11 +129,15 @@ const UpdateROICond = () => {
       <span>{row.m05_profit1}</span>,
       <span>{formatedDate(moment, row.m05_updated_at)}</span>,
       <span>
-        <Edit
-          onClick={() => openEdit(row)}
-          sx={{ color: "#749df5", cursor: "pointer" }}
-          fontSize="medium"
-        />
+        {hasPermission("trade.update_profit") ? (
+          <Edit
+            onClick={() => openEdit(row)}
+            sx={{ color: "#749df5", cursor: "pointer" }}
+            fontSize="medium"
+          />
+        ) : (
+          <Edit sx={{ color: "#4b5563", cursor: "not-allowed" }} fontSize="medium" />
+        )}
       </span>,
     ];
   });

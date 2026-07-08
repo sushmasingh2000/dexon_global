@@ -10,6 +10,7 @@ import { endpoint } from "../../../utils/APIRoutes";
 import { areYouSureFn, formatedDate } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import Swal from "sweetalert2";
+import { hasPermission } from "../../../utils/permissions";
 
 const NewsAndUpdated = () => {
     const [page, setPage] = useState(1);
@@ -126,19 +127,23 @@ const NewsAndUpdated = () => {
             <span> {(page - 1) * (fk.values.count || 10) + index + 1}</span>,
             <span> {row.m01_nw_news}</span>,
             <span>{formatedDate(moment, row.m01_nw_created_at)}</span>,
-            <button
-                type="button"
-                onClick={() => handleOpenNewsDialog(row)}
-                className="px-3 py-1 rounded-md text-xs font-medium bg-cyan-600 hover:bg-cyan-500 transition-colors !text-white"
-            >
-                Edit
-            </button>,
-            <label className="inline-flex items-center cursor-pointer gap-2">
+            hasPermission("news.update") ? (
+              <button
+                  type="button"
+                  onClick={() => handleOpenNewsDialog(row)}
+                  className="px-3 py-1 rounded-md text-xs font-medium bg-cyan-600 hover:bg-cyan-500 transition-colors !text-white"
+              >
+                  Edit
+              </button>
+            ) : (
+              <span className="text-gray-600 text-xs">—</span>
+            ),
+            <label className={`inline-flex items-center gap-2 ${hasPermission("news.toggle_status") ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
                 <input
                     type="checkbox"
                     checked={row?.m01_nw_status === 1}
-                    onChange={() => handleNewsStatus(row)}
-                    // disabled={statusUpdatingId === row?.m01_nw_id}
+                    onChange={() => hasPermission("news.toggle_status") && handleNewsStatus(row)}
+                    disabled={!hasPermission("news.toggle_status")}
                     className="sr-only peer"
                 />
                 <div className="relative w-10 h-5 bg-gray-600 rounded-full peer peer-checked:bg-cyan-600 transition-colors">

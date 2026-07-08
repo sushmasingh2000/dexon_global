@@ -24,7 +24,13 @@ import {
 import { BiSolidBusiness } from "react-icons/bi";
 import { MdCurrencyExchange } from "react-icons/md";
 import { GiTwoCoins } from "react-icons/gi";
-import { Instagram, Telegram, Twitter, WhatsApp, YouTube } from "@mui/icons-material";
+import {
+  Instagram,
+  Telegram,
+  Twitter,
+  WhatsApp,
+  YouTube,
+} from "@mui/icons-material";
 const Card = ({ title, value, color, icon = "dollar", path, navigate }) => {
   const colors = {
     cyan: {
@@ -261,15 +267,14 @@ const Dashboard = () => {
 
   const { data: social_media } = useQuery(
     ["get_social_media"],
-    () =>
-      apiConnectorGet(endpoint?.get_all_social_media_api),
+    () => apiConnectorGet(endpoint?.get_all_social_media_api),
     {
       keepPreviousData: true,
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       onError: (err) => console.error("Social Media fetch error:", err),
-    }
+    },
   );
 
   const socialLinks = social_media?.data?.result || [];
@@ -469,7 +474,9 @@ const Dashboard = () => {
                 {/* Value */}
                 <h2 className="text-3xl font-bold mb-1">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">
-                    {getFloatingValue(user_profile?.total_prenciple) - getFloatingValue(user_profile?.withdrawal_prenciple)}USD
+                    {getFloatingValue(user_profile?.total_prenciple) -
+                      getFloatingValue(user_profile?.withdrawal_prenciple)}
+                    USD
                   </span>
                 </h2>
 
@@ -522,10 +529,12 @@ const Dashboard = () => {
                 {/* Value */}
                 <h2 className="text-3xl font-bold mb-1">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">
-                    {(
-                      getFloatingValue(user_profile?.total_roi) -
-                      getFloatingValue(user_profile?.withdrawal_roi)
-                    ).toFixed(2)}USD
+                    {getFloatingValue(dashboard?.net_growth)}
+                    {/* {(
+                      getFloatingValue(user_profile?.total_roi) 
+                     - getFloatingValue(user_profile?.withdrawal_roi)
+                    ).toFixed(2)} */}
+                    USD
                   </span>
                 </h2>
 
@@ -564,7 +573,7 @@ const Dashboard = () => {
           </div>
           <div className="mt-4 space-y-2">
             {/* Progress Bar */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
@@ -596,7 +605,7 @@ const Dashboard = () => {
                   return isNaN(val) ? 0 : val;
                 })()}%
               </span>
-            </div>
+            </div> */}
 
             {/* Caption */}
             <p className="text-[11px] text-gray-500 italic tracking-wide text-center">
@@ -725,7 +734,7 @@ const Dashboard = () => {
             {/* Progress Bar */}
             <div className="mt-4 space-y-2">
               {/* Progress Bar */}
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-lg shadow-yellow-400/50"
@@ -757,7 +766,7 @@ const Dashboard = () => {
                   })()}
                   %
                 </span>
-              </div>
+              </div> */}
 
               {/* Caption */}
               <p className="text-[11px] text-gray-500 italic tracking-wide text-center">
@@ -825,37 +834,14 @@ const Dashboard = () => {
                 onClick={() =>
                   functionTOCopy(
                     frontend +
-                    "/register?startapp=" +
-                    user_profile?.lgn_cust_id,
+                      "/register?startapp=" +
+                      user_profile?.lgn_cust_id,
                   )
                 }
                 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-400 to-blue-500 text-sm break-all text-center font-medium cursor-pointer hover:scale-[1.02] transition-transform duration-200 relative z-10"
               >
                 {frontend + "/register?startapp=" + user_profile?.lgn_cust_id}
               </p>
-              <div className="flex justify-center mt-4 gap-3 relative z-50">
-                {socialLinks.map((item) => {
-                  const key = item.m09_soc_name?.toLowerCase()?.trim();
-
-                  return (
-                    <div
-                      key={item.m09_id}
-                      className="cursor-pointer hover:scale-110 transition"
-                      onClick={(e) => {
-                        e.stopPropagation();
-
-                        const url = item.m09_soc_url.startsWith("http")
-                          ? item.m09_soc_url
-                          : `https://${item.m09_soc_url}`;
-
-                        window.open(url, "_blank", "noopener,noreferrer");
-                      }}
-                    >
-                      {socialIcons[key]}
-                    </div>
-                  );
-                })}
-              </div>
             </div>
 
             {/* Copy Button */}
@@ -864,8 +850,8 @@ const Dashboard = () => {
                 onClick={() =>
                   functionTOCopy(
                     frontend +
-                    "/register?startapp=" +
-                    user_profile?.lgn_cust_id,
+                      "/register?startapp=" +
+                      user_profile?.lgn_cust_id,
                   )
                 }
                 className="relative px-6 py-2.5 rounded-lg font-semibold text-sm overflow-hidden group/btn transition-all duration-300 hover:scale-105"
@@ -919,6 +905,128 @@ const Dashboard = () => {
                 </p>
               </div>
             </div>
+            {socialLinks.length > 0 && (
+              <div className="mt-4 space-y-2 relative z-50">
+                {socialLinks.map((item) => {
+                  const key = item.m09_soc_name?.toLowerCase()?.trim();
+
+                  const SOCIAL_META = {
+                    telegram: {
+                      title: "Join Our Telegram Channel",
+                      subtitle: "Get instant updates & announcements",
+                      gradient: "from-sky-500/15 to-blue-600/10",
+                      border: "rgba(14,165,233,0.25)",
+                      iconBg: "rgba(14,165,233,0.12)",
+                      shine: "rgba(14,165,233,0.06)",
+                      labelColor: "#38bdf8",
+                    },
+                    whatsaap: {
+                      title: "Join Our WhatsApp Group",
+                      subtitle: "Connect with our community",
+                      gradient: "from-green-500/15 to-emerald-600/10",
+                      border: "rgba(34,197,94,0.25)",
+                      iconBg: "rgba(34,197,94,0.12)",
+                      shine: "rgba(34,197,94,0.06)",
+                      labelColor: "#4ade80",
+                    },
+                    youtube: {
+                      title: "Subscribe on YouTube",
+                      subtitle: "Watch tutorials & live sessions",
+                      gradient: "from-red-500/15 to-rose-600/10",
+                      border: "rgba(239,68,68,0.25)",
+                      iconBg: "rgba(239,68,68,0.12)",
+                      shine: "rgba(239,68,68,0.06)",
+                      labelColor: "#f87171",
+                    },
+                    instagram: {
+                      title: "Follow on Instagram",
+                      subtitle: "Stay inspired with our latest posts",
+                      gradient: "from-pink-500/15 to-purple-600/10",
+                      border: "rgba(236,72,153,0.25)",
+                      iconBg: "rgba(236,72,153,0.12)",
+                      shine: "rgba(236,72,153,0.06)",
+                      labelColor: "#f472b6",
+                    },
+                    twitter: {
+                      title: "Follow on Twitter / X",
+                      subtitle: "Follow for real-time updates",
+                      gradient: "from-blue-500/15 to-indigo-600/10",
+                      border: "rgba(59,130,246,0.25)",
+                      iconBg: "rgba(59,130,246,0.12)",
+                      shine: "rgba(59,130,246,0.06)",
+                      labelColor: "#60a5fa",
+                    },
+                  };
+
+                  const meta = SOCIAL_META[key] || {
+                    title: item.m09_soc_name || "Visit Us",
+                    subtitle: "Click to open",
+                    gradient: "from-blue-500/10 to-indigo-500/10",
+                    border: "rgba(99,102,241,0.2)",
+                    iconBg: "rgba(99,102,241,0.1)",
+                    shine: "rgba(99,102,241,0.05)",
+                    labelColor: "#818cf8",
+                  };
+
+                  return (
+                    <div
+                      key={item.m09_id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const url = item.m09_soc_url.startsWith("http")
+                          ? item.m09_soc_url
+                          : `https://${item.m09_soc_url}`;
+                        window.open(url, "_blank", "noopener,noreferrer");
+                      }}
+                      className={`relative flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer group overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg bg-gradient-to-r ${meta.gradient}`}
+                      style={{ border: `1px solid ${meta.border}` }}
+                    >
+                      {/* Hover shine */}
+                      <div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                          background: `linear-gradient(90deg, transparent, ${meta.shine}, transparent)`,
+                        }}
+                      />
+
+                      {/* Icon bubble */}
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-xl transition-transform duration-300 group-hover:scale-110"
+                        style={{ background: meta.iconBg }}
+                      >
+                        {socialIcons[key]}
+                      </div>
+
+                      {/* Text */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-xs font-semibold leading-tight truncate">
+                          {meta.title}
+                        </p>
+                        <p className="text-gray-500 text-[10px] leading-tight mt-0.5 truncate">
+                          {meta.subtitle}
+                        </p>
+                      </div>
+
+                      {/* Arrow */}
+                      <svg
+                        className="w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+                        style={{ color: meta.labelColor }}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Particles effect */}
@@ -1115,9 +1223,16 @@ const Dashboard = () => {
       {/* ===== GRID ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4">
         <Card
-          title="Earning Wallet"
-          value={`$${getFloatingValue(user_profile?.tr03_inc_wallet)}`}
-          color="cyan"
+          title="Total Withdrawal"
+          value={`$${getFloatingValue(dashboard?.payout || 0)}`}
+          color="green"
+          path="/payout-report"
+          navigate={navigate}
+        />
+        <Card
+          title="Total Earning"
+          value={`$${getFloatingValue(Number(getFloatingValue(dashboard?.total_income || 0) || 0) + Number(getFloatingValue(user_profile?.total_roi) || 0))}`}
+          color="yellow"
           path=""
           navigate={navigate}
         />
@@ -1128,6 +1243,14 @@ const Dashboard = () => {
           path=""
           navigate={navigate}
         />
+        <Card
+          title="Earning Wallet"
+          value={`$${getFloatingValue(dashboard?.earning_wallet)}`}
+          color="cyan"
+          path=""
+          navigate={navigate}
+        />
+
         <Card
           title="Trading Income"
           value={`$${getFloatingValue(dashboard?.roi_bonus || 0)}`}
@@ -1174,20 +1297,6 @@ const Dashboard = () => {
           path="/income/salary"
           navigate={navigate}
         /> */}
-        <Card
-          title="Total Payout"
-          value={`$${getFloatingValue(dashboard?.payout || 0)}`}
-          color="green"
-          path="/payout-report"
-          navigate={navigate}
-        />
-        <Card
-          title="Total Earning"
-          value={`$${getFloatingValue(dashboard?.total_income || 0)}`}
-          color="yellow"
-          path=""
-          navigate={navigate}
-        />
 
         {/* <Card title="Total Withdrawal" value="$ 0" color="cyan" icon="user" /> */}
         {/* <Card

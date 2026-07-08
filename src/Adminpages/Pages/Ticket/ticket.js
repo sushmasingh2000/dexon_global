@@ -10,6 +10,7 @@ import { formatedDate } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import { ReplyAll, Visibility } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { hasPermission } from "../../../utils/permissions";
 
 // ── Status badge ──────────────────────────────────────────────────────────────
 const StatusBadge = ({ status }) => {
@@ -194,18 +195,20 @@ const TicketAndSupport = () => {
           <Visibility sx={{ color: "#749df5", fontSize: 20 }} />
         </button>
         {/* Reply */}
-        <button
-          title={isPending ? "Send Reply" : "Already Replied"}
-          onClick={() => isPending && openReply(row)}
-          disabled={!isPending}
-          className={`p-1 rounded-lg transition-colors ${
-            isPending
-              ? "hover:bg-green-400/10 cursor-pointer"
-              : "opacity-30 cursor-not-allowed"
-          }`}
-        >
-          <ReplyAll sx={{ color: "#4ade80", fontSize: 20 }} />
-        </button>
+        {hasPermission("tickets.reply") && (
+          <button
+            title={isPending ? "Send Reply" : "Already Replied"}
+            onClick={() => isPending && openReply(row)}
+            disabled={!isPending}
+            className={`p-1 rounded-lg transition-colors ${
+              isPending
+                ? "hover:bg-green-400/10 cursor-pointer"
+                : "opacity-30 cursor-not-allowed"
+            }`}
+          >
+            <ReplyAll sx={{ color: "#4ade80", fontSize: 20 }} />
+          </button>
+        )}
       </div>,
     ];
   });

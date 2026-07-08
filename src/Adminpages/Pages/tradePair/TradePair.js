@@ -11,6 +11,7 @@ import CustomToPagination from "../../../Shared/Pagination";
 import { apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { areYouSureFn, formatedDate } from "../../../utils/utilityFun";
+import { hasPermission } from "../../../utils/permissions";
 
 const TradePair = () => {
     const [page, setPage] = useState(1);
@@ -124,18 +125,24 @@ const TradePair = () => {
             <span className={row?.m07_status === 0 ? "text-red-500" : "text-green-500"}>
                 <Switch
                     checked={row?.m07_status === 1}
-                    onChange={() => 
-                        StatusFn(row?.m07_td_id)}
+                    onChange={() => hasPermission("trade.update_status") && StatusFn(row?.m07_td_id)}
+                    disabled={!hasPermission("trade.update_status")}
                 />
                 {row?.m07_status === 0 ? "InActive" : "Active"}
             </span>,
             <span>{formatedDate(moment, row?.m07_created_at)}</span>,
 
-            <span><DeleteForever className="!text-red-600"
-                onClick={() => {
-                    areYouSureFn(Swal, ()=>DeleteFn(row?.m07_td_id), {})
-                }}
-            /></span>,
+            <span>
+                {hasPermission("trade.delete") ? (
+                    <DeleteForever className="!text-red-600 cursor-pointer"
+                        onClick={() => {
+                            areYouSureFn(Swal, ()=>DeleteFn(row?.m07_td_id), {})
+                        }}
+                    />
+                ) : (
+                    <DeleteForever className="!text-gray-600 cursor-not-allowed opacity-40" />
+                )}
+            </span>,
         ];
     });
 
@@ -143,14 +150,16 @@ const TradePair = () => {
         <div className="p-2">
             {/* <div className="bg-gray-800 rounded-lg shadow-lg p-3 text-white border border-gray-700 mb-6"> */}
           
-            <div className="flex justify-end mb-3">
+            {hasPermission("trade.create") && (
+              <div className="flex justify-end mb-3">
                 <button
                     onClick={() => setShowModal(true)}
                     className="bg-[#50c1db] text-white px-4 py-2 rounded-md font-semibold"
                 >
                     + Add Trade Pair
                 </button>
-            </div>
+              </div>
+            )}
             {/* <div className="flex flex-col sm:flex-wrap md:flex-row items-center gap-3 sm:gap-4 w-full text-sm sm:text-base">
           <input
             type="date"

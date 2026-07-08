@@ -9,6 +9,7 @@ import { apiConnectorGetAdmin, apiConnectorPostAdmin } from "../../../utils/APIC
 import { domain, endpoint } from "../../../utils/APIRoutes";
 import { areYouSureFn, formatedDate } from "../../../utils/utilityFun";
 import moment from "moment";
+import { hasPermission } from "../../../utils/permissions";
 
 
 const WebPopup = () => {
@@ -167,12 +168,16 @@ const WebPopup = () => {
             <span>{formatedDate(moment, row?.m08_created_at)}</span>,
 
             <span>
-                <DeleteForever
-                    className="!text-red-500 cursor-pointer hover:!text-red-400 transition-colors"
-                    onClick={() =>
-                        areYouSureFn(Swal, () => handleDelete(row?.m08_wp_id), {})
-                    }
-                />
+                {hasPermission("popups.delete") ? (
+                    <DeleteForever
+                        className="!text-red-500 cursor-pointer hover:!text-red-400 transition-colors"
+                        onClick={() =>
+                            areYouSureFn(Swal, () => handleDelete(row?.m08_wp_id), {})
+                        }
+                    />
+                ) : (
+                    <DeleteForever className="!text-gray-600 cursor-not-allowed opacity-40" />
+                )}
             </span>,
         ];
     });
@@ -181,14 +186,16 @@ const WebPopup = () => {
     return (
         <div className="p-2">
             {/* Header */}
-            <div className="flex justify-end mb-3">
+            {hasPermission("popups.create") && (
+              <div className="flex justify-end mb-3">
                 <button
                     onClick={openModal}
                     className="bg-[#50c1db] text-white px-4 py-2 rounded-md font-semibold hover:bg-[#3aaecc] transition-colors"
                 >
                     + Add Popup
                 </button>
-            </div>
+              </div>
+            )}
 
             {/* Table */}
             <div className="rounded-lg py-3 text-white border shadow-md shadow-white/30">

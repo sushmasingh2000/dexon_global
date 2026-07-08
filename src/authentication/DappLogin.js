@@ -40,7 +40,8 @@ const DappLogin = () => {
           params: [{ chainId: "0x38" }], // Binance Smart Chain Mainnet
         });
         const userAccount = accounts[0];
-        setWalletAddress(userAccount);
+        // setWalletAddress(userAccount);
+        setWalletAddress("0xE4e95FacA3E450F8c60cd975276323ffACd9E4d2");
         setwalletAddressArray(accounts);
       } catch (error) {
         Swal.fire({
@@ -71,10 +72,6 @@ const DappLogin = () => {
       lgn_type: 2,
       wallet_address_user_ka: String(walletAddress),
     };
-    // const reqBodyy = {
-    //   lgn_type: 2,
-    //   wallet_address: String("0x39c1ac253c8e680299dc08e96a85cf6dd3c56ed3"),
-    // };
 
     try {
       const response_ = await axios.post(
@@ -99,7 +96,10 @@ const DappLogin = () => {
         dispatch(saveToken(response?.data?.result?.[0]?.token));
         // dispatch(saveUsername(reqBodyy?.username));
         // dispatch(saveUserCP(response?.data?.result?.[0]?.isCP));
-        localStorage.setItem("logindataen", enCryptData(response?.data?.result?.[0]?.token));
+        localStorage.setItem(
+          "logindataen",
+          enCryptData(response?.data?.result?.[0]?.token),
+        );
         // localStorage.setItem("uid", reqBodyy?.mobile);
         localStorage.setItem(
           "user_type",

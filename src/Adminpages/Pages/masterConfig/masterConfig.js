@@ -3,17 +3,17 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { apiConnectorGetAdmin, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
+import { hasPermission } from "../../../utils/permissions";
 
 const CONFIG_FIELDS = [
-  { id: 2, label: "Auto Payout", type: "toggle", hasComment: true, commentLabel: "Message to users" },
-  { id: 3, label: "Topup", type: "toggle", hasComment: false },
-  { id: 16, label: "TOPUP BONUS (%)"},
-  { id: 4, label: "Payout", type: "toggle", hasComment: true, commentLabel: "Service message" },
-  { id: 5, label: "Minimum Pay-In ($)", type: "number", hasComment: false },
-  { id: 6, label: "Fund Wallet Charges (%)", type: "percent", hasComment: true, commentLabel: "e.g. 0.05 = 5%" },
-  { id: 7, label: "Earning Wallet Charges (%)", type: "percent", hasComment: true, commentLabel: "e.g. 0.05 = 5%" },
-  { id: 8, label: "Capital Wallet Charges (%)", type: "percent", hasComment: true, commentLabel: "e.g. 0.05 = 5%" },
-  
+  { id: 2,  label: "Auto Payout",               type: "toggle",  hasComment: true,  commentLabel: "Message to users", permKey: "config.auto_payout"     },
+  { id: 3,  label: "Topup",                      type: "toggle",  hasComment: false,                                   permKey: "config.topup"           },
+  { id: 16, label: "TOPUP BONUS (%)",                                                                                   permKey: "config.topup_bonus"     },
+  { id: 4,  label: "Payout",                     type: "toggle",  hasComment: true,  commentLabel: "Service message",  permKey: "config.payout"          },
+  { id: 5,  label: "Minimum Pay-In ($)",         type: "number",  hasComment: false,                                   permKey: "config.min_payin"       },
+  { id: 6,  label: "Fund Wallet Charges (%)",    type: "percent", hasComment: true,  commentLabel: "e.g. 0.05 = 5%",  permKey: "config.fund_charges"    },
+  { id: 7,  label: "Earning Wallet Charges (%)", type: "percent", hasComment: true,  commentLabel: "e.g. 0.05 = 5%",  permKey: "config.earning_charges" },
+  { id: 8,  label: "Capital Wallet Charges (%)", type: "percent", hasComment: true,  commentLabel: "e.g. 0.05 = 5%",  permKey: "config.capital_charges" },
 ];
 
 const MasterConfig = () => {
@@ -83,6 +83,7 @@ const MasterConfig = () => {
 
   const showPageLoader = isLoading || saving || isFetching;
   const ready = !isLoading && Object.keys(cards).length > 0;
+  const visibleFields = CONFIG_FIELDS.filter((f) => hasPermission(f.permKey));
 
   return (
     <div
@@ -130,9 +131,25 @@ const MasterConfig = () => {
         </p>
       </div>
 
-      {!ready ? null : (
+      {!ready ? null : visibleFields.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <div
+            className="w-20 h-20 rounded-2xl flex items-center justify-center border border-red-500/20"
+            style={{ background: "rgba(239,68,68,0.06)" }}
+          >
+            <svg className="w-9 h-9 text-red-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <div className="text-center">
+            <p className="text-white font-semibold text-base mb-1">Access Restricted</p>
+            <p className="text-gray-500 text-sm">You don't have permission to view or edit any config card.</p>
+            <p className="text-gray-600 text-xs mt-1">Contact the admin to grant the required permissions.</p>
+          </div>
+        </div>
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {CONFIG_FIELDS.map((field) => {
+          {visibleFields.map((field) => {
             const c = cards[field.id];
             const dirty = isDirty(field.id);
             if (!c) return null;
@@ -214,20 +231,20 @@ const MasterConfig = () => {
                 </div>
                 <button
                   onClick={() => handleSave(field.id)}
-                  disabled={!dirty || saving}
-                  className={`mt-4 w-full py-2 rounded-lg text-sm font-semibold transition-all duration-200 border relative overflow-hidden group ${dirty
+                  disabled={!dirty || saving || !hasPermission(field.permKey)}
+                  className={`mt-4 w-full py-2 rounded-lg text-sm font-semibold transition-all duration-200 border relative overflow-hidden group ${dirty && hasPermission(field.permKey)
                       ? "border-cyan-400/30 text-white hover:scale-[1.01] cursor-pointer"
                       : "border-gray-700/40 text-gray-600 cursor-not-allowed"
                     }`}
-                  style={dirty ? { background: "rgba(34,211,238,0.12)" } : { background: "rgba(34,211,238,0.03)" }}
+                  style={dirty && hasPermission(field.permKey) ? { background: "rgba(34,211,238,0.12)" } : { background: "rgba(34,211,238,0.03)" }}
                 >
-                  {dirty && (
+                  {dirty && hasPermission(field.permKey) && (
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden rounded-lg pointer-events-none">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                     </div>
                   )}
                   <span className="relative z-10">
-                    {dirty ? "Save Changes" : "No Changes"}
+                    {!hasPermission(field.permKey) ? "No Permission" : dirty ? "Save Changes" : "No Changes"}
                   </span>
                 </button>
               </div>

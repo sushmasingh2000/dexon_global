@@ -18,6 +18,7 @@ import DappRegistration from "./authentication/DappRegistration";
 import Main from "./Dexon";
 import { useEffect } from "react";
 import { deCryptData } from "./utils/Secret";
+import SubadminLogin from "./Adminpages/Authentication/Login/SubadminLogin";
 
 const App = () => {
   const user = deCryptData(localStorage.getItem("logindataen"));
@@ -99,6 +100,7 @@ const App = () => {
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         {/* //admin */}
         <Route path="/adminlogin" element={<LogIn />} />
+        <Route path="/subadminlogin" element={<SubadminLogin />} />
 
         {admin ? (
           adminroutes.map((route, i) => (

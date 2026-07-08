@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { apiConnectorPost, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import Swal from "sweetalert2";
+import { hasPermission } from "../../../utils/permissions";
 import axios from "axios";
 import Loader from "../../../Shared/Loader";
 
@@ -212,8 +213,8 @@ const TopUp = () => {
       setOtpError("Invalid code. Please try again.");
     }
   } catch (err) {
-    console.log("FULL OTP ERROR:", err);
-    console.log("OTP RESPONSE DATA:", err.response?.data);
+    // console.log("FULL OTP ERROR:", err);
+    // console.log("OTP RESPONSE DATA:", err.response?.data);
     setOtpError(err.response?.data?.message || err.message);
   } finally {
     setIsVerifying(false);
@@ -413,10 +414,12 @@ const TopUp = () => {
               Clear
             </button>
 
-            <button onClick={areYouSureFn} type="button"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 relative overflow-hidden group"
+            <button onClick={hasPermission("fund.topup") ? areYouSureFn : undefined}
+              type="button"
+              disabled={!hasPermission("fund.topup")}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ background: "linear-gradient(135deg, rgba(6,182,212,0.22) 0%, rgba(14,116,144,0.16) 100%)", border: "1px solid rgba(34,211,238,0.35)", color: "rgba(34,211,238,0.95)", boxShadow: "0 0 16px rgba(34,211,238,0.1)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(6,182,212,0.32) 0%, rgba(14,116,144,0.24) 100%)"; e.currentTarget.style.boxShadow = "0 0 24px rgba(34,211,238,0.22)"; }}
+              onMouseEnter={(e) => { if(hasPermission("fund.topup")) { e.currentTarget.style.background = "linear-gradient(135deg, rgba(6,182,212,0.32) 0%, rgba(14,116,144,0.24) 100%)"; e.currentTarget.style.boxShadow = "0 0 24px rgba(34,211,238,0.22)"; }}}
               onMouseLeave={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, rgba(6,182,212,0.22) 0%, rgba(14,116,144,0.16) 100%)"; e.currentTarget.style.boxShadow = "0 0 16px rgba(34,211,238,0.1)"; }}>
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden rounded-xl pointer-events-none">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />

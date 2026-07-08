@@ -16,6 +16,7 @@ import {
 } from "../../../utils/utilityFun";
 import CustomTableSearch from "../../Shared/CustomTableSearch";
 import Swal from "sweetalert2";
+import { hasPermission } from "../../../utils/permissions";
 
 const PayoutReport = () => {
   const [page, setPage] = useState(1);
@@ -129,48 +130,35 @@ const PayoutReport = () => {
         {row?.tr11_status}
       </span>,
       <span className="flex gap-2">
-        {row?.tr11_status === "Pending" ||
-        (row?.tr11_status === "Processing" &&
-          JSON.stringify(
-            JSON.parse(row?.tr11_api_res || "{}")?.message,
-            null,
-            2,
-          ) !==
-            `"Request Added in gateway it will take 1-2 hour to update your wallet."`) ? (
-          // &&  row?.tr11_wallet_type === "Capital Wallet" ?
-          <>
-            <button
-              className="px-2 py-1 rounded bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition"
-              onClick={() =>
-                areYouSureFn(Swal, () => handlePayoutAction(row, "Success"))
-              }
-            >
-              Accept
-            </button>
-            {/* <button
-              className="px-2 py-1 rounded bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition"
-              onClick={() =>
-                areYouSureFn(Swal, () => handlePayoutAction(row, "Reject"))
-              }
-            >
-              Reject
-            </button> */}
-          </>
-        ) : (
-          <>
-            <button
-              className="px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold cursor-not-allowed opacity-60"
-              disabled
-            >
-              Accept
-            </button>
-            {/* <button
-              className="px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold cursor-not-allowed opacity-60"
-              disabled
-            >
-              Reject
-            </button> */}
-          </>
+        {hasPermission("fund.withdrawal_approve") && (
+          row?.tr11_status === "Pending" ||
+          (row?.tr11_status === "Processing" &&
+            JSON.stringify(
+              JSON.parse(row?.tr11_api_res || "{}")?.message,
+              null,
+              2,
+            ) !==
+              `"Request Added in gateway it will take 1-2 hour to update your wallet."`) ? (
+            <>
+              <button
+                className="px-2 py-1 rounded bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition"
+                onClick={() =>
+                  areYouSureFn(Swal, () => handlePayoutAction(row, "Success"))
+                }
+              >
+                Accept
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="px-2 py-1 rounded bg-gray-400 text-white text-xs font-semibold cursor-not-allowed opacity-60"
+                disabled
+              >
+                Accept
+              </button>
+            </>
+          )
         )}
       </span>,
       <span className="!text-white">

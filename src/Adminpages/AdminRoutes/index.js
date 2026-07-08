@@ -23,12 +23,13 @@ import P2PFundTrasnfer from "../Pages/fundmanagement/p2pFundTransfer";
 import MasterConfig from "../Pages/masterConfig/masterConfig";
 import WebPopup from "../Pages/webpopup/WebPopup";
 import SocialMedia from "../Pages/socialmedia/SoacilaMedia";
+import PermissionGate from "../Shared/PermissionGate";
 
 export const adminroutes = [
   {
     id: 2,
     path: "/admindashboard",
-    component: <Dashboard />,
+    component: <PermissionGate require="dashboard.view"><Dashboard /></PermissionGate>,
     navItem: "Dashboard",
   },
   {
@@ -40,25 +41,25 @@ export const adminroutes = [
   {
     id: 19,
     path: "/levelBonus",
-    component: <LevelBonus />,
+    component: <PermissionGate require="reports.income"><LevelBonus /></PermissionGate>,
     navItem: "Community Level Income",
   },
   {
     id: 19,
     path: "/directBonus",
-    component: <DirectBonus />,
+    component: <PermissionGate require="reports.income"><DirectBonus /></PermissionGate>,
     navItem: "Sponsor Income",
   },
   {
     id: 19,
     path: "/roiBonus",
-    component: <ROIBonus />,
+    component: <PermissionGate require="reports.income"><ROIBonus /></PermissionGate>,
     navItem: "Trading Income",
   },
   {
     id: 19,
     path: "/memberList",
-    component: <MemberList />,
+    component: <PermissionGate require="members.view"><MemberList /></PermissionGate>,
     navItem: "Member List",
   },
   {
@@ -70,25 +71,25 @@ export const adminroutes = [
   {
     id: 44,
     path: "/topup",
-    component: <TopUp />,
+    component: <PermissionGate require="fund.topup"><TopUp /></PermissionGate>,
     navItem: "Top Up",
   },
   {
     id: 45,
     path: "/payoutReport",
-    component: <PayoutReport />,
+    component: <PermissionGate require="reports.withdrawal"><PayoutReport /></PermissionGate>,
     navItem: "Withdrawal Report",
   },
   {
     id: 46,
     path: "/fundTransferHistory",
-    component: <FundTransferHistory />,
+    component: <PermissionGate require="reports.fund_request"><FundTransferHistory /></PermissionGate>,
     navItem: "Fund Transfer History",
   },
   {
     id: 47,
     path: "/topupHistory",
-    component: <TopupHistory />,
+    component: <PermissionGate require="reports.topup"><TopupHistory /></PermissionGate>,
     navItem: "Member Topup History",
   },
   {
@@ -112,63 +113,61 @@ export const adminroutes = [
   {
     id: 47,
     path: "/newsAnnouncement",
-    component: <NewsAndUpdated />,
+    component: <PermissionGate require={["news.create", "news.update", "news.toggle_status"]}><NewsAndUpdated /></PermissionGate>,
     navItem: "News And Updated",
   },
   {
     id: 48,
     path: "/trade_pairs",
-    component: <TradePair />,
+    component: <PermissionGate require={["trade.create", "trade.update_status", "trade.delete"]}><TradePair /></PermissionGate>,
     navItem: "Trade & Pair",
   },
   {
     id: 49,
     path: "/update-trade-profit",
-    component: <UpdateROICond />,
+    component: <PermissionGate require="trade.update_profit"><UpdateROICond /></PermissionGate>,
     navItem: "Update Trade Profit",
   },
   {
     id: 50,
     path: "/leadershipRankBonus",
-    component: <RankBonus />,
+    component: <PermissionGate require="reports.income"><RankBonus /></PermissionGate>,
     navItem: "Leadership Rank Bonus",
   },
   {
     id: 51,
     path: "/rewardBonus",
-    component: <RewardBonus />,
+    component: <PermissionGate require="reports.income"><RewardBonus /></PermissionGate>,
     navItem: "Dexon Global Reward Pool",
   },
   {
     id: 52,
     path: "/tickets",
-    component: <Ticket />,
+    component: <PermissionGate require="tickets.view"><Ticket /></PermissionGate>,
     navItem: "Dexon Global Tickets",
   },
   {
     id: 53,
     path: "/subadmin-permission",
-    component: <SubadminPermission />,
+    component: <PermissionGate require="subadmin.view"><SubadminPermission /></PermissionGate>,
     navItem: "Subadmin Permission",
   },
   {
     id: 53,
     path: "/p2pTransferHistory",
-    component: <P2PFundTrasnfer />,
+    component: <PermissionGate require="reports.fund_request"><P2PFundTrasnfer /></PermissionGate>,
     navItem: "Subadmin Permission",
   },
-   {
+  {
     id: 48,
     path: "/web_popup",
-    component: <WebPopup />,
+    component: <PermissionGate require={["popups.create", "popups.delete"]}><WebPopup /></PermissionGate>,
     navItem: "Web Popup",
   },
-   {
+  {
     id: 48,
     path: "/social_media",
-    component: <SocialMedia />,
+    component: <PermissionGate require={["social.create", "social.update", "social.delete"]}><SocialMedia /></PermissionGate>,
     navItem: "Social Media Platform",
   },
-
-  
 ];

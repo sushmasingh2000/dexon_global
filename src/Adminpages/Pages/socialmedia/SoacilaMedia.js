@@ -9,6 +9,7 @@ import CustomToPagination from "../../../Shared/Pagination";
 import { apiConnectorGetAdmin, apiConnectorPostAdmin } from "../../../utils/APIConnector";
 import { endpoint } from "../../../utils/APIRoutes";
 import { areYouSureFn } from "../../../utils/utilityFun";
+import { hasPermission } from "../../../utils/permissions";
 
 const SocialMedia = () => {
     const [page, setPage] = useState(1);
@@ -129,16 +130,24 @@ const SocialMedia = () => {
         </a>,
 
         <span className="flex items-center gap-3">
-            <Edit
-                className="!text-blue-400 cursor-pointer hover:!text-blue-300 transition-colors"
-                onClick={() => openEdit(row)}
-            />
-            <DeleteForever
-                className="!text-red-500 cursor-pointer hover:!text-red-400 transition-colors"
-                onClick={() =>
-                    areYouSureFn(Swal, () => handleDelete(row?.m09_id), {})
-                }
-            />
+            {hasPermission("social.update") ? (
+              <Edit
+                  className="!text-blue-400 cursor-pointer hover:!text-blue-300 transition-colors"
+                  onClick={() => openEdit(row)}
+              />
+            ) : (
+              <Edit className="!text-gray-600 cursor-not-allowed opacity-40" />
+            )}
+            {hasPermission("social.delete") ? (
+              <DeleteForever
+                  className="!text-red-500 cursor-pointer hover:!text-red-400 transition-colors"
+                  onClick={() =>
+                      areYouSureFn(Swal, () => handleDelete(row?.m09_id), {})
+                  }
+              />
+            ) : (
+              <DeleteForever className="!text-gray-600 cursor-not-allowed opacity-40" />
+            )}
         </span>,
     ]);
 
@@ -146,14 +155,16 @@ const SocialMedia = () => {
     return (
         <div className="p-2">
             {/* Header */}
-            <div className="flex justify-end mb-3">
+            {hasPermission("social.create") && (
+              <div className="flex justify-end mb-3">
                 <button
                     onClick={openCreate}
                     className="bg-[#50c1db] text-white px-4 py-2 rounded-md font-semibold hover:bg-[#3aaecc] transition-colors"
                 >
                     + Add Social Media
                 </button>
-            </div>
+              </div>
+            )}
 
             {/* Table */}
             <div className="rounded-lg py-3 text-white border shadow-md shadow-white/30">
