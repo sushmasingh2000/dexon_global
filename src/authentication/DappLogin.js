@@ -41,7 +41,7 @@ const DappLogin = () => {
         });
         const userAccount = accounts[0];
         // setWalletAddress(userAccount);
-        setWalletAddress("0xE4e95FacA3E450F8c60cd975276323ffACd9E4d2");
+        setWalletAddress("0x3d7d61cfbe157bfd56ade9fd5bf62713a071e766");
         setwalletAddressArray(accounts);
       } catch (error) {
         Swal.fire({

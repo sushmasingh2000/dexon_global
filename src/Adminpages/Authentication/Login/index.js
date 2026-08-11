@@ -7,7 +7,7 @@ import axios from "axios";
 import Loader from "../../../Shared/Loader";
 import logo from "../../../assets/logo.png";
 import { FaEye, FaEyeSlash, FaShieldAlt, FaUserShield } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
+import { MdAdminPanelSettings, MdOutlineMarkEmailRead } from "react-icons/md";
 import { RiShieldKeyholeLine } from "react-icons/ri";
 
 const LogIn = () => {
@@ -15,9 +15,10 @@ const LogIn = () => {
   const [loading, setLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
-  // 2FA state
-  const [step, setStep] = useState(1); // 1 = credentials, 2 = OTP
+  // Multi-factor state
+  const [step, setStep] = useState(1); // 1 = credentials, 2 = mail OTP, 3 = authenticator OTP
   const [pendingAuth, setPendingAuth] = useState(null);
+  const [mailOtp, setMailOtp] = useState("");
   const [otp, setOtp] = useState("");
 
   const formik = useFormik({
@@ -26,7 +27,14 @@ const LogIn = () => {
     onSubmit: (values) => loginFn(values),
   });
 
-  // ── Step 1: Validate credentials ──────────────────────────────────────────
+  const resetToCredentials = () => {
+    setStep(1);
+    setPendingAuth(null);
+    setMailOtp("");
+    setOtp("");
+  };
+
+  // ── Step 1: Validate credentials → send mail OTP ──────────────────────────
   const loginFn = async ({ username, password }) => {
     setLoading(true);
     try {
@@ -39,12 +47,12 @@ const LogIn = () => {
       const { message, result } = response?.data || {};
       const userType = result?.[0]?.user_type;
       const token = result?.[0]?.token;
+      const useremail = username.trim();
 
       if (message === "Login Successfully") {
-        // Don't persist yet — wait for 2FA verification
-        setPendingAuth({ token, userType });
-        setStep(2);
-        toast.success("Credentials verified. Enter your 2FA code.");
+        // Don't persist yet — wait for mail OTP + 2FA verification
+        setPendingAuth({ token, userType, useremail });
+        await sendMailOtp(useremail);
       } else {
         toast.error(message || "Login failed.");
       }
@@ -55,7 +63,63 @@ const LogIn = () => {
     }
   };
 
-  // ── Step 2: Verify Admin TOTP ─────────────────────────────────────────────
+  // ── Step 2a: Send mail OTP ─────────────────────────────────────────────────
+  const sendMailOtp = async (useremail) => {
+    try {
+      const response = await axios.post(
+        endpoint?.send_otp,
+        { useremail },
+        { headers: { "Content-Type": "application/json" } },
+      );
+      if (response?.data?.success) {
+        setStep(2);
+        toast.success("OTP sent to your registered email.");
+      } else {
+        toast.error(response?.data?.msg || "Failed to send OTP.");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.msg || "Error sending OTP.");
+    }
+  };
+
+  // ── Step 2b: Verify mail OTP → move to authenticator step ─────────────────
+  const verifyMailOtp = async (otpValue) => {
+    const code = otpValue ?? mailOtp;
+    if (!/^\d{6}$/.test(code)) {
+      toast.error("Enter a valid 6-digit OTP.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        endpoint?.verify_otp,
+        { useremail: pendingAuth?.useremail, otp: code },
+        { headers: { "Content-Type": "application/json" } },
+      );
+
+      if (response?.data?.success) {
+        setOtp("");
+        setStep(3);
+        toast.success("Email verified. Enter your authenticator code.");
+      } else {
+        toast.error(response?.data?.msg || "Invalid OTP.");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.msg || "Invalid or expired OTP.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMailOtpChange = (e) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+    setMailOtp(val);
+    if (val.length === 6) {
+      verifyMailOtp(val);
+    }
+  };
+
+  // ── Step 3: Verify Admin TOTP ──────────────────────────────────────────────
   const verifyOtp = async (otpValue) => {
     const code = otpValue ?? otp; // use passed value if available, else state
     if (!/^\d{6}$/.test(code)) {
@@ -163,15 +227,18 @@ const LogIn = () => {
               <p className="text-gray-500 text-xs">
                 {step === 1
                   ? "Sign in to manage your platform"
-                  : "Two-Factor Authentication"}
+                  : step === 2
+                    ? "Email Verification"
+                    : "Two-Factor Authentication"}
               </p>
 
               {/* Step indicator */}
               <div className="flex items-center justify-center gap-2 mt-4">
                 {[
                   { num: 1, label: "Credentials" },
-                  { num: 2, label: "2FA Code" },
-                ].map((s, i) => (
+                  { num: 2, label: "Email OTP" },
+                  { num: 3, label: "Authenticator" },
+                ].map((s, i, arr) => (
                   <div key={s.num} className="flex items-center gap-2">
                     <div className="flex flex-col items-center gap-1">
                       <div
@@ -194,7 +261,7 @@ const LogIn = () => {
                         {s.label}
                       </span>
                     </div>
-                    {i < 1 && (
+                    {i < arr.length - 1 && (
                       <div
                         className="w-12 h-0.5 mb-4 transition-all duration-500"
                         style={{
@@ -313,8 +380,117 @@ const LogIn = () => {
               </form>
             )}
 
-            {/* ── STEP 2: 2FA OTP ── */}
+            {/* ── STEP 2: Email OTP ── */}
             {step === 2 && (
+              <div className="px-8 py-7 space-y-6">
+                {/* Icon */}
+                <div className="flex flex-col items-center gap-3">
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                    style={{
+                      background: "rgba(34,211,238,0.08)",
+                      border: "1px solid rgba(34,211,238,0.2)",
+                      boxShadow: "0 0 32px rgba(34,211,238,0.1)",
+                    }}
+                  >
+                    <MdOutlineMarkEmailRead className="text-cyan-400 text-3xl" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white text-sm font-semibold">
+                      Enter Email OTP
+                    </p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      Enter the 6-digit code sent to{" "}
+                      <span className="text-cyan-500">
+                        {pendingAuth?.useremail}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* OTP Input */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest mb-1.5 text-center">
+                    6-Digit OTP Code
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="000000"
+                    value={mailOtp}
+                    onChange={handleMailOtpChange}
+                    maxLength={6}
+                    autoFocus
+                    className="w-full px-4 py-4 rounded-xl text-2xl text-white placeholder-gray-700 outline-none transition-all duration-200 text-center font-mono tracking-[0.5em]"
+                    style={{
+                      background: "rgba(34,211,238,0.04)",
+                      border: "1px solid rgba(34,211,238,0.15)",
+                      letterSpacing: "0.5em",
+                    }}
+                    onFocus={inputFocus}
+                    onBlur={inputBlur}
+                  />
+                  <p className="text-[10px] text-gray-600 text-center mt-2">
+                    Code auto-submits when all 6 digits are entered
+                  </p>
+                </div>
+
+                {/* Verify Button */}
+                <button
+                  onClick={() => verifyMailOtp()}
+                  disabled={loading || mailOtp.length !== 6}
+                  className="relative w-full py-3 rounded-xl font-bold text-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    background: "linear-gradient(135deg,#06b6d4,#3b82f6)",
+                    boxShadow: "0 8px 24px rgba(6,182,212,0.3)",
+                    color: "white",
+                  }}
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {loading ? (
+                      <>
+                        <svg
+                          className="animate-spin w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                          />
+                        </svg>
+                        Verifying OTP…
+                      </>
+                    ) : (
+                      <>
+                        <MdOutlineMarkEmailRead size={15} /> Verify & Continue
+                      </>
+                    )}
+                  </span>
+                </button>
+
+                {/* Back button */}
+                <button
+                  type="button"
+                  onClick={resetToCredentials}
+                  className="w-full py-2 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+                >
+                  ← Back to credentials
+                </button>
+              </div>
+            )}
+
+            {/* ── STEP 3: Authenticator OTP ── */}
+            {step === 3 && (
               <div className="px-8 py-7 space-y-6">
                 {/* Icon */}
                 <div className="flex flex-col items-center gap-3">
@@ -369,7 +545,7 @@ const LogIn = () => {
 
                 {/* Verify Button */}
                 <button
-                  onClick={verifyOtp}
+                  onClick={() => verifyOtp()}
                   disabled={loading || otp.length !== 6}
                   className="relative w-full py-3 rounded-xl font-bold text-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
@@ -413,11 +589,7 @@ const LogIn = () => {
                 {/* Back button */}
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep(1);
-                    setOtp("");
-                    setPendingAuth(null);
-                  }}
+                  onClick={resetToCredentials}
                   className="w-full py-2 text-xs text-gray-600 hover:text-gray-400 transition-colors"
                 >
                   ← Back to credentials

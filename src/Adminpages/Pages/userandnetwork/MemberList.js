@@ -822,10 +822,10 @@ const MemberList = () => {
     <span>Trade</span>,
     ...(!isSubAdminUser
       ? [
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse inline-block" />
-            SubAdmin
-          </span>,
+          // <span className="flex items-center gap-1">
+          //   <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse inline-block" />
+          //   SubAdmin
+          // </span>,
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
             2FA
@@ -1001,22 +1001,22 @@ const MemberList = () => {
       ...(!isSubAdminUser
         ? [
             // ── SubAdmin Access ──────────────────────────────────────────────────
-            <div className="flex flex-col items-center gap-1">
-              <SubAdminToggle
-                enabled={isSubAdmin}
-                onChange={() => toggleSubAdminAccess(row)}
-                loading={isThisRowLoading}
-              />
-              {isSubAdmin && (
-                <span
-                  onClick={() => navigate("/subadmin-permission")}
-                  className="text-[9px] text-purple-400 hover:text-purple-300 cursor-pointer underline underline-offset-2 transition-colors"
-                  title="Manage permissions"
-                >
-                  Permissions
-                </span>
-              )}
-            </div>,
+            // <div className="flex flex-col items-center gap-1">
+            //   <SubAdminToggle
+            //     enabled={isSubAdmin}
+            //     onChange={() => toggleSubAdminAccess(row)}
+            //     loading={isThisRowLoading}
+            //   />
+            //   {isSubAdmin && (
+            //     <span
+            //       onClick={() => navigate("/subadmin-permission")}
+            //       className="text-[9px] text-purple-400 hover:text-purple-300 cursor-pointer underline underline-offset-2 transition-colors"
+            //       title="Manage permissions"
+            //     >
+            //       Permissions
+            //     </span>
+            //   )}
+            // </div>,
 
             // ── 2FA Status ────────────────────────────────────────────────────────
             isSubAdmin ? (
